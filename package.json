@@ -1,0 +1,18 @@
+{
+  "name": "connexion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "openapi-server-validate": "openapi-generator-cli validate -i './openapi/openapi.yaml'",
+    "openapi-server-generate": "openapi-generator-cli generate -g python-fastapi -i './openapi/openapi.yaml' --output './autogen/server'",
+    "openapi-server-generate-client": "openapi-generator-cli generate -g javascript -i './openapi/openapi.yaml' --output './autogen/client'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "^2.4.26"
+  }
+}

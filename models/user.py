@@ -1,16 +1,18 @@
-
 from pydantic import BaseModel, EmailStr
 from pydantic.class_validators import Optional
 from pydantic.fields import Field
 from pydantic.types import SecretStr
 
 from models.document import BaseDocument
+from models.organization import Organization
+from models.privilege import Privilege
 
 
 class User(BaseDocument):
     pid: Optional[str]
     firstName: str
     lastName: str
+    imgUrl: str = ""
     email: EmailStr
     galleryPids: Optional[list[str]] = []
     organizationPid: str
@@ -52,6 +54,20 @@ class UserSignIn(BaseModel):
 
 class UserResponse(User):
     password: SecretStr = Field(..., exclude=True)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "firstName": "First",
+                "lastName": "Last",
+                "email": "user@user.com",
+            }
+        }
+
+
+class UserProfile(UserResponse):
+    organization: Organization
+    privilege: Privilege
 
     class Config:
         schema_extra = {

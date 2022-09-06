@@ -2,7 +2,6 @@ import json
 
 from fastapi import HTTPException
 from jsonpatch import JsonPatch, JsonPatchException
-from pydantic import parse_obj_as
 
 import uuid
 from pydantic.error_wrappers import ValidationError
@@ -62,6 +61,20 @@ class Service:
                                                sort=sort).to_list()
         return documents
 
+    async def total(self, q=None, additional_filters=None):
+        """Retrieves the total of documents that fit the specified criteria.
+
+        :param q: Represents the stringified q object.
+        :param additional_filters: Represents the additional filters to apply, if any.
+        :return: The total count of documents matching the specified criteria.
+        """
+        query = {}
+        if q is not None:
+            query = json.loads(q)
+        if additional_filters is not None:
+            query = {**query, **additional_filters}
+        return await self.collection.find(query).count()
+
     async def validate_exists(self, pid: str):
         """Validate the document exists.
 
@@ -70,7 +83,7 @@ class Service:
         """
         exists = await self.collection.find_one({"isDeleted": {"$ne": True}, "pid": pid})
         if exists is None:
-            raise HTTPException(status_code=404, detail="Not found")
+            raise HTTPException(status_code=404, detail=str(self.collection.__name__) + " not found.")
         return exists
 
     async def patch(self, pid: str, patch_document_list: list):
@@ -103,7 +116,7 @@ class Service:
             except ValidationError:
                 raise HTTPException(status_code=422, detail="Invalid patch")
             update_query = {"$set": {
-                field: value for field, value in new_doc.dict().items()
+                field: value for field, value in new_doc.dict().items() if field is not "id"
             }}
             await result.update(update_query)
         except JsonPatchException:

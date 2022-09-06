@@ -1,3 +1,21 @@
+# Structure of the Cloud
+This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
+and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These
+controllers generally connect with services which manage the interaction with the database. 
+
+# Generating Client
+If you need to generate a client, you can do so by running the following commands:
+
+```console
+$ cd autogen
+$ npm run openapi-server-generate-client
+$ cd client/release
+$ npm pack
+```
+
+This will generate a tarball that can be installed by transferring the tarball to the
+target directory and running npm install.
+
 # FastAPI and MongoDB Boilerplate
 
 A simple starter for building RESTful APIs with FastAPI and MongoDB. 

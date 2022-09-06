@@ -6,8 +6,8 @@ from models.document import BaseDocument
 class Gallery(BaseDocument):
     pid: Optional[str]
     name: str
-    description: str
-    imgUrl: str
+    description: str = ""
+    imgUrl: str = ""
     userPids: list
     organizationPid: str
 

@@ -1,10 +1,11 @@
-from fastapi import Body, APIRouter, HTTPException
+from fastapi import Body, APIRouter, HTTPException, Depends
 from passlib.context import CryptContext
 from pydantic.validators import List
 
-from auth.jwt_handler import sign_jwt
-from models.response import Response
-from models.user import User, UserResponse, UserSignIn
+from auth.jwt_bearer import JWTBearer
+from auth.jwt_handler import sign_jwt, decode_jwt
+from models.response import Response, LoginResponse, Respond
+from models.user import User, UserResponse, UserSignIn, UserProfile
 from domains.users.services.user_services import UserService
 
 router = APIRouter()
@@ -12,7 +13,7 @@ router = APIRouter()
 hash_helper = CryptContext(schemes=["bcrypt"])
 
 
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse)
 async def login_user(credentials: UserSignIn = Body(...)):
     user_exists = await User.find_one(User.email == credentials.email)
     if user_exists:
@@ -59,15 +60,21 @@ async def patch_user(pid: str, patch_list: List[object] = Body(...)):
 
 
 @router.get("/", response_description="Users retrieved", response_model=Response[UserResponse])
-async def get_users(q: str | None = None, limit: int | None = None, offset: int | None = None, sort: str | None = None):
+async def get_users(q: str | None = None, limit: int | None = None, offset: int | None = None, sort: str | None = None,
+                    includeTotals: bool | None = None):
     """Gets all users using the user defined parameters.
     """
     user_services = UserService()
     users = await user_services.get_all(q=q, limit=limit, offset=offset, sort=sort)
-    return Response(status_code=200,
-                    response_type='success',
-                    description="Users retrieved successfully.",
-                    data=users)
+    headers = {}
+    if includeTotals is not None:
+        headers = {"X-Total-Count": str(await user_services.total(q=q))}
+    return Respond(status_code=200,
+                   response_type='success',
+                   model=User,
+                   description="Users retrieved successfully.",
+                   data=users,
+                   headers=headers)
 
 
 @router.get("/{pid}", response_description="User data retrieved", response_model=Response[UserResponse])
@@ -86,3 +93,15 @@ async def delete_user(pid: str):
     user_services = UserService()
     await user_services.delete_document(pid=pid)
     return Response(status_code=200, response_type="success", description="User deleted.")
+
+
+@router.post('/profile', response_description="User profile successfully retrieved.",
+             response_model=Response[UserProfile])
+async def profile(token: str = Depends(JWTBearer())):
+    """Retrieves the current user's profile given their access token.
+    """
+    decoded_credentials = decode_jwt(token)
+    user_service = UserService()
+    user_profile = await user_service.users_profile(pid=decoded_credentials['uid'])
+    return Response(status_code=200, response_type="success", description="User profile retrieved.", data=[user_profile])
+

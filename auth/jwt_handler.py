@@ -8,9 +8,10 @@ from domains.privileges.services.privilege_services import PrivilegesService
 from models.user import User
 
 
-def token_response(token: str):
+def token_response(token: str, user: User):
     return {
-        "access_token": token
+        "accessToken": token,
+        "user": user
     }
 
 
@@ -32,7 +33,7 @@ async def sign_jwt(user: User) -> Dict[str, str]:
         'exp': now + 2400,
         'iat': now,
     }
-    return token_response(jwt.encode(payload, secret_key, algorithm="HS256"))
+    return token_response(jwt.encode(payload, secret_key, algorithm="HS256"), user=user)
 
 
 def decode_jwt(token: str) -> dict:

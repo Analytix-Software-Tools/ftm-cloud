@@ -3,6 +3,7 @@ from passlib.context import CryptContext
 from pydantic.validators import List
 
 from domains.galleries.services.gallery_services import GalleriesService
+from domains.organizations.services.organization_services import OrganizationsService
 from domains.users.services.user_services import UserService
 from models.gallery import Gallery
 from models.response import Response
@@ -26,12 +27,15 @@ async def add_gallery(new_gallery: Gallery = Body(...)):
     for i in range(0, len(new_gallery.userPids)):
         await user_service.validate_exists(pid=new_gallery.userPids[i])
 
+    organization_service = OrganizationsService()
+    await organization_service.validate_exists(pid=new_gallery.organizationPid)
+
     gallery_services = GalleriesService()
     await gallery_services.add_document(new_gallery)
     return new_gallery
 
 
-@router.get("/", response_description="Organizations retrieved", response_model=Response[Gallery])
+@router.get("/", response_description="Galleries retrieved", response_model=Response[Gallery])
 async def get_galleries(q: str | None = None, limit: int | None = None, offset: int | None = None, sort: str | None = None):
     """Gets all galleries using the user defined parameters.
     """

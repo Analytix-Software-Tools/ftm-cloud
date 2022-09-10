@@ -6,6 +6,7 @@ from domains.galleries.services.gallery_services import GalleriesService
 from domains.organizations.services.organization_services import OrganizationsService
 from domains.users.services.user_services import UserService
 from models.gallery import Gallery
+from models.patchdocument import PatchDocument
 from models.response import Response
 
 router = APIRouter()
@@ -57,7 +58,7 @@ async def get_gallery(pid: str):
 
 
 @router.patch("/{pid}", response_model=Response, response_description="Successfully patched gallery.")
-async def patch_gallery(pid: str, patch_list: List[object] = Body(...)):
+async def patch_gallery(pid: str, patch_list: List[PatchDocument] = Body(...)):
     """Patches a gallery within the space.
     """
     gallery_service = GalleriesService()

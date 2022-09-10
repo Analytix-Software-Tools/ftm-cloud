@@ -3,6 +3,9 @@ from pydantic.class_validators import Optional
 
 
 class Privilege(Document):
+    """Represents different access control levels a user might have within
+    the database.
+    """
     pid: str
     name: str
     description: Optional[str]

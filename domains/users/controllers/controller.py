@@ -4,6 +4,7 @@ from pydantic.validators import List
 
 from auth.jwt_bearer import JWTBearer
 from auth.jwt_handler import sign_jwt, decode_jwt
+from models.patchdocument import PatchDocument
 from models.response import Response, LoginResponse, Respond
 from models.user import User, UserResponse, UserSignIn, UserProfile
 from domains.users.services.user_services import UserService
@@ -51,7 +52,7 @@ async def signup_user(new_user: User = Body(...)):
 
 
 @router.patch("/{pid}", response_model=Response, response_description="Successfully patched user.")
-async def patch_user(pid: str, patch_list: List[object] = Body(...)):
+async def patch_user(pid: str, patch_list: List[PatchDocument] = Body(...)):
     """Patches a user within the space.
     """
     user_service = UserService()
@@ -97,7 +98,7 @@ async def delete_user(pid: str):
 
 @router.post('/profile', response_description="User profile successfully retrieved.",
              response_model=Response[UserProfile])
-async def profile(token: str = Depends(JWTBearer())):
+async def users_profile(token: str = Depends(JWTBearer())):
     """Retrieves the current user's profile given their access token.
     """
     decoded_credentials = decode_jwt(token)

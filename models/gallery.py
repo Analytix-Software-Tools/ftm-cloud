@@ -4,6 +4,8 @@ from models.document import BaseDocument
 
 
 class Gallery(BaseDocument):
+    """Represents a grouping of user privileges that allow them access to
+    a particular gallery."""
     pid: Optional[str]
     name: str
     description: str = ""

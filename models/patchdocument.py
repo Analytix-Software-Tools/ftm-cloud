@@ -3,8 +3,8 @@ from pydantic.schema import Literal, Any
 
 
 class PatchDocument(BaseModel):
-    """This model is used to enforce consistency with a user's patch
-    document.
+    """A document representing a transaction within a PATCH operation
+    in accordance with the IETF proposed RFC-6902 JSON-Patch.
 
     """
     op: Literal["add", "remove", "replace", "copy", "move", "test"]

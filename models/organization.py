@@ -4,6 +4,8 @@ from models.document import BaseDocument
 
 
 class Organization(BaseDocument):
+    """Represents a grouping of users that exist within the space.
+    """
     pid: Optional[str]
     name: str
     description: str

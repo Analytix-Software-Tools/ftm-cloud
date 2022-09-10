@@ -2,6 +2,7 @@ from fastapi import Body, APIRouter, HTTPException
 from pydantic.validators import List
 
 from domains.users.services.user_services import UserService
+from models.patchdocument import PatchDocument
 from models.response import Response, Respond
 from models.organization import Organization
 from domains.organizations.services.organization_services import OrganizationsService
@@ -52,7 +53,7 @@ async def get_organization(pid: str):
 
 
 @router.patch("/{pid}", response_model=Response, response_description="Successfully patched organization.")
-async def patch_organization(pid: str, patch_list: List[object] = Body(...)):
+async def patch_organization(pid: str, patch_list: List[PatchDocument] = Body(...)):
     """Patches an organization within the space.
     """
     organization_service = OrganizationsService()

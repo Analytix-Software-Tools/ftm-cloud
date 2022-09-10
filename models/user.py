@@ -72,8 +72,17 @@ class UserProfile(UserResponse):
     class Config:
         schema_extra = {
             "example": {
+                "pid": "pid",
                 "firstName": "First",
                 "lastName": "Last",
                 "email": "user@user.com",
+                "imgUrl": "imgUrl",
+                "galleryPids": [],
+                "organizationPid": "organizationPid",
+                "privilegePid": "privilegePid",
+                "organization": {"organization"},
+                "privilege": {
+                    "privilege"
+                }
             }
         }

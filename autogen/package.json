@@ -1,11 +1,11 @@
 {
-  "name": "trax-api-client",
+  "name": "hourly-api-client",
   "version": "1.0.0",
-  "description": "A client for use with the Trax application.",
+  "description": "A client for use with the Hourly application.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "openapi-server-generate-client": "openapi-generator-cli generate -g javascript -i http://localhost:8080/openapi.json --output 'client/release' --skip-validate-spec --additional-properties=usePromises=true,projectVersion=1.0.0,projectName=trax-api-client"
+    "openapi-server-generate-client": "openapi-generator-cli generate -g javascript -i http://localhost:8080/openapi.json --output 'client/release' --skip-validate-spec --additional-properties=usePromises=true,projectVersion=1.0.0,projectName=hourly-api-client"
   },
   "keywords": [],
   "author": "",

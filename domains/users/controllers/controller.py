@@ -72,7 +72,7 @@ async def get_users(q: str | None = None, limit: int | None = None, offset: int 
         headers = {"X-Total-Count": str(await user_services.total(q=q))}
     return Respond(status_code=200,
                    response_type='success',
-                   model=User,
+                   model=UserResponse,
                    description="Users retrieved successfully.",
                    data=users,
                    headers=headers)

@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi import Body, APIRouter, HTTPException
 from passlib.context import CryptContext
 from pydantic.validators import List
@@ -62,6 +64,7 @@ async def patch_gallery(pid: str, patch_list: List[PatchDocument] = Body(...)):
     """Patches a gallery within the space.
     """
     gallery_service = GalleriesService()
+    patch_list.append(PatchDocument(op='add', path='/lastModified', value=datetime.datetime.now()))
     await gallery_service.patch(pid=pid, patch_document_list=patch_list)
     return Response(status_code=204, response_type='success', description="Gallery patched successfully.")
 

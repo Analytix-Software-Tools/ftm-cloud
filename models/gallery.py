@@ -1,3 +1,5 @@
+import datetime
+
 from pydantic.class_validators import Optional
 
 from models.document import BaseDocument
@@ -12,6 +14,7 @@ class Gallery(BaseDocument):
     imgUrl: str = ""
     userPids: list
     organizationPid: str
+    lastModified: datetime.datetime = datetime.datetime.now()
 
     class Collection:
         name = "galleries"

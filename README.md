@@ -4,6 +4,9 @@ and a service. Functions for each controller can be found by their corresponding
 controllers generally connect with services which manage the interaction with the database. 
 
 # Generating Client
+Generation of client files is supported through the use of OpenAPI generator, which analyzes the resulting spec as defined
+from your endpoints and spawns a client for use with any frontend application.
+
 If you need to generate a client, you can do so by running the following commands:
 
 ```console
@@ -15,6 +18,23 @@ $ npm pack
 
 This will generate a tarball that can be installed by transferring the tarball to the
 target directory and running npm install.
+
+# Test Cases
+Unit and integration testing is provided for each domain. Be sure to update and run unit tests prior to deployment to
+either dev or prod environments. To generate stubs for your test suite, you may run the following commands, starting
+from the root directory:
+
+```console
+$ cd autogen
+$ npm run openapi-server-generate-tests
+```
+
+This will generate function stubs which contain the logic of analyzing the responses and can be copied over to each
+respective domain. If you need to run all tests, run the command:
+
+```console
+$ python3 runtests --all
+```
 
 # FastAPI and MongoDB Boilerplate
 

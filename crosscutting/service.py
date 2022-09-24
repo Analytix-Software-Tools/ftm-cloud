@@ -99,7 +99,7 @@ class Service:
         """
         if len(patch_document_list) == 0:
             return
-        patch = JsonPatch(patch_document_list)
+        patch = JsonPatch(list(map(lambda x: x.dict(), patch_document_list)))
         patch_list = list(patch)
         for i in range(0, len(patch_list)):
             if patch_list[i]['path'] == '/_id' \
@@ -116,7 +116,7 @@ class Service:
             except ValidationError:
                 raise HTTPException(status_code=422, detail="Invalid patch")
             update_query = {"$set": {
-                field: value for field, value in new_doc.dict().items() if field is not "id"
+                field: value for field, value in new_doc.dict().items() if field != "id"
             }}
             await result.update(update_query)
         except JsonPatchException:

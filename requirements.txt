@@ -9,3 +9,5 @@ passlib~=1.7.4
 uuid
 jsonpatch
 beanie~=1.10.8
+pytest==6.2.5
+requests==2.25.1

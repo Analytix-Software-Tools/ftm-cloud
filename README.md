@@ -19,9 +19,9 @@ $ npm pack
 This will generate a tarball that can be installed by transferring the tarball to the
 target directory and running npm install.
 
-# Test Cases
-Unit and integration testing is provided for each domain. Be sure to update and run unit tests prior to deployment to
-either dev or prod environments. To generate stubs for your test suite, you may run the following commands, starting
+# Unit Testing
+Unit test suites are provided for each domain. Be sure to update and run unit tests prior to deployment to
+either dev or prod environments. To generate unit test stubs for your domains, you may run the following commands, starting
 from the root directory:
 
 ```console
@@ -29,8 +29,8 @@ $ cd autogen
 $ npm run openapi-server-generate-tests
 ```
 
-This will generate function stubs which contain the logic of analyzing the responses and can be copied over to each
-respective domain. If you need to run all tests, run the command:
+This will generate function stubs which contain the logic of analyzing the responses and automatically populate in each
+respective domain if one does not exist already. If you need to run all tests, run the command:
 
 ```console
 $ python3 runtests --all

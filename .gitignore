@@ -1,5 +1,6 @@
 autogen/client/release/
 autogen/node_modules/
+autogen/server
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

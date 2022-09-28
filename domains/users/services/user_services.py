@@ -11,6 +11,18 @@ class UserService(Service):
     def __init__(self):
         super(UserService, self).__init__(collection=User)
 
+    
+    async def patch_users_profile(self, pid, patch_document_list):
+        """Patches the user's own profile with information provided by them.
+        """
+
+        await self.validate_exists(pid=pid)
+        for document in patch_document_list:
+            if document.path == '/organizationPid' or document.path == '/privilegePid':
+                raise HTTPException(status_code=422, detail="Invalid patch")
+
+        return await self.patch(pid=pid, patch_document_list=patch_document_list)
+
     async def users_profile(self, pid) -> UserProfile:
         """Retrieves the user's full profile information by returning
         their profile, the organization they are in as well as the role.

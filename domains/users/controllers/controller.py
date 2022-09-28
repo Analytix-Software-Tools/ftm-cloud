@@ -106,3 +106,13 @@ async def users_profile(token: str = Depends(JWTBearer())):
     user_profile = await user_service.users_profile(pid=decoded_credentials['uid'])
     return Response(status_code=200, response_type="success", description="User profile retrieved.", data=[user_profile])
 
+
+@router.patch('/profile/modify', response_description="User profile successfully modified.",
+                response_model=Response)
+async def patch_users_profile(patch_list: List[PatchDocument], token: str = Depends(JWTBearer())):
+    user_service = UserService()
+    decoded_credentials = decode_jwt(token)
+    print(decoded_credentials)
+    await user_service.patch_users_profile(pid=decoded_credentials['uid'], patch_document_list=patch_list)
+    return Response(status_code=204, response_type="success", description="User profile modified.", data=[])
+

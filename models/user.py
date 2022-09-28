@@ -17,6 +17,13 @@ class User(BaseDocument):
     galleryPids: Optional[list[str]] = []
     organizationPid: str
     privilegePid: str = "2fe4b840-0a27-4b5f-98cd-e6080c228eec"
+    addressStreet1: str = ""
+    addressStreet2: str = ""
+    city: str = ""
+    state: str = ""
+    country: str = ""
+    zip: str = ""
+    phone: str = ""
     password: str
 
     class Collection:
@@ -33,6 +40,12 @@ class User(BaseDocument):
                 "isDeleted": "false",
                 "organizationPid": "organization",
                 "pid": "userPid",
+                "addressStreet1": "1 Test Avenue",
+                "addressStreet2": "",
+                "city": "Testville",
+                "state": "VT",
+                "country": "USA",
+                "phone": "(856) 123-4567",
                 "createdAt": "2022-03-17T00:54:43.924+00:00"
             }
         }

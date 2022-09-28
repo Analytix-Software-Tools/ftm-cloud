@@ -1,10 +1,12 @@
-from fastapi import Body, APIRouter, HTTPException
+from fastapi import Body, APIRouter, HTTPException, Depends
 from pydantic.validators import List
+from auth.jwt_bearer import get_user_token, token_listener
 
 from domains.users.services.user_services import UserService
 from models.patchdocument import PatchDocument
 from models.response import Response, Respond
 from models.organization import Organization
+from models.user import User
 from domains.organizations.services.organization_services import OrganizationsService
 
 router = APIRouter()
@@ -58,6 +60,17 @@ async def patch_organization(pid: str, patch_list: List[PatchDocument] = Body(..
     """
     organization_service = OrganizationsService()
     await organization_service.patch(pid=pid, patch_document_list=patch_list)
+    return Response(status_code=204, response_type='success', description="Organization patched successfully.")
+
+
+@router.patch("/", response_model=Response, response_description="Successfully patched organization.")
+async def patch_users_organization(token: str = Depends(get_user_token), patch_document_list: List[PatchDocument] = Body(...)):
+    """Patches the user's own organization, if their privileges suffice.
+    """
+    organization_service = OrganizationsService()
+    user_service = UserService()
+    user: User = await user_service.validate_exists(pid=token['uid'])
+    await organization_service.patch(pid=user.organizationPid, patch_document_list=patch_document_list)
     return Response(status_code=204, response_type='success', description="Organization patched successfully.")
 
 

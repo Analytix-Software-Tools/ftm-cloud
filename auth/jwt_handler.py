@@ -4,6 +4,7 @@ from typing import Dict
 import jwt
 
 from config.config import Settings
+from domains.organizations.services.organization_services import OrganizationsService
 from domains.privileges.services.privilege_services import PrivilegesService
 from models.user import User
 

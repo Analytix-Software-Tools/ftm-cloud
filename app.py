@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
 
-from auth.jwt_bearer import JWTBearer
+from auth.jwt_bearer import token_listener
 from config.config import initiate_database
 from domains.users.controllers.controller import router as user_router
 from domains.organizations.controllers.controller import router as organization_router
@@ -27,8 +27,6 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=['X-Total-Count']
 )
-
-token_listener = JWTBearer()
 
 
 @app.on_event("startup")

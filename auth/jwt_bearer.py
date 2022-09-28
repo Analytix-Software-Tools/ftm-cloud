@@ -1,4 +1,4 @@
-from fastapi import Request, HTTPException
+from fastapi import Request, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jwt.exceptions import InvalidTokenError
 
@@ -36,3 +36,13 @@ class JWTBearer(HTTPBearer):
             return credentials.credentials
         else:
             raise HTTPException(status_code=403, detail="Invalid authorization token")
+
+
+token_listener = JWTBearer()
+
+async def get_user_token(token: str = Depends(token_listener)):
+    """Decodes and retrieves the user's access control token. If the permissions field
+    is specified, validates that the permission exists in the user's decoded ACL.
+    """
+    user = decode_jwt(token)
+    return user

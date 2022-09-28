@@ -2,8 +2,8 @@ from fastapi import Body, APIRouter, HTTPException, Depends
 from passlib.context import CryptContext
 from pydantic.validators import List
 
-from auth.jwt_bearer import JWTBearer
-from auth.jwt_handler import sign_jwt, decode_jwt
+from auth.jwt_bearer import get_user_token
+from auth.jwt_handler import sign_jwt
 from models.patchdocument import PatchDocument
 from models.response import Response, LoginResponse, Respond
 from models.user import User, UserResponse, UserSignIn, UserProfile
@@ -98,21 +98,18 @@ async def delete_user(pid: str):
 
 @router.post('/profile', response_description="User profile successfully retrieved.",
              response_model=Response[UserProfile])
-async def users_profile(token: str = Depends(JWTBearer())):
+async def users_profile(token: str = Depends(get_user_token)):
     """Retrieves the current user's profile given their access token.
     """
-    decoded_credentials = decode_jwt(token)
     user_service = UserService()
-    user_profile = await user_service.users_profile(pid=decoded_credentials['uid'])
+    user_profile = await user_service.users_profile(pid=token['uid'])
     return Response(status_code=200, response_type="success", description="User profile retrieved.", data=[user_profile])
 
 
 @router.patch('/profile/modify', response_description="User profile successfully modified.",
                 response_model=Response)
-async def patch_users_profile(patch_list: List[PatchDocument], token: str = Depends(JWTBearer())):
+async def patch_users_profile(patch_list: List[PatchDocument], token: str = Depends(get_user_token)):
     user_service = UserService()
-    decoded_credentials = decode_jwt(token)
-    print(decoded_credentials)
-    await user_service.patch_users_profile(pid=decoded_credentials['uid'], patch_document_list=patch_list)
-    return Response(status_code=204, response_type="success", description="User profile modified.", data=[])
+    await user_service.patch_users_profile(pid=token['uid'], patch_document_list=patch_list)
+    return Response(status_code=204, response_type="success", description="User profile modified.")
 

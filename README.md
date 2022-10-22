@@ -1,7 +1,13 @@
 # Structure of the Cloud
 This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
-and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These
-controllers generally connect with services which manage the interaction with the database. 
+and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These controllers generally connect with services which manage the interaction with the database. 
+
+There are 2 Linux VMs that make up the FTM-Cloud with a host for both dev and prod, bringing this total to 4 Linux VMs. The VMs are:
+
+ftm-cloud-dev
+ftm-cloud-prod
+ftm-services-dev
+ftm-services-prod
 
 # Generating Client
 Generation of client files is supported through the use of OpenAPI generator, which analyzes the resulting spec as defined

@@ -4,6 +4,7 @@ from pydantic.validators import List
 
 from auth.jwt_bearer import get_user_token
 from auth.jwt_handler import sign_jwt
+from domains.privileges.services.privilege_services import PrivilegesService
 from models.patchdocument import PatchDocument
 from models.response import Response, LoginResponse, Respond
 from models.user import User, UserResponse, UserSignIn, UserProfile
@@ -46,6 +47,8 @@ async def signup_user(new_user: User = Body(...)):
         )
 
     user_services = UserService()
+    privilege_service = PrivilegesService()
+    await privilege_service.validate_exists(new_user.privilegePid)
     new_user.password = hash_helper.encrypt(new_user.password)
     new_user = await user_services.add_document(new_user)
     return new_user

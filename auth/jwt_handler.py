@@ -31,6 +31,7 @@ async def sign_jwt(user: User) -> Dict[str, str]:
     payload = {
         'uid': user.pid,
         'privilege': role.routes,
+        'privilegeName': role.name,
         'exp': now + 2400,
         'iat': now,
     }

@@ -57,8 +57,17 @@ class Service:
             query = json.loads(q)
         if additional_filters is not None:
             query = {**query, **additional_filters}
+        sort_criteria = []
+        if sort is not None:
+            sort_direction = sort[0]
+            sort_field = sort[1:]
+            if sort_direction == '^':
+                sort_direction = 1
+            elif sort_direction == '-':
+                sort_direction = -1
+            sort_criteria.append((sort_field, sort_direction))
         documents = await self.collection.find({"isDeleted": {"$ne": True}, **query}, limit=limit, skip=offset,
-                                               sort=sort).to_list()
+                                               sort=sort_criteria).to_list()
         return documents
 
     async def total(self, q=None, additional_filters=None):
@@ -85,6 +94,17 @@ class Service:
         if exists is None:
             raise HTTPException(status_code=404, detail=str(self.collection.__name__) + " not found.")
         return exists
+
+    async def validate_pids_in_list(self, pid_list: [str]):
+        """Validates multiple resource PIDs within one general list of PIDs.
+
+        :param pid_list: the list of pids
+        :return:
+        """
+        pid_list_len = len(pid_list)
+        if pid_list_len:
+            for i in range(0, pid_list_len):
+                await self.validate_exists(pid=pid_list[i])
 
     async def patch(self, pid: str, patch_document_list: list):
         """Patch the resource within the space by pid. Attempts to

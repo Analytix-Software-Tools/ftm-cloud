@@ -1,10 +1,11 @@
 from fastapi import Body, APIRouter, HTTPException, Depends
 from pydantic.validators import List
 from auth.jwt_bearer import get_user_token, token_listener
+from crosscutting.exception import default_exception_list
 
 from domains.users.services.user_services import UserService
 from models.patchdocument import PatchDocument
-from models.response import Response, Respond
+from models.response import Response, ResponseWithHttpInfo
 from models.organization import Organization
 from models.user import User
 from domains.organizations.services.organization_services import OrganizationsService
@@ -12,7 +13,8 @@ from domains.organizations.services.organization_services import OrganizationsSe
 router = APIRouter()
 
 
-@router.post("/", response_model=Organization, response_description="Successfully registered organization.")
+@router.post("/", response_model=Organization, response_description="Successfully registered organization.",
+             responses=default_exception_list)
 async def add_organization(new_organization: Organization = Body(...)):
     """Registers a new organization within the space.
     """
@@ -28,7 +30,8 @@ async def add_organization(new_organization: Organization = Body(...)):
     return new_organization
 
 
-@router.get("/", response_description="Organizations retrieved", response_model=Response[Organization])
+@router.get("/", response_description="Organizations retrieved", response_model=Response[Organization],
+            responses=default_exception_list)
 async def get_organizations(q: str | None = None, limit: int | None = None, offset: int | None = None,
                             sort: str | None = None, includeTotals: bool | None = None):
     """Gets all organizations using the user defined parameters.
@@ -38,13 +41,14 @@ async def get_organizations(q: str | None = None, limit: int | None = None, offs
     headers = {}
     if includeTotals is not None:
         headers = {"X-Total-Count": str(await organization_service.total(q))}
-    return Respond(data=organizations,
-                   model=Organization,
-                   description="Organizations retrieved successfully.",
-                   headers=headers)
+    return ResponseWithHttpInfo(data=organizations,
+                                model=Organization,
+                                description="Organizations retrieved successfully.",
+                                headers=headers)
 
 
-@router.get("/{pid}", response_description="Organization data retrieved", response_model=Response[Organization])
+@router.get("/{pid}", response_description="Organization data retrieved", response_model=Response[Organization],
+            responses=default_exception_list)
 async def get_organization(pid: str):
     """Retrieves an organization by ID.
     """
@@ -54,7 +58,8 @@ async def get_organization(pid: str):
                     data=[organization])
 
 
-@router.patch("/{pid}", response_model=Response, response_description="Successfully patched organization.")
+@router.patch("/{pid}", response_model=Response, response_description="Successfully patched organization.",
+              responses=default_exception_list)
 async def patch_organization(pid: str, patch_list: List[PatchDocument] = Body(...)):
     """Patches an organization within the space.
     """
@@ -63,7 +68,8 @@ async def patch_organization(pid: str, patch_list: List[PatchDocument] = Body(..
     return Response(status_code=204, response_type='success', description="Organization patched successfully.")
 
 
-@router.patch("/", response_model=Response, response_description="Successfully patched organization.")
+@router.patch("/", response_model=Response, response_description="Successfully patched organization.",
+              responses=default_exception_list)
 async def patch_users_organization(token: str = Depends(get_user_token), patch_document_list: List[PatchDocument] = Body(...)):
     """Patches the user's own organization, if their privileges suffice.
     """
@@ -74,7 +80,8 @@ async def patch_users_organization(token: str = Depends(get_user_token), patch_d
     return Response(status_code=204, response_type='success', description="Organization patched successfully.")
 
 
-@router.delete("/{pid}", response_description="Organization successfully deleted.", response_model=Response)
+@router.delete("/{pid}", response_description="Organization successfully deleted.", response_model=Response,
+               responses=default_exception_list)
 async def delete_organization(pid: str):
     """Deletes a user.
     """

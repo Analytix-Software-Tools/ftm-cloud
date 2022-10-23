@@ -9,7 +9,7 @@ from domains.organizations.services.organization_services import OrganizationsSe
 from domains.users.services.user_services import UserService
 from models.gallery import Gallery
 from models.patchdocument import PatchDocument
-from models.response import Response, Respond
+from models.response import Response, ResponseWithHttpInfo
 
 router = APIRouter()
 
@@ -48,12 +48,12 @@ async def get_galleries(q: str | None = None, limit: int | None = None, offset: 
     headers = {}
     if includeTotals is not None:
         headers = {"X-Total-Count": str(await gallery_service.total(q=q))}
-    return Respond(status_code=200,
-                   response_type='success',
-                   model=Gallery,
-                   description="Users retrieved successfully.",
-                   data=galleries,
-                   headers=headers)
+    return ResponseWithHttpInfo(status_code=200,
+                                response_type='success',
+                                model=Gallery,
+                                description="Users retrieved successfully.",
+                                data=galleries,
+                                headers=headers)
 
 
 @router.get("/{pid}", response_description="Gallery data retrieved", response_model=Response[Gallery])

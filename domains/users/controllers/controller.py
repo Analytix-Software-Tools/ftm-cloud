@@ -4,9 +4,10 @@ from pydantic.validators import List
 
 from auth.jwt_bearer import get_user_token
 from auth.jwt_handler import sign_jwt
+from crosscutting.exception import default_exception_list
 from domains.privileges.services.privilege_services import PrivilegesService
 from models.patchdocument import PatchDocument
-from models.response import Response, LoginResponse, Respond
+from models.response import Response, LoginResponse, ResponseWithHttpInfo
 from models.user import User, UserResponse, UserSignIn, UserProfile
 from domains.users.services.user_services import UserService
 
@@ -15,7 +16,7 @@ router = APIRouter()
 hash_helper = CryptContext(schemes=["bcrypt"])
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post("/login", response_model=LoginResponse, responses=default_exception_list)
 async def login_user(credentials: UserSignIn = Body(...)):
     user_exists = await User.find_one(User.email == credentials.email)
     if user_exists:
@@ -25,17 +26,18 @@ async def login_user(credentials: UserSignIn = Body(...)):
             return await sign_jwt(user_exists)
 
         raise HTTPException(
-            status_code=403,
+            status_code=401,
             detail="Invalid username or password specified!"
         )
 
     raise HTTPException(
-        status_code=403,
+        status_code=401,
         detail="Invalid username or password specified!"
     )
 
 
-@router.post("/", response_model=UserResponse, response_description="Successfully registered user.")
+@router.post("/", response_model=UserResponse, response_description="Successfully registered user.",
+             responses=default_exception_list)
 async def signup_user(new_user: User = Body(...)):
     """Registers a new user within the space.
     """
@@ -54,7 +56,8 @@ async def signup_user(new_user: User = Body(...)):
     return new_user
 
 
-@router.patch("/{pid}", response_model=Response, response_description="Successfully patched user.")
+@router.patch("/{pid}", response_model=Response, response_description="Successfully patched user.",
+              responses=default_exception_list)
 async def patch_user(pid: str, patch_list: List[PatchDocument] = Body(...)):
     """Patches a user within the space.
     """
@@ -63,7 +66,8 @@ async def patch_user(pid: str, patch_list: List[PatchDocument] = Body(...)):
     return Response(status_code=204, response_type='success', description="User patched successfully.")
 
 
-@router.get("/", response_description="Users retrieved", response_model=Response[UserResponse])
+@router.get("/", response_description="Users retrieved", response_model=Response[UserResponse],
+            responses=default_exception_list)
 async def get_users(q: str | None = None, limit: int | None = None, offset: int | None = None, sort: str | None = None,
                     includeTotals: bool | None = None):
     """Gets all users using the user defined parameters.
@@ -73,15 +77,16 @@ async def get_users(q: str | None = None, limit: int | None = None, offset: int 
     headers = {}
     if includeTotals is not None:
         headers = {"X-Total-Count": str(await user_services.total(q=q))}
-    return Respond(status_code=200,
-                   response_type='success',
-                   model=UserResponse,
-                   description="Users retrieved successfully.",
-                   data=users,
-                   headers=headers)
+    return ResponseWithHttpInfo(status_code=200,
+                                response_type='success',
+                                model=UserResponse,
+                                description="Users retrieved successfully.",
+                                data=users,
+                                headers=headers)
 
 
-@router.get("/{pid}", response_description="User data retrieved", response_model=Response[UserResponse])
+@router.get("/{pid}", response_description="User data retrieved", response_model=Response[UserResponse],
+            responses=default_exception_list)
 async def get_user(pid: str):
     """Retrieves a user by ID.
     """
@@ -90,7 +95,8 @@ async def get_user(pid: str):
     return Response(status_code=200, response_type='success', description='User retrieved.', data=[user])
 
 
-@router.delete("/{pid}", response_description="User successfully deleted.", response_model=Response)
+@router.delete("/{pid}", response_description="User successfully deleted.", response_model=Response,
+               responses=default_exception_list)
 async def delete_user(pid: str):
     """Deletes a user.
     """
@@ -100,19 +106,19 @@ async def delete_user(pid: str):
 
 
 @router.post('/profile', response_description="User profile successfully retrieved.",
-             response_model=Response[UserProfile])
+             response_model=Response[UserProfile], responses=default_exception_list)
 async def users_profile(token: str = Depends(get_user_token)):
     """Retrieves the current user's profile given their access token.
     """
     user_service = UserService()
     user_profile = await user_service.users_profile(pid=token['uid'])
-    return Response(status_code=200, response_type="success", description="User profile retrieved.", data=[user_profile])
+    return Response(status_code=200, response_type="success", description="User profile retrieved.",
+                    data=[user_profile])
 
 
 @router.patch('/profile/modify', response_description="User profile successfully modified.",
-                response_model=Response)
+              response_model=Response, responses=default_exception_list)
 async def patch_users_profile(patch_list: List[PatchDocument], token: str = Depends(get_user_token)):
     user_service = UserService()
     await user_service.patch_users_profile(pid=token['uid'], patch_document_list=patch_list)
     return Response(status_code=204, response_type="success", description="User profile modified.")
-

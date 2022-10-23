@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from models.privilege import Privilege
-from models.response import Response, Respond
+from models.response import Response, ResponseWithHttpInfo
 from domains.privileges.services.privilege_services import PrivilegesService
 
 router = APIRouter()
@@ -26,9 +26,9 @@ async def get_privileges(q: str | None = None, limit: int | None = None, offset:
     headers = {}
     if includeTotals is not None:
         headers = {"X-Total-Count": str(await privilege_service.total(q=q))}
-    return Respond(status_code=200,
-                   response_type='success',
-                   model=Privilege,
-                   description="Privileges retrieved successfully.",
-                   data=privileges,
-                   headers=headers)
+    return ResponseWithHttpInfo(status_code=200,
+                                response_type='success',
+                                model=Privilege,
+                                description="Privileges retrieved successfully.",
+                                data=privileges,
+                                headers=headers)

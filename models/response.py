@@ -49,7 +49,7 @@ class LoginResponse(BaseModel):
         }
 
 
-class Respond(JSONResponse, Generic[DataT]):
+class ResponseWithHttpInfo(JSONResponse, Generic[DataT]):
     """Wraps the raw response model to allow fields such as the headers to be set. Ensures that data in the response
     model aligns with the taxonomy of the designated model.
 

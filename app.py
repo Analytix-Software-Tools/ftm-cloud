@@ -6,6 +6,7 @@ from domains.users.controllers.controller import router as user_router
 from domains.organizations.controllers.controller import router as organization_router
 from domains.galleries.controllers.controller import router as gallery_router
 from domains.privileges.controllers.controller import router as privilege_router
+from domains.industries.controllers.controller import router as industry_router
 from domains.student import router as student_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
@@ -15,7 +16,12 @@ def custom_generate_unique_id(route: APIRoute):
     return f"{route.name}"
 
 
-app = FastAPI(generate_unique_id_function=custom_generate_unique_id)
+app = FastAPI(
+    title="FTMCloud",
+    description="Advanced cost solution and analytics API.",
+    version="1.0.0",
+    generate_unique_id_function=custom_generate_unique_id
+)
 
 origins = ["*"]
 
@@ -46,4 +52,6 @@ app.include_router(student_router, tags=["Students"], prefix="/api/v0/student", 
 app.include_router(gallery_router, tags=['Galleries'], prefix='/api/v0/galleries',
                    dependencies=[Depends(token_listener)])
 app.include_router(privilege_router, tags=['Privileges'], prefix='/api/v0/privileges',
+                   dependencies=[Depends(token_listener)])
+app.include_router(industry_router, tags=['Industries'], prefix='/api/v0/industries',
                    dependencies=[Depends(token_listener)])

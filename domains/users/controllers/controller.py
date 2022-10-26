@@ -6,6 +6,7 @@ from auth.jwt_bearer import get_user_token
 from auth.jwt_handler import sign_jwt
 from crosscutting.exception import default_exception_list
 from domains.privileges.services.privilege_services import PrivilegesService
+from domains.organizations.services.organization_services import OrganizationsService
 from models.patchdocument import PatchDocument
 from models.response import Response, LoginResponse, ResponseWithHttpInfo
 from models.user import User, UserResponse, UserSignIn, UserProfile
@@ -41,7 +42,7 @@ async def login_user(credentials: UserSignIn = Body(...)):
 async def signup_user(new_user: User = Body(...)):
     """Registers a new user within the space.
     """
-    user_exists = await User.find_one(User.email == new_user.email)
+    user_exists = await User.find_one(User.email == new_user.email, {"isDeleted": {"$ne": True}})
     if user_exists:
         raise HTTPException(
             status_code=409,
@@ -50,7 +51,9 @@ async def signup_user(new_user: User = Body(...)):
 
     user_services = UserService()
     privilege_service = PrivilegesService()
+    organization_service = OrganizationsService()
     await privilege_service.validate_exists(new_user.privilegePid)
+    await organization_service.validate_exists(pid=new_user.organizationPid)
     new_user.password = hash_helper.encrypt(new_user.password)
     new_user = await user_services.add_document(new_user)
     return new_user

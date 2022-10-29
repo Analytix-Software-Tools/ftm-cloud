@@ -17,14 +17,13 @@ router = APIRouter()
 async def add_industry(new_industry: Industry = Body(...)):
     """Registers a new industry within the space.
     """
-    industry_exists = await Industry.find_one(Industry.name == new_industry.name)
+    industry_service = IndustriesService()
+    industry_exists = await industry_service.find_one({"name": new_industry.name})
     if industry_exists:
         raise HTTPException(
             status_code=409,
             detail="An industry already exists by that name."
         )
-
-    industry_service = IndustriesService()
     await industry_service.add_document(new_industry)
     return new_industry
 
@@ -78,7 +77,7 @@ async def delete_industry(pid: str):
     if len(organizations) > 0:
         message = "Please remove or de-associate the following organizations before deletion: "
         for i in range(0, len(organizations)):
-            message += organizations[i]['name']
+            message += organizations[i].name
         raise HTTPException(status_code=409, detail=message)
     await indusry_service.delete_document(pid=pid)
     return Response(status_code=200, response_type="success", description="Industry deleted.")

@@ -19,22 +19,10 @@ hash_helper = CryptContext(schemes=["bcrypt"])
 
 @router.post("/login", response_model=LoginResponse, responses=default_exception_list)
 async def login_user(credentials: UserSignIn = Body(...)):
-    user_exists = await User.find_one(User.email == credentials.email)
-    if user_exists:
-        password = hash_helper.verify(
-            credentials.password, user_exists.password)
-        if password:
-            return await sign_jwt(user_exists)
-
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid username or password specified!"
-        )
-
-    raise HTTPException(
-        status_code=401,
-        detail="Invalid username or password specified!"
-    )
+    """Signs a user in using their provided credentials.
+    """
+    user_service = UserService()
+    return await user_service.login_user(credentials=credentials)
 
 
 @router.post("/", response_model=UserResponse, response_description="Successfully registered user.",

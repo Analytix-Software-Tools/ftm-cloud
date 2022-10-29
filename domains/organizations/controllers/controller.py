@@ -18,14 +18,13 @@ router = APIRouter()
 async def add_organization(new_organization: Organization = Body(...)):
     """Registers a new organization within the space.
     """
-    organization_exists = await Organization.find_one(Organization.name == new_organization.name)
+    organization_services = OrganizationsService()
+    organization_exists = await organization_services.find_one({"name": new_organization.name})
     if organization_exists:
         raise HTTPException(
             status_code=409,
             detail="An organization already exists by that name."
         )
-
-    organization_services = OrganizationsService()
     await organization_services.add_document(new_organization)
     return new_organization
 

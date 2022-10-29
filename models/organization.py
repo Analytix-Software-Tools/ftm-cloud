@@ -9,6 +9,7 @@ class Organization(BaseDocument):
     pid: Optional[str]
     name: str
     description: str
+    logoUrl: str = ""
     imgUrl: str = ""
     imgUrl2: str = ""
     addressStreet: str = ""

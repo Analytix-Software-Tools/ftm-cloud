@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from fastapi import HTTPException
@@ -26,9 +27,8 @@ class Service:
         :param q:
         :return:
         """
-        exists = self.collection.find_one(q)
-        if exists is None:
-            raise HTTPException(status_code=404, detail="Resource not found")
+        exists = await self.collection.find_one({"isDeleted": {"$ne": True}, **q})
+        return exists
 
     async def add_document(self, new_document):
         """Adds a specified document.
@@ -39,6 +39,7 @@ class Service:
         """
         new_pid = str(uuid.uuid4())
         new_document.pid = new_pid
+        new_document.createdAt = datetime.datetime.now()
         document = await new_document.create()
         return document
 
@@ -82,7 +83,7 @@ class Service:
             query = json.loads(q)
         if additional_filters is not None:
             query = {**query, **additional_filters}
-        return await self.collection.find(query).count()
+        return await self.collection.find(query, {"isDeleted": {"$ne": True}}).count()
 
     async def validate_exists(self, pid: str):
         """Validate the document exists.

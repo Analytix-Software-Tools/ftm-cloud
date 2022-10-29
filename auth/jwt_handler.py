@@ -6,21 +6,16 @@ import jwt
 from config.config import Settings
 from domains.organizations.services.organization_services import OrganizationsService
 from domains.privileges.services.privilege_services import PrivilegesService
+from models.response import LoginResponse
 from models.user import User
-
-
-def token_response(token: str, user: User):
-    return {
-        "accessToken": token,
-        "user": user
-    }
 
 
 secret_key = Settings().secret_key
 
 
-async def sign_jwt(user: User) -> Dict[str, str]:
-    """Sign the JWT given the specified user.
+async def sign_jwt(user: User) -> LoginResponse:
+    """Sign the JWT given the specified user. Returns a response
+    containing the user's signed access token.
 
     :param user:
     :return:
@@ -35,7 +30,10 @@ async def sign_jwt(user: User) -> Dict[str, str]:
         'exp': now + 2400,
         'iat': now,
     }
-    return token_response(jwt.encode(payload, secret_key, algorithm="HS256"), user=user)
+
+    signed_jwt = jwt.encode(payload, secret_key, algorithm="HS256")
+
+    return LoginResponse(accessToken=signed_jwt)
 
 
 def decode_jwt(token: str) -> dict:

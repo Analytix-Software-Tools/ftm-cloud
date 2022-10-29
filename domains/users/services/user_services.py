@@ -1,7 +1,9 @@
 from fastapi import HTTPException
 
+from auth.jwt_handler import sign_jwt
 from crosscutting.service import Service
-from models.user import User, UserProfile
+from passlib.context import CryptContext
+from models.user import User, UserProfile, UserSignIn
 
 user_collection = User
 
@@ -11,7 +13,6 @@ class UserService(Service):
     def __init__(self):
         super(UserService, self).__init__(collection=User)
 
-    
     async def patch_users_profile(self, pid, patch_document_list):
         """Patches the user's own profile with information provided by them.
         """
@@ -22,6 +23,30 @@ class UserService(Service):
                 raise HTTPException(status_code=422, detail="Invalid patch")
 
         return await self.patch(pid=pid, patch_document_list=patch_document_list)
+
+    async def login_user(self, credentials: UserSignIn):
+        """Signs a user in using the specified credentials.
+
+        :param credentials: represents the user's credentials
+        :return: a LoginResponse containing a signed access token
+        """
+        user_exists = await self.collection.find_one(User.email == credentials.email)
+        hash_helper = CryptContext(schemes=["bcrypt"])
+        if user_exists:
+            password = hash_helper.verify(
+                credentials.password, user_exists.password)
+            if password:
+                return await sign_jwt(user_exists)
+
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid username or password specified!"
+            )
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid username or password specified!"
+        )
 
     async def users_profile(self, pid) -> UserProfile:
         """Retrieves the user's full profile information by returning

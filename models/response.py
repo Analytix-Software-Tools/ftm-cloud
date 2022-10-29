@@ -36,15 +36,11 @@ class Response(GenericModel, Generic[DataT]):
 
 class LoginResponse(BaseModel):
     accessToken: str
-    user: User
 
     class Config:
         schema_extra = {
             "example": {
                 "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIwN2Y5MTVmNC1hNTBmLTRhM2UtODJkNi0yMzBmMzZhZTM3YjQiLCJwcml2aWxlZ2UiOlsiZ2FsbGVyaWVzOmdldCIsInV…",
-                "user": {
-                    "userFields"
-                },
             }
         }
 

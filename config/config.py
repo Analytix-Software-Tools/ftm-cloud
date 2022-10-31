@@ -14,7 +14,7 @@ from models.student import Student
 
 class Settings(BaseSettings):
     # database configurations
-    DATABASE_URL: Optional[str] = 'mongodb://localhost/'
+    DATABASE_URL: Optional[str] = 'mongodb+srv://admin:eky0PQyN3cd71WwY@cluster0.illqh.mongodb.net'
     MAX_QUERY_LIMIT: int = 100
 
     # JWT

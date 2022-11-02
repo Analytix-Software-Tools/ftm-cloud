@@ -3,18 +3,19 @@ version: "3"
 services:
   web:
     build: .
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
     ports:
       - "8080:8080"
-    env_file:
-      - .env
 
   mongodb:
-    image: bitnami/mongodb:latest
+    image: mongo:5.0
     ports:
-      - "27017"
+      - 27017:27017
     volumes:
-      - data:/bitnami/mongodb
-
+      - ~/apps/mongo:/data/db
 
 volumes:
   data:

@@ -2,12 +2,22 @@
 This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
 and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These controllers generally connect with services which manage the interaction with the database. 
 
-There are 2 Linux VMs that make up the FTM-Cloud with a host for both dev and prod, bringing this total to 4 Linux VMs. The VMs are:
+There are 3 services, that make up the FTM-Cloud prod environment - 2 hosted on Linux VMs, one Atlas instance. The services are:
 
-ftm-cloud-dev
 ftm-cloud-prod
-ftm-services-dev
 ftm-services-prod
+ftm-cloud-mongo-prod
+
+# Development Environment
+A development environment can easily be setup for non-production or prod-like environments at any time by running
+the command
+
+```commandline
+docker compose up -d
+```
+
+This will build images for the ftm-cloud, the ftm-cloud-mongo, and the ftm-services application and run a containerized
+version of the micro services environment.
 
 # Generating Client
 Generation of client files is supported through the use of OpenAPI generator, which analyzes the resulting spec as defined

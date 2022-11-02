@@ -2,6 +2,10 @@ autogen/client/release/
 autogen/client/typescript
 autogen/node_modules/
 autogen/server
+
+.pytest_cache/
+.fleet/
+.vscode/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

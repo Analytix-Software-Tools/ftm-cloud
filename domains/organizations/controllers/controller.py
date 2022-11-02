@@ -74,7 +74,7 @@ async def patch_users_organization(token: str = Depends(get_user_token), patch_d
     """
     organization_service = OrganizationsService()
     user_service = UserService()
-    user: User = await user_service.validate_exists(pid=token['uid'])
+    user: User = await user_service.validate_exists(pid=token['sub'])
     await organization_service.patch(pid=user.organizationPid, patch_document_list=patch_document_list)
     return Response(status_code=204, response_type='success', description="Organization patched successfully.")
 

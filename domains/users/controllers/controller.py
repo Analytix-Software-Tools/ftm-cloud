@@ -102,7 +102,7 @@ async def users_profile(token: str = Depends(get_user_token)):
     """Retrieves the current user's profile given their access token.
     """
     user_service = UserService()
-    user_profile = await user_service.users_profile(pid=token['uid'])
+    user_profile = await user_service.users_profile(pid=token['sub'])
     return Response(status_code=200, response_type="success", description="User profile retrieved.",
                     data=[user_profile])
 
@@ -111,5 +111,5 @@ async def users_profile(token: str = Depends(get_user_token)):
               response_model=Response, responses=default_exception_list)
 async def patch_users_profile(patch_list: List[PatchDocument], token: str = Depends(get_user_token)):
     user_service = UserService()
-    await user_service.patch_users_profile(pid=token['uid'], patch_document_list=patch_list)
+    await user_service.patch_users_profile(pid=token['sub'], patch_document_list=patch_list)
     return Response(status_code=204, response_type="success", description="User profile modified.")

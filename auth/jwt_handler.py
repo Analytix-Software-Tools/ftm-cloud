@@ -4,7 +4,6 @@ from typing import Dict
 import jwt
 
 from config.config import Settings
-from domains.organizations.services.organization_services import OrganizationsService
 from domains.privileges.services.privilege_services import PrivilegesService
 from models.response import LoginResponse
 from models.user import User
@@ -24,11 +23,13 @@ async def sign_jwt(user: User) -> LoginResponse:
     role = await PrivilegesService().validate_exists(pid=user.privilegePid)
 
     payload = {
-        'uid': user.pid,
-        'privilege': role.routes,
-        'privilegeName': role.name,
+        'iss': 'com.analytics.ftmcloud',
+        'sub': user.pid,
         'exp': now + 2400,
         'iat': now,
+        'permissions': role.permissions,
+        'privilegeName': role.name,
+        'orgPid': user.organizationPid
     }
 
     signed_jwt = jwt.encode(payload, secret_key, algorithm="HS256")

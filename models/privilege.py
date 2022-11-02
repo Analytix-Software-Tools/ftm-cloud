@@ -9,7 +9,7 @@ class Privilege(Document):
     pid: str
     name: str
     description: Optional[str]
-    routes: list
+    permissions: list
 
     class Collection:
         name = "privileges"
@@ -19,7 +19,7 @@ class Privilege(Document):
             "example": {
                 "name": "Privilege",
                 "description": "User privilege",
-                "routes": [],
+                "permissions": [],
                 "createdAt": "2022-03-17T00:54:43.924+00:00"
             }
         }

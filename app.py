@@ -4,7 +4,6 @@ from auth.jwt_bearer import token_listener
 from config.config import initiate_database
 from domains.users.controllers.controller import router as user_router
 from domains.organizations.controllers.controller import router as organization_router
-from domains.galleries.controllers.controller import router as gallery_router
 from domains.privileges.controllers.controller import router as privilege_router
 from domains.industries.controllers.controller import router as industry_router
 from fastapi.middleware.cors import CORSMiddleware
@@ -47,8 +46,6 @@ async def read_root():
 app.include_router(organization_router, tags=['Organizations'], prefix='/api/v0/organizations',
                    dependencies=[Depends(token_listener)])
 app.include_router(user_router, tags=["Users"], prefix="/api/v0/users")
-app.include_router(gallery_router, tags=['Galleries'], prefix='/api/v0/galleries',
-                   dependencies=[Depends(token_listener)])
 app.include_router(privilege_router, tags=['Privileges'], prefix='/api/v0/privileges',
                    dependencies=[Depends(token_listener)])
 app.include_router(industry_router, tags=['Industries'], prefix='/api/v0/industries',

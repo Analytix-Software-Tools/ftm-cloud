@@ -6,7 +6,7 @@ from .jwt_handler import decode_jwt
 
 
 def verify_jwt(jwtoken: str) -> bool:
-    isTokenValid: bool = False
+    is_token_valid: bool = False
 
     try:
         payload = decode_jwt(jwtoken)
@@ -14,8 +14,8 @@ def verify_jwt(jwtoken: str) -> bool:
         raise HTTPException(status_code=401, detail="Access token is expired or invalid. Please re-authenticate.")
 
     if payload:
-        isTokenValid = True
-    return isTokenValid
+        is_token_valid = True
+    return is_token_valid
 
 
 class JWTBearer(HTTPBearer):
@@ -28,17 +28,20 @@ class JWTBearer(HTTPBearer):
         print("Credentials :", credentials)
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise HTTPException(status_code=403, detail="Invalid authentication token")
+                raise HTTPException(status_code=403, detail="Bad authentication method. Must be of type 'Bearer'!")
 
             if not verify_jwt(credentials.credentials):
-                raise HTTPException(status_code=403, detail="Invalid token or expired token")
+                raise HTTPException(status_code=403, detail="Access token integrity is invalid!")
+
+            await init_controller(credentials.credentials, request)
 
             return credentials.credentials
         else:
-            raise HTTPException(status_code=403, detail="Invalid authorization token")
+            raise HTTPException(status_code=403, detail="Invalid authorization token!")
 
 
 token_listener = JWTBearer()
+
 
 async def get_user_token(token: str = Depends(token_listener)):
     """Decodes and retrieves the user's access control token. If the permissions field
@@ -46,3 +49,19 @@ async def get_user_token(token: str = Depends(token_listener)):
     """
     user = decode_jwt(token)
     return user
+
+
+async def init_controller(token: str, request: Request):
+    """Initializes the controller by first decoding the user's access token,
+    then parsing out their access control and verifying whether they have
+    permission to perform the operation given their role.
+
+    :param token: represents the token
+    :param request: represents the request
+    :return: None
+    """
+    user = decode_jwt(token)
+    acl_list = user['permissions']
+    route_path = request.method + ':' + str(request.url).replace(f'{str(request.base_url)}api/v0/', '').split('/')[0]
+    if route_path not in acl_list:
+        raise HTTPException(status_code=401, detail="You do not have permission to perform this operation.")

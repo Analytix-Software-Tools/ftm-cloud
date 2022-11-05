@@ -12,7 +12,7 @@ class BaseDocument(Document):
     """A model that wraps database objects to store universal fields."""
 
     # id: PydanticObjectId = Field(..., exclude=True)
-    createdAt: Optional[datetime.datetime] = Field(default=datetime.datetime.now())
+    createdAt: Optional[datetime.datetime] = Field(default=datetime.datetime.now(), exclude=True)
     isDeleted: SecretBytes = Field(default=False, exclude=True)
 
     class Config:

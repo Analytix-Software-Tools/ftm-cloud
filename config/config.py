@@ -7,6 +7,7 @@ from pydantic import BaseSettings
 from models.organization import Organization
 from models.industry import Industry
 from models.privilege import Privilege
+from models.service_classifications import ServiceClassification
 from models.user import User
 from models.student import Student
 
@@ -29,4 +30,4 @@ class Settings(BaseSettings):
 async def initiate_database():
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.memorymaker,
-                      document_models=[User, Student, Privilege, Organization, Industry])
+                      document_models=[User, Student, Privilege, Organization, Industry, ServiceClassification])

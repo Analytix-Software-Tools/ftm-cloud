@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 from crosscutting.service import Service
-from models.service_classifications import ServiceClassification
+from models.service_classification import ServiceClassification
 
 
 class ServiceClassificationsService(Service):

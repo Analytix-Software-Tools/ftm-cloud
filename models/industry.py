@@ -9,7 +9,7 @@ class Industry(BaseDocument):
     pid: Optional[str]
     name: str
     description: str
-    naicsCode: int = ""
+    naicsCode: int | None = None
 
     class Collection:
         name = "industries"

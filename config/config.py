@@ -4,10 +4,12 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseSettings
 
+from models.attribute import Attribute
 from models.organization import Organization
 from models.industry import Industry
 from models.privilege import Privilege
-from models.service_classifications import ServiceClassification
+from models.service import Service
+from models.service_classification import ServiceClassification
 from models.user import User
 from models.student import Student
 
@@ -30,4 +32,5 @@ class Settings(BaseSettings):
 async def initiate_database():
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.memorymaker,
-                      document_models=[User, Student, Privilege, Organization, Industry, ServiceClassification])
+                      document_models=[User, Student, Privilege, Organization, Industry, ServiceClassification, Service,
+                                       Attribute])

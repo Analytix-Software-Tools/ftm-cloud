@@ -6,7 +6,7 @@ from domains.service_classifications.services.service_classification_services im
 
 from models.patchdocument import PatchDocument
 from models.response import Response, ResponseWithHttpInfo
-from models.service_classifications import ServiceClassification
+from models.service_classification import ServiceClassification
 
 router = APIRouter()
 

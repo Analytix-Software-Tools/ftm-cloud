@@ -7,6 +7,8 @@ from domains.organizations.controllers.controller import router as organization_
 from domains.privileges.controllers.controller import router as privilege_router
 from domains.industries.controllers.controller import router as industry_router
 from domains.service_classifications.controllers.controller import router as service_classification_router
+from domains.attributes.controllers.controller import router as attribute_router
+from domains.services.controllers.controller import router as service_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 
@@ -52,4 +54,8 @@ app.include_router(privilege_router, tags=['Privileges'], prefix='/api/v0/privil
 app.include_router(industry_router, tags=['Industries'], prefix='/api/v0/industries',
                    dependencies=[Depends(token_listener)])
 app.include_router(service_classification_router, tags=['ServiceClassifications'], prefix='/api/v0/service_classifications',
+                   dependencies=[Depends(token_listener)])
+app.include_router(attribute_router, tags=['Attributes'], prefix='/api/v0/attributes',
+                   dependencies=[Depends(token_listener)])
+app.include_router(service_router, tags=['Services'], prefix='/api/v0/services',
                    dependencies=[Depends(token_listener)])

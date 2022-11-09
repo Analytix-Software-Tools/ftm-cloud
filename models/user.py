@@ -14,7 +14,6 @@ class User(BaseDocument):
     lastName: str
     imgUrl: str = ""
     email: EmailStr
-    galleryPids: Optional[list[str]] = []
     organizationPid: str
     privilegePid: str = "2fe4b840-0a27-4b5f-98cd-e6080c228eec"
     addressStreet1: str = ""

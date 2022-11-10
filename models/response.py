@@ -4,9 +4,6 @@ from pydantic.generics import GenericModel
 from pydantic.main import BaseModel
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from pydantic import parse_obj_as
-
-from models.user import User
 
 DataT = TypeVar('DataT')
 

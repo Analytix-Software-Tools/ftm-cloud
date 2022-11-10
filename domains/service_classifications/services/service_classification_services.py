@@ -2,6 +2,7 @@ from fastapi import HTTPException
 
 from crosscutting.service import Service
 from models.service_classification import ServiceClassification
+from models.service import Service as ServiceModel
 
 
 class ServiceClassificationsService(Service):
@@ -33,4 +34,13 @@ class ServiceClassificationsService(Service):
                     {"pid": patch_document_list[i].value, "isDeleted": {"$ne": "true"}})
                 if exists is None:
                     raise HTTPException(status_code=404, detail="Service classification not found.")
-        await super(ServiceClassificationsService, self).patch(pid=pid, patch_document_list=patch_document_list)
+        return await super(ServiceClassificationsService, self).patch(pid=pid, patch_document_list=patch_document_list)
+
+    async def delete_document(self, pid: str):
+        services = await ServiceModel.find_one({"serviceClassificationPid": pid})
+        if services is not None:
+            raise HTTPException(
+                status_code=409,
+                detail="Please remove or de-associate all services associated with this service classification."
+            )
+        return await super(ServiceClassificationsService, self).delete_document(pid=pid)

@@ -1,10 +1,12 @@
 from fastapi import HTTPException
+from pydantic.error_wrappers import ValidationError
 
 from crosscutting.service import Service
 from models.patchdocument import PatchDocument
 from models.service_classification import ServiceClassification
 from models.service import Service as ServiceModel
-from models.attribute import Attribute
+from models.attribute import Attribute, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, \
+    AttributeValue
 
 
 class ServicesService(Service):
@@ -28,27 +30,56 @@ class ServicesService(Service):
                     status_code=404,
                     detail="Service classification not found."
                 )
-        for i in range(0, len(new_service.attributeValues)):
-            attribute_exists = await Attribute.find_one({"pid": new_service.attributeValues[i].attributePid})
-            if attribute_exists is None:
+        await self.validate_attribute_values_in_service(attribute_values=new_service.attributeValues)
+        return await super(ServicesService, self).add_document(new_document=new_service)
+
+    async def validate_attribute_values_in_service(self, attribute_values: list[AttributeValue]):
+        """Validates the attribute values within the specified service. Ensures
+        that the attribute value's value matches what is specified in the attribute and
+        that, if applicable, the value is set to a valid dropdown option.
+
+        :param attribute_values:
+        :return: None
+        """
+        for i in range(0, len(attribute_values)):
+            attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid})
+            if attribute is None:
                 raise HTTPException(
                     status_code=404,
                     detail=f"Attribute not found. attributeValues[{i}].attributePid"
                 )
-        return await super(ServicesService, self).add_document(new_document=new_service)
+            if attribute.type == "number":
+                try:
+                    AttributeNumberValue.parse_obj(attribute_values[i].value)
+                except:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid AttributeNumberValue on attributeValues[{i}].value"
+                    )
+            elif attribute.type == "dropdown":
+                try:
+                    AttributeDropdownValue.parse_obj(attribute_values[i].value)
+                except:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid AttributeDropdownValue attributeValues[{i}].value"
+                    )
+            elif attribute.type == "range":
+                try:
+                    AttributeRangeValue.parse_obj(attribute_values[i].value)
+                except:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid AttributeRangeValue on attributeValues[{i}].value"
+                    )
 
     async def patch(self, pid: str, patch_document_list: list[PatchDocument]):
         for i in range(0, len(patch_document_list)):
             if patch_document_list[i].path == "/attributeValues":
-                for j in range(0, len(patch_document_list[i].value)):
-                    attribute_exists = await Attribute.find_one({"pid": patch_document_list[i].value[j].attributePid})
-                    if attribute_exists is None:
-                        raise HTTPException(
-                            status_code=404,
-                            detail=f"Attribute not found on attributeValues{i}"
-                        )
+                await self.validate_attribute_values_in_service(attribute_values=patch_document_list[i].value)
             elif patch_document_list[i].path == "/serviceClassificationPid":
-                service_classification_exists = await ServiceClassification.find_one({"pid": patch_document_list[i].value})
+                service_classification_exists = await ServiceClassification.find_one({
+                    "pid": patch_document_list[i].value})
                 if service_classification_exists is None:
                     raise HTTPException(
                         status_code=404,

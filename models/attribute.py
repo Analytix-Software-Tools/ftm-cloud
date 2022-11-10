@@ -1,4 +1,5 @@
-from pydantic.class_validators import Optional
+import pydantic
+from pydantic.class_validators import Optional, root_validator
 from pydantic import BaseModel
 from pydantic.schema import Literal, Any
 
@@ -28,7 +29,7 @@ class Attribute(BaseDocument):
 
 
 class AttributeNumberValue(BaseModel):
-    numValue: int | None
+    numValue: int
 
     class Config:
         scheme_extra = {
@@ -39,8 +40,8 @@ class AttributeNumberValue(BaseModel):
 
 
 class AttributeRangeValue(BaseModel):
-    minValue: int | None
-    maxValue: int | None
+    minValue: int
+    maxValue: int
 
     class Config:
         scheme_extra = {
@@ -50,9 +51,17 @@ class AttributeRangeValue(BaseModel):
             }
         }
 
+    @root_validator(pre=True)
+    def validate_min_max_values(cls, values):
+        min_value, max_value = values.get('minValue'), values.get('maxValue')
+        if min_value is not None and max_value is not None:
+            if min_value >= max_value:
+                raise ValueError("Value for field 'minValue' cannot exceed 'maxValue'")
+        return values
+
 
 class AttributeDropdownValue(BaseModel):
-    options: list[str] = []
+    options: list[str]
     value: str
 
     class Config:
@@ -62,6 +71,14 @@ class AttributeDropdownValue(BaseModel):
                 "value": "test value"
             }
         }
+
+    @root_validator(pre=True)
+    def validate_value_in_options(cls, values):
+        options, value = values.get('options'), values.get('value')
+        if options is not None and value is not None:
+            if value not in options:
+                raise ValueError(f"Bad value '{value}' not found in attributeValues.value.options")
+        return values
 
 
 class AttributeValue(BaseModel):

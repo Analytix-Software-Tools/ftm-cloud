@@ -3,39 +3,39 @@ from pydantic.error_wrappers import ValidationError
 
 from crosscutting.service import Service
 from models.patchdocument import PatchDocument
-from models.service_classification import ServiceClassification
-from models.service import Service as ServiceModel
+from models.category import Category
+from models.product_type import ProductType
 from models.attribute import Attribute, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, \
     AttributeValue
 
 
-class ServicesService(Service):
+class ProductTypesService(Service):
 
     def __init__(self):
-        super(ServicesService, self).__init__(collection=ServiceModel)
+        super(ProductTypesService, self).__init__(collection=ProductType)
 
-    async def add_document(self, new_service: ServiceModel):
-        service_exists = await self.find_one(
-            {"name": new_service.name})
-        if service_exists:
+    async def add_document(self, new_product_type: ProductType):
+        product_type_exists = await self.find_one(
+            {"name": new_product_type.name})
+        if product_type_exists:
             raise HTTPException(
                 status_code=409,
-                detail="A service already exists by that name."
+                detail="A product type already exists by that name."
             )
-        if new_service.serviceClassificationPid is not None:
-            service_classification_exists = await ServiceClassification.find_one({
-                "pid": new_service.serviceClassificationPid})
-            if service_classification_exists is None:
+        if new_product_type.categoryPid is not None:
+            category_exists = await Category.find_one({
+                "pid": new_product_type.categoryPid})
+            if category_exists is None:
                 raise HTTPException(
                     status_code=404,
-                    detail="Service classification not found."
+                    detail="Product category not found."
                 )
-        await self.validate_attribute_values_in_service(attribute_values=new_service.attributeValues)
-        return await super(ServicesService, self).add_document(new_document=new_service)
+        await self.validate_attribute_values_in_product_type(attribute_values=new_product_type.attributeValues)
+        return await super(ProductTypesService, self).add_document(new_document=new_product_type)
 
-    async def validate_attribute_values_in_service(self, attribute_values: list[AttributeValue]):
-        """Validates the attribute values within the specified service. Ensures
-        that the attribute value's value matches what is specified in the attribute and
+    async def validate_attribute_values_in_product_type(self, attribute_values: list[AttributeValue]):
+        """Validates the attribute values within the specified product type. Ensures
+        that the attribute value's value matches what is specified in the product type and
         that, if applicable, the value is set to a valid dropdown option.
 
         :param attribute_values:
@@ -76,13 +76,13 @@ class ServicesService(Service):
     async def patch(self, pid: str, patch_document_list: list[PatchDocument]):
         for i in range(0, len(patch_document_list)):
             if patch_document_list[i].path == "/attributeValues":
-                await self.validate_attribute_values_in_service(attribute_values=patch_document_list[i].value)
-            elif patch_document_list[i].path == "/serviceClassificationPid":
-                service_classification_exists = await ServiceClassification.find_one({
+                await self.validate_attribute_values_in_product_type(attribute_values=patch_document_list[i].value)
+            elif patch_document_list[i].path == "/categoryPid":
+                category_exists = await Category.find_one({
                     "pid": patch_document_list[i].value})
-                if service_classification_exists is None:
+                if category_exists is None:
                     raise HTTPException(
                         status_code=404,
-                        detail="Service classification not found."
+                        detail="Category not found."
                     )
-        await super(ServicesService, self).patch(pid=pid, patch_document_list=patch_document_list)
+        await super(ProductTypesService, self).patch(pid=pid, patch_document_list=patch_document_list)

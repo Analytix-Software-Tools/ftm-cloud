@@ -6,9 +6,9 @@ from domains.users.controllers.controller import router as user_router
 from domains.organizations.controllers.controller import router as organization_router
 from domains.privileges.controllers.controller import router as privilege_router
 from domains.industries.controllers.controller import router as industry_router
-from domains.service_classifications.controllers.controller import router as service_classification_router
+from domains.categories.controllers.controller import categories_router
 from domains.attributes.controllers.controller import router as attribute_router
-from domains.services.controllers.controller import router as service_router
+from domains.product_types.controllers.controller import product_type_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 
@@ -19,7 +19,7 @@ def custom_generate_unique_id(route: APIRoute):
 
 app = FastAPI(
     title="FTMCloud",
-    description="Advanced cost solution and analytics API.",
+    description="Search engine and analytics API.",
     version="1.0.0",
     generate_unique_id_function=custom_generate_unique_id
 )
@@ -53,9 +53,9 @@ app.include_router(privilege_router, tags=['Privileges'], prefix='/api/v0/privil
                    dependencies=[Depends(token_listener)])
 app.include_router(industry_router, tags=['Industries'], prefix='/api/v0/industries',
                    dependencies=[Depends(token_listener)])
-app.include_router(service_classification_router, tags=['ServiceClassifications'], prefix='/api/v0/service_classifications',
+app.include_router(categories_router, tags=['Categories'], prefix='/api/v0/categories',
                    dependencies=[Depends(token_listener)])
 app.include_router(attribute_router, tags=['Attributes'], prefix='/api/v0/attributes',
                    dependencies=[Depends(token_listener)])
-app.include_router(service_router, tags=['Services'], prefix='/api/v0/services',
+app.include_router(product_type_router, tags=['Product Types'], prefix='/api/v0/product_types',
                    dependencies=[Depends(token_listener)])

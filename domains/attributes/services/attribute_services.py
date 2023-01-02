@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from crosscutting.service import Service
 from models.attribute import Attribute
-from models.service import Service as ServiceModel
+from models.product_type import ProductType as ServiceModel
 
 
 class AttributesService(Service):
@@ -25,6 +25,6 @@ class AttributesService(Service):
         if services is not None:
             raise HTTPException(
                 status_code=409,
-                detail="Please remove all services that contain this attribute first."
+                detail="Please remove all product_types that contain this attribute first."
             )
         return await super(AttributesService, self).delete_document(pid=pid)

@@ -3,24 +3,24 @@ from pydantic.class_validators import Optional
 from models.document import BaseDocument
 
 
-class ServiceClassification(BaseDocument):
-    """Represents a type of service to standardize formatting.
+class Category(BaseDocument):
+    """Represents a type of product category to standardize formatting.
     """
     pid: Optional[str]
     name: str
     description: str
-    parentServiceClassificationPid: str | None = None
+    parentCategoryPid: str | None = None
 
     class Collection:
-        name = "service_classifications"
+        name = "categories"
 
     class Config:
         schema_extra = {
             "example": {
-                "name": "Test Service",
-                "description": "Service",
+                "name": "Test Category",
+                "description": "Category",
                 "pid": "Test pid",
-                "parentServiceClassificationPid": "parentServiceGroup",
+                "parentCategoryPid": "parentServiceGroup",
                 "createdAt": "2022-03-17T00:54:43.924+00:00"
             }
         }

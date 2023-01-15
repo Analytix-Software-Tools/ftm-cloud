@@ -52,10 +52,6 @@ respective domain if one does not exist already. If you need to run all tests, r
 $ python3 runtests --all
 ```
 
-# TO-DO
-* Attach default client to application
-* Override application client to be a database with test data that will be cleaned up
-
 # FastAPI and MongoDB Boilerplate
 
 A simple starter for building RESTful APIs with FastAPI and MongoDB. 

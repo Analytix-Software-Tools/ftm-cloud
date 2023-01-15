@@ -5,6 +5,7 @@ autogen/server
 
 .pytest_cache/
 .fleet/
+.idea
 .vscode/
 # Byte-compiled / optimized / DLL files
 __pycache__/

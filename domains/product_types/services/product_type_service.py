@@ -16,7 +16,7 @@ class ProductTypesService(Service):
 
     async def add_document(self, new_product_type: ProductType):
         product_type_exists = await self.find_one(
-            {"name": new_product_type.name})
+            {"name": new_product_type.name, "isDeleted": {"$ne": "true"}})
         if product_type_exists:
             raise HTTPException(
                 status_code=409,
@@ -24,7 +24,7 @@ class ProductTypesService(Service):
             )
         if new_product_type.categoryPid is not None:
             category_exists = await Category.find_one({
-                "pid": new_product_type.categoryPid})
+                "pid": new_product_type.categoryPid, "isDeleted": {"$ne": "true"}})
             if category_exists is None:
                 raise HTTPException(
                     status_code=404,
@@ -42,7 +42,7 @@ class ProductTypesService(Service):
         :return: None
         """
         for i in range(0, len(attribute_values)):
-            attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid})
+            attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid, "isDeleted": {"$ne": "true"}})
             if attribute is None:
                 raise HTTPException(
                     status_code=404,
@@ -79,7 +79,7 @@ class ProductTypesService(Service):
                 await self.validate_attribute_values_in_product_type(attribute_values=patch_document_list[i].value)
             elif patch_document_list[i].path == "/categoryPid":
                 category_exists = await Category.find_one({
-                    "pid": patch_document_list[i].value})
+                    "pid": patch_document_list[i].value,"isDeleted": {"$ne": "true"}})
                 if category_exists is None:
                     raise HTTPException(
                         status_code=404,

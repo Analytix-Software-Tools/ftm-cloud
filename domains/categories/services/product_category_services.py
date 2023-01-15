@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from crosscutting.service import Service
 from models.category import Category
-from models.product_type import ProductType as ServiceModel
+from models.product_type import ProductType
 
 
 class CategoriesService(Service):
@@ -12,14 +12,14 @@ class CategoriesService(Service):
 
     async def add_document(self, new_category: Category):
         category_exists = await self.find_one(
-            {"name": new_category.name})
+            {"name": new_category.name, "isDeleted": {"$ne": "true"}})
         if category_exists:
             raise HTTPException(
                 status_code=409,
                 detail="A product category already exists by that name."
             )
         if new_category.parentCategoryPid is not None:
-            parent_category_exists = await self.find_one({"pid": new_category.parentCategoryPid})
+            parent_category_exists = await self.find_one({"pid": new_category.parentCategoryPid, "isDeleted": {"$ne": "true"}})
             if not parent_category_exists:
                 raise HTTPException(
                     status_code=404,
@@ -37,7 +37,7 @@ class CategoriesService(Service):
         return await super(CategoriesService, self).patch(pid=pid, patch_document_list=patch_document_list)
 
     async def delete_document(self, pid: str):
-        services = await ServiceModel.find_one({"productCategoryPid": pid})
+        services = await ProductType.find_one({"productCategoryPid": pid, "isDeleted": {"$ne": "true"}})
         if services is not None:
             raise HTTPException(
                 status_code=409,

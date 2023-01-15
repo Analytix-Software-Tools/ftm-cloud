@@ -39,6 +39,17 @@ class AttributeNumberValue(BaseModel):
         }
 
 
+class AttributeTextValue(BaseModel):
+    value: str
+
+    class Config:
+        scheme_extra = {
+            "example": {
+                "value": "value"
+            }
+        }
+
+
 class AttributeRangeValue(BaseModel):
     minValue: int
     maxValue: int
@@ -87,12 +98,14 @@ class AttributeValue(BaseModel):
 
     """
     attributePid: str
-    value: AttributeNumberValue | AttributeDropdownValue | AttributeRangeValue
+    value: AttributeNumberValue | AttributeDropdownValue | AttributeRangeValue | AttributeTextValue
+    isRequired: Optional[bool]
 
     class Config:
         schema_extra = {
             "example": {
                 "attributePid": "Attribute Pid",
                 "value": {"value": 4},
+                "isRequired": "true"
             }
         }

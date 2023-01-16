@@ -13,26 +13,26 @@ product_router = APIRouter()
 
 @product_router.post("/", response_model=Product, response_description="Successfully registered product.",
                           responses=default_exception_list)
-async def add_product(new_product_type: Product = Body(...)):
-    """Registers a new product type within the space.
+async def add_product(new_product: Product = Body(...)):
+    """Registers a new product within the space.
     """
-    product_types_service = ProductService()
-    new_product_type = await product_types_service.add_document(new_product_type)
-    return new_product_type
+    products_service = ProductService()
+    new_product = await products_service.add_document(new_product)
+    return new_product
 
 
 @product_router.get("/", response_description="Products retrieved", response_model=Response[Product],
                          responses=default_exception_list)
-async def get_product_types(q: str | None = None, limit: int | None = None, offset: int | None = None,
+async def get_products(q: str | None = None, limit: int | None = None, offset: int | None = None,
                             sort: str | None = None, includeTotals: bool | None = None):
-    """Gets all product types using the user defined parameters.
+    """Gets all products using the user defined parameters.
     """
     products_service = ProductService()
-    product_types = await products_service.get_all(q=q, limit=limit, offset=offset, sort=sort)
+    products = await products_service.get_all(q=q, limit=limit, offset=offset, sort=sort)
     headers = {}
     if includeTotals is not None:
         headers = {"X-Total-Count": str(await products_service.total(q))}
-    return ResponseWithHttpInfo(data=product_types,
+    return ResponseWithHttpInfo(data=products,
                                 model=Product,
                                 description="Products retrieved successfully.",
                                 headers=headers)
@@ -40,13 +40,13 @@ async def get_product_types(q: str | None = None, limit: int | None = None, offs
 
 @product_router.get("/{pid}", response_description="Product data retrieved", response_model=Response[Product],
                          responses=default_exception_list)
-async def get_product_type(pid: str):
-    """Retrieves a product type by ID.
+async def get_product(pid: str):
+    """Retrieves a product by ID.
     """
     products_service = ProductService()
-    product_type_exists = await products_service.validate_exists(pid=pid)
+    product_exists = await products_service.validate_exists(pid=pid)
     return Response(status_code=200, response_type='success', description='Product retrieved.',
-                    data=[product_type_exists])
+                    data=[product_exists])
 
 
 @product_router.patch("/{pid}", response_model=Response, response_description="Successfully patched product.",

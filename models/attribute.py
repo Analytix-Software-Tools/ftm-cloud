@@ -39,6 +39,17 @@ class AttributeNumberValue(BaseModel):
         }
 
 
+class AttributeBooleanValue(BaseModel):
+    value: bool
+
+    class Config:
+        scheme_extra = {
+            "example": {
+                "value": "true"
+            }
+        }
+
+
 class AttributeTextValue(BaseModel):
     value: str
 
@@ -98,7 +109,7 @@ class AttributeValue(BaseModel):
 
     """
     attributePid: str
-    value: AttributeNumberValue | AttributeDropdownValue | AttributeRangeValue | AttributeTextValue
+    value: AttributeNumberValue | AttributeDropdownValue | AttributeRangeValue | AttributeTextValue | AttributeBooleanValue
     isRequired: Optional[bool]
 
     class Config:

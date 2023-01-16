@@ -10,6 +10,7 @@ class Product(BaseDocument):
     pid: Optional[str]
     name: str
     description: str
+    imgUrl: str = ""
     productTypePid: str
     organizationPid: str
     attributeValues: list[AttributeValue] = []
@@ -22,6 +23,7 @@ class Product(BaseDocument):
             "example": {
                 "name": "Test Product",
                 "description": "Product",
+                "imgUrl": "imgUrl",
                 "pid": "Test pid",
                 "productTypePid": "productTypePid",
                 "organizationPid": "organizationPid",

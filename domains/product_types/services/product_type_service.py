@@ -5,7 +5,7 @@ from crosscutting.service import Service
 from models.patchdocument import PatchDocument
 from models.category import Category
 from models.product_type import ProductType
-from models.attribute import Attribute, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, \
+from models.attribute import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, \
     AttributeValue
 
 
@@ -71,6 +71,14 @@ class ProductTypesService(Service):
                     raise HTTPException(
                         status_code=400,
                         detail=f"Invalid AttributeRangeValue on attributeValues[{i}].value"
+                    )
+            elif attribute.type == "boolean":
+                try:
+                    AttributeBooleanValue.parse_obj(attribute_values[i].value)
+                except:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid AttributeBooleanValue on attributeValues[{i}].value"
                     )
 
     async def patch(self, pid: str, patch_document_list: list[PatchDocument]):

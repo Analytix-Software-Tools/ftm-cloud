@@ -7,7 +7,7 @@ from models.category import Category
 from models.organization import Organization
 from models.product_type import ProductType
 from models.product import Product
-from models.attribute import Attribute, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, \
+from models.attribute import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, AttributeTextValue, \
     AttributeValue
 
 
@@ -85,6 +85,14 @@ class ProductService(Service):
                         status_code=400,
                         detail=f"Invalid AttributeDropdownValue attributeValues[{i}].value"
                     )
+            elif attribute.type == "text":
+                try:
+                    AttributeTextValue.parse_obj(attribute_values[i].value)
+                except:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid AttributeTextValue attributeValues[{i}].value"
+                    )
             elif attribute.type == "range":
                 try:
                     AttributeRangeValue.parse_obj(attribute_values[i].value)
@@ -92,6 +100,14 @@ class ProductService(Service):
                     raise HTTPException(
                         status_code=400,
                         detail=f"Invalid AttributeRangeValue on attributeValues[{i}].value"
+                    )
+            elif attribute.type == "boolean":
+                try:
+                    AttributeBooleanValue.parse_obj(attribute_values[i].value)
+                except:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid AttributeBooleanValue on attributeValues[{i}].value"
                     )
 
     async def patch(self, pid: str, patch_document_list: list[PatchDocument]):

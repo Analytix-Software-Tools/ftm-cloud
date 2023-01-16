@@ -54,21 +54,26 @@ class ProductService(Service):
                 detail="Product type not found"
             )
         product_type_attribute_pid_mapping = {}
+        required_attribute_to_found = {}
         for value in product_type.attributeValues:
-            product_type_attribute_pid_mapping[value.attributePid] = True
+            product_type_attribute_pid_mapping[value.attributePid] = value
+            if value.isRequired:
+                required_attribute_to_found[value.attributePid] = False
         attribute_values = product.attributeValues
         for i in range(0, len(attribute_values)):
             attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid, "isDeleted": {"$ne": "true"}})
-            if attribute_values[i].attributePid not in product_type_attribute_pid_mapping:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Attribute {attribute.name} does not exist on product type. attributeValues[{i}].attributePid"
-                )
             if attribute is None:
                 raise HTTPException(
                     status_code=404,
                     detail=f"Attribute not found. attributeValues[{i}].attributePid"
                 )
+            if attribute_values[i].attributePid not in product_type_attribute_pid_mapping:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Attribute '{attribute.name}' does not exist on product type. attributeValues[{i}].attributePid"
+                )
+            if attribute_values[i].attributePid in required_attribute_to_found:
+                required_attribute_to_found[attribute_values[i].attributePid] = True
             if attribute.type == "number":
                 try:
                     AttributeNumberValue.parse_obj(attribute_values[i].value)
@@ -84,6 +89,11 @@ class ProductService(Service):
                     raise HTTPException(
                         status_code=400,
                         detail=f"Invalid AttributeDropdownValue attributeValues[{i}].value"
+                    )
+                if attribute_values[i].value.value not in product_type_attribute_pid_mapping[attribute_values[i].attributePid].value.options:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid value '{attribute_values[i].value.value}' not specified in product type. attributeValues[{i}].value.value"
                     )
             elif attribute.type == "text":
                 try:
@@ -108,6 +118,16 @@ class ProductService(Service):
                     raise HTTPException(
                         status_code=400,
                         detail=f"Invalid AttributeBooleanValue on attributeValues[{i}].value"
+                    )
+        for key in required_attribute_to_found.keys():
+            if required_attribute_to_found[key] == False:
+                required_attr = await Attribute.find_one({"pid": key, "isDeleted": {"$ne": "true"}})
+                if required_attr is None:
+                    continue
+                else:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Attribute '{required_attr.name}' is required for product type '{product_type.name}'."
                     )
 
     async def patch(self, pid: str, patch_document_list: list[PatchDocument]):

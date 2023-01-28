@@ -9,6 +9,8 @@ from pydantic.error_wrappers import ValidationError
 from config.config import Settings
 from crosscutting.error.exception import FtmException
 
+settings = Settings()
+
 
 class Service:
 
@@ -43,7 +45,8 @@ class Service:
         document = await new_document.create()
         return document
 
-    async def get_all(self, q=None, offset=None, sort=None, limit=Settings().MAX_QUERY_LIMIT, additional_filters=None):
+    async def get_all(self, q=None, offset=None, sort=None, limit=None,
+                      additional_filters=None):
         """Retrieves all documents in the collection.
 
         :param additional_filters: A dict query applied after the q.
@@ -58,6 +61,11 @@ class Service:
             query = json.loads(q)
         if additional_filters is not None:
             query = {**query, **additional_filters}
+        config = Settings()
+        if limit is None:
+            limit = config.DEFAULT_QUERY_LIMIT
+        elif limit > config.MAX_QUERY_LIMIT:
+            limit = config.DEFAULT_QUERY_LIMIT
         sort_criteria = []
         if sort is not None:
             sort_direction = sort[0]

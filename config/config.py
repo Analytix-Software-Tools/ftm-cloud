@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     # 'mongodb+srv://admin:eky0PQyN3cd71WwY@cluster0.illqh.mongodb.net'
     DATABASE_URL: Optional[str] =  os.environ['MONGO_URI_PROD_ENCODED'] if 'MONGO_URI_PROD_ENCODED' in os.environ else 'mongodb://mongodb:27017'
     MAX_QUERY_LIMIT: int = 100
+    DEFAULT_QUERY_LIMIT: int = 10
 
     # JWT
     secret_key: str = 'D(G+KbPe'

@@ -1,7 +1,8 @@
-from fastapi import HTTPException, Depends, status
+from fastapi import Depends
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from passlib.context import CryptContext
 
+from crosscutting.error.exception import FtmException
 from domains.users.services.user_services import user_collection
 
 security = HTTPBasic()
@@ -13,10 +14,7 @@ async def validate_login(credentials: HTTPBasicCredentials = Depends(security)):
     if admin:
         password = hash_helper.verify(credentials.password, admin['password'])
         if not password:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect email or password"
-            )
+            raise FtmException('error.user.InvalidCredentials')
         return True
     return False
 

@@ -1,13 +1,13 @@
 import datetime
 import json
 
-from fastapi import HTTPException
 from jsonpatch import JsonPatch, JsonPatchException
 
 import uuid
 from pydantic.error_wrappers import ValidationError
 
 from config.config import Settings
+from crosscutting.error.exception import FtmException
 
 
 class Service:
@@ -93,7 +93,7 @@ class Service:
         """
         exists = await self.collection.find_one({"isDeleted": {"$ne": True}, "pid": pid})
         if exists is None:
-            raise HTTPException(status_code=404, detail=str(self.collection.__name__) + " not found.")
+            raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
         return exists
 
     async def validate_pids_in_list(self, pid_list: [str]):
@@ -126,22 +126,22 @@ class Service:
             if patch_list[i]['path'] == '/_id' \
                     or patch_list[i]['path'] == '/pid' \
                     or patch_list[i]['path'] == '/isDeleted':
-                raise HTTPException(status_code=422, detail="Invalid patch")
+                raise FtmException('error.patch.InvalidPatch')
         result = await self.collection.find_one({"pid": pid})
         if result is None:
-            raise HTTPException(status_code=404, detail="Resource not found.")
+            raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
         try:
             diff_doc = patch.apply(result.dict())
             try:
                 new_doc = self.collection(**diff_doc)
             except ValidationError:
-                raise HTTPException(status_code=422, detail="Invalid patch")
+                raise FtmException('error.patch.InvalidPatch')
             update_query = {"$set": {
                 field: value for field, value in new_doc.dict().items() if field != "id"
             }}
             await result.update(update_query)
         except JsonPatchException:
-            raise HTTPException(status_code=422, detail="Patch list is of invalid or inoperable formatting.")
+            raise FtmException('error.patch.InvalidPatch')
 
     async def delete_document(self, pid: str):
         """Delete the specified document by asserting the isDeleted field
@@ -153,5 +153,5 @@ class Service:
         """
         exists = await self.collection.find_one({"isDeleted": {"$ne": True}, "pid": pid})
         if exists is None:
-            raise HTTPException(status_code=404, detail="Resource not found")
+            raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
         await exists.update({"$set": {"isDeleted": True}})

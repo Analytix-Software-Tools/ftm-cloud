@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 
+from crosscutting.error.exception import FtmException
 from crosscutting.service import Service
 from models.category import Category
 from models.product_type import ProductType
@@ -14,17 +15,12 @@ class CategoriesService(Service):
         category_exists = await self.find_one(
             {"name": new_category.name, "isDeleted": {"$ne": "true"}})
         if category_exists:
-            raise HTTPException(
-                status_code=409,
-                detail="A product category already exists by that name."
-            )
+            raise FtmException('error.category.InvalidName')
         if new_category.parentCategoryPid is not None:
             parent_category_exists = await self.find_one({"pid": new_category.parentCategoryPid, "isDeleted": {"$ne": "true"}})
             if not parent_category_exists:
-                raise HTTPException(
-                    status_code=404,
-                    detail="Parent product category not found."
-                )
+                raise FtmException('error.category.NotFound', developer_message="Parent category not found!",
+                                   user_message="We couldn't find the parent category you specified.")
         return await super(CategoriesService, self).add_document(new_document=new_category)
 
     async def patch(self, pid: str, patch_document_list: list):
@@ -33,14 +29,11 @@ class CategoriesService(Service):
                 exists = await self.base_model.find_one(
                     {"pid": patch_document_list[i].value, "isDeleted": {"$ne": "true"}})
                 if exists is None:
-                    raise HTTPException(status_code=404, detail="Product category not found.")
+                    raise FtmException('error.category.NotFound')
         return await super(CategoriesService, self).patch(pid=pid, patch_document_list=patch_document_list)
 
     async def delete_document(self, pid: str):
-        services = await ProductType.find_one({"productCategoryPid": pid, "isDeleted": {"$ne": "true"}})
-        if services is not None:
-            raise HTTPException(
-                status_code=409,
-                detail="Please remove or de-associate all product types associated with this category."
-            )
+        product_types = await ProductType.find_one({"productCategoryPid": pid, "isDeleted": {"$ne": "true"}})
+        if product_types is not None:
+            raise FtmException('error.category.NotEmpty')
         return await super(CategoriesService, self).delete_document(pid=pid)

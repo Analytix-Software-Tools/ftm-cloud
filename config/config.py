@@ -14,6 +14,8 @@ from models.product_type import ProductType
 from models.category import Category
 from models.user import User
 from models.student import Student
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 
 class Settings(BaseSettings):
@@ -29,6 +31,9 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env.dev"
         orm_mode = True
+
+
+limiter = Limiter(key_func=get_remote_address)
 
 
 async def initiate_database():

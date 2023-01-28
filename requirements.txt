@@ -13,3 +13,5 @@ pytest==6.2.5
 anyio[trio]
 requests==2.25.1
 httpx
+pyyaml
+slowapi

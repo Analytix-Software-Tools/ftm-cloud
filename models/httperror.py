@@ -6,11 +6,19 @@ class HttpError(BaseModel):
     """An error model that contains messages to be displayed on the
     frontend.
     """
-    detail: str
+    errorCode: str
+    developerMessage: str
+    userMessage: str
+    statusCode: int
+    info: str
 
     class Config:
         schema_extra = {
             "example": {
-                "detail": "Error detail"
+                "errorCode": "error.demo.ExampleError",
+                "developerMessage": "Try a different error.",
+                "userMessage": "userMessage",
+                "statusCode": 500,
+                "info": "http://www.example.com/exampleError.html"
             }
         }

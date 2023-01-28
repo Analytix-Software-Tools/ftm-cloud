@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 
 from auth.jwt_handler import sign_jwt
+from crosscutting.error.exception import FtmException
 from crosscutting.service import Service
 from passlib.context import CryptContext
 from models.user import User, UserProfile, UserSignIn
@@ -20,7 +21,7 @@ class UserService(Service):
         await self.validate_exists(pid=pid)
         for document in patch_document_list:
             if document.path == '/organizationPid' or document.path == '/privilegePid':
-                raise HTTPException(status_code=422, detail="Invalid patch")
+                raise FtmException('error.patch.InvalidPatch')
 
         return await self.patch(pid=pid, patch_document_list=patch_document_list)
 
@@ -38,15 +39,9 @@ class UserService(Service):
             if password:
                 return await sign_jwt(user_exists)
 
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid username or password specified!"
-            )
+            raise FtmException('error.user.InvalidCredentials')
 
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid username or password specified!"
-        )
+        raise FtmException('error.user.InvalidCredentials')
 
     async def users_profile(self, pid) -> UserProfile:
         """Retrieves the user's full profile information by returning
@@ -85,5 +80,5 @@ class UserService(Service):
             }
         }]).to_list()
         if len(user) == 0:
-            raise HTTPException(status_code=404, detail="User not found.")
+            raise FtmException('error.user.NotFound')
         return user[0]

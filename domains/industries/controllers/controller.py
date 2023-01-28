@@ -1,7 +1,7 @@
 from fastapi import Body, APIRouter, HTTPException
 from pydantic.validators import List
 
-from crosscutting.exception import default_exception_list
+from crosscutting.error.exception import default_exception_list, FtmException
 from domains.organizations.services.organization_services import OrganizationsService
 
 from models.patchdocument import PatchDocument
@@ -20,10 +20,7 @@ async def add_industry(new_industry: Industry = Body(...)):
     industry_service = IndustriesService()
     industry_exists = await industry_service.find_one({"name": new_industry.name})
     if industry_exists:
-        raise HTTPException(
-            status_code=409,
-            detail="An industry already exists by that name."
-        )
+        raise FtmException('error.industry.InvalidName')
     await industry_service.add_document(new_industry)
     return new_industry
 
@@ -78,6 +75,6 @@ async def delete_industry(pid: str):
         message = "Please remove or de-associate the following organizations before deletion: "
         for i in range(0, len(organizations)):
             message += organizations[i].name
-        raise HTTPException(status_code=409, detail=message)
+        raise FtmException('error.industry.NotEmpty', developer_message=message, user_message=message)
     await indusry_service.delete_document(pid=pid)
     return Response(status_code=200, response_type="success", description="Industry deleted.")

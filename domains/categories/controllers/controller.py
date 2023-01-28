@@ -1,8 +1,8 @@
 from fastapi import Body, APIRouter, HTTPException
 from pydantic.validators import List
 
-from crosscutting.exception import default_exception_list
-from domains.categories.services.product_category_services import CategoriesService
+from crosscutting.error.exception import default_exception_list, FtmException
+from domains.categories.services.category_services import CategoriesService
 from domains.product_types.services.product_type_service import ProductTypesService
 
 from models.patchdocument import PatchDocument
@@ -73,11 +73,11 @@ async def delete_category(pid: str):
         message = "Please remove or de-associate the following child categories before deletion: "
         for i in range(0, len(child_categories)):
             message += child_categories[i].name
-        raise HTTPException(status_code=409, detail=message)
+        raise FtmException('error.category.NotEmpty', developer_message=message, user_message=message)
     if len(product_types) > 0:
         message = "Please remove or de-associate the following product types before deletion: "
         for i in product_types:
             message += product_types[i].name
-        raise HTTPException(status_code=409, detail=message)
+        raise FtmException('error.category.NotEmpty', developer_message=message, user_message=message)
     await categories_service.delete_document(pid=pid)
     return Response(status_code=200, response_type="success", description="Category deleted.")

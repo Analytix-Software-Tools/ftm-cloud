@@ -1,8 +1,10 @@
 from fastapi import HTTPException
 
+from crosscutting.error.exception import FtmException
 from crosscutting.service import Service
 from models.attribute import Attribute
-from models.product_type import ProductType as ServiceModel
+from models.product import Product
+from models.product_type import ProductType
 
 
 class AttributesService(Service):
@@ -14,17 +16,14 @@ class AttributesService(Service):
         attribute_exists = await self.find_one(
             {"name": new_attribute.name})
         if attribute_exists:
-            raise HTTPException(
-                status_code=409,
-                detail="An attribute already exists by that name."
-            )
+            raise FtmException('error.attribute.InvalidName')
         return await super(AttributesService, self).add_document(new_document=new_attribute)
 
     async def delete_document(self, pid: str):
-        services = await ServiceModel.find_one({"attributeValues.attributePid": pid})
-        if services is not None:
-            raise HTTPException(
-                status_code=409,
-                detail="Please remove all product_types that contain this attribute first."
-            )
+        products = await Product.find_one({"attributeValues.attributePid": pid, "isDeleted": {"$ne": True}})
+        if products is not None:
+            raise FtmException('error.attribute.NotEmpty')
+        product_types = await ProductType.find_one({"attributeValues.attributePid": pid, "isDeleted": {"$ne": True}})
+        if product_types is not None:
+            raise FtmException('error.attribute.NotEmpty')
         return await super(AttributesService, self).delete_document(pid=pid)

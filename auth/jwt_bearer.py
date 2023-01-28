@@ -2,6 +2,7 @@ from fastapi import Request, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jwt.exceptions import InvalidTokenError
 
+from crosscutting.error.exception import FtmException
 from .jwt_handler import decode_jwt
 
 
@@ -11,7 +12,7 @@ def verify_jwt(jwtoken: str) -> bool:
     try:
         payload = decode_jwt(jwtoken)
     except InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Access token is expired or invalid. Please re-authenticate.")
+        raise FtmException('error.user.InvalidToken')
 
     if payload:
         is_token_valid = True
@@ -28,16 +29,17 @@ class JWTBearer(HTTPBearer):
         print("Credentials :", credentials)
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise HTTPException(status_code=403, detail="Bad authentication method. Must be of type 'Bearer'!")
+                raise FtmException('error.user.InvalidToken',
+                                   developer_message="Bad authentication method. Must be of type 'Bearer'!")
 
             if not verify_jwt(credentials.credentials):
-                raise HTTPException(status_code=403, detail="Access token integrity is invalid!")
+                raise FtmException('error.user.InvalidToken', developer_message="Access token integrity is invalid!")
 
             await init_controller(credentials.credentials, request)
 
             return credentials.credentials
         else:
-            raise HTTPException(status_code=403, detail="Invalid authorization token!")
+            raise FtmException('error.user.InvalidToken')
 
 
 token_listener = JWTBearer()
@@ -64,4 +66,4 @@ async def init_controller(token: str, request: Request):
     acl_list = user['permissions']
     route_path = request.method + ':' + str(request.url).replace(f'{str(request.base_url)}api/v0/', '').split('/')[0]
     if route_path not in acl_list:
-        raise HTTPException(status_code=401, detail="You do not have permission to perform this operation.")
+        raise FtmException('error.user.InsufficientPrivileges')

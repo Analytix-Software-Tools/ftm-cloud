@@ -1,7 +1,7 @@
 from fastapi import Body, APIRouter, HTTPException, Depends
 from pydantic.validators import List
-from auth.jwt_bearer import get_user_token, token_listener
-from crosscutting.exception import default_exception_list
+from auth.jwt_bearer import get_user_token
+from crosscutting.error.exception import default_exception_list, FtmException
 
 from domains.users.services.user_services import UserService
 from models.patchdocument import PatchDocument
@@ -21,10 +21,7 @@ async def add_organization(new_organization: Organization = Body(...)):
     organization_services = OrganizationsService()
     organization_exists = await organization_services.find_one({"name": new_organization.name})
     if organization_exists:
-        raise HTTPException(
-            status_code=409,
-            detail="An organization already exists by that name."
-        )
+        raise FtmException('error.organization.InvalidName')
     await organization_services.add_document(new_organization)
     return new_organization
 
@@ -88,7 +85,6 @@ async def delete_organization(pid: str):
     user_service = UserService()
     users = await user_service.get_all(additional_filters={"organizationPid": pid})
     if len(users) > 0:
-        raise HTTPException(status_code=409, detail="Please remove or transfer all existing users before "
-                                                    "deleting this organization!")
+        raise FtmException('error.organization.NotEmpty')
     await organization_service.delete_document(pid=pid)
     return Response(status_code=200, response_type="success", description="Organization deleted.")

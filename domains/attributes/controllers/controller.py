@@ -1,7 +1,7 @@
 from fastapi import Body, APIRouter
 from pydantic.validators import List
 
-from crosscutting.exception import default_exception_list
+from crosscutting.error.exception import default_exception_list
 from domains.attributes.services.attribute_services import AttributesService
 
 from models.patchdocument import PatchDocument

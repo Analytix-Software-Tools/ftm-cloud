@@ -3,8 +3,7 @@ from passlib.context import CryptContext
 from pydantic.validators import List
 
 from auth.jwt_bearer import get_user_token
-from auth.jwt_handler import sign_jwt
-from crosscutting.exception import default_exception_list
+from crosscutting.error.exception import default_exception_list, FtmException
 from domains.privileges.services.privilege_services import PrivilegesService
 from domains.organizations.services.organization_services import OrganizationsService
 from models.patchdocument import PatchDocument
@@ -32,10 +31,7 @@ async def signup_user(new_user: User = Body(...)):
     """
     user_exists = await User.find_one(User.email == new_user.email, {"isDeleted": {"$ne": True}})
     if user_exists:
-        raise HTTPException(
-            status_code=409,
-            detail="A user already exists by that email."
-        )
+        raise FtmException('error.user.InvalidEmail')
 
     user_services = UserService()
     privilege_service = PrivilegesService()

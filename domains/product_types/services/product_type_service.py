@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from pydantic.error_wrappers import ValidationError
 
+from crosscutting.error.exception import FtmException
 from crosscutting.service import Service
 from models.patchdocument import PatchDocument
 from models.category import Category
@@ -18,18 +19,12 @@ class ProductTypesService(Service):
         product_type_exists = await self.find_one(
             {"name": new_product_type.name, "isDeleted": {"$ne": "true"}})
         if product_type_exists:
-            raise HTTPException(
-                status_code=409,
-                detail="A product type already exists by that name."
-            )
+            raise FtmException('error.producttype.InvalidName')
         if new_product_type.categoryPid is not None:
             category_exists = await Category.find_one({
                 "pid": new_product_type.categoryPid, "isDeleted": {"$ne": "true"}})
             if category_exists is None:
-                raise HTTPException(
-                    status_code=404,
-                    detail="Product category not found."
-                )
+                raise FtmException('error.category.NotFound')
         await self.validate_attribute_values_in_product_type(attribute_values=new_product_type.attributeValues)
         return await super(ProductTypesService, self).add_document(new_document=new_product_type)
 
@@ -44,42 +39,31 @@ class ProductTypesService(Service):
         for i in range(0, len(attribute_values)):
             attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid, "isDeleted": {"$ne": "true"}})
             if attribute is None:
-                raise HTTPException(
-                    status_code=404,
-                    detail=f"Attribute not found. attributeValues[{i}].attributePid"
-                )
+                raise FtmException('error.attribute.NotFound', developer_message=f"Attribute not found. attributeValues[{i}].attributePid")
             if attribute.type == "number":
                 try:
                     AttributeNumberValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise HTTPException(
-                        status_code=400,
-                        detail=f"Invalid AttributeNumberValue on attributeValues[{i}].value"
-                    )
+                    raise FtmException('error.attribute.InvalidAttributeNumberValue',
+                                       developer_message=f"Invalid AttributeNumberValue on attributeValues[{i}].value")
             elif attribute.type == "dropdown":
                 try:
                     AttributeDropdownValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise HTTPException(
-                        status_code=400,
-                        detail=f"Invalid AttributeDropdownValue attributeValues[{i}].value"
-                    )
+                    raise FtmException('error.attribute.InvalidAttributeDropdownValue',
+                                       developer_message=f"Invalid AttributeDropdownValue on attributeValues[{i}].value")
             elif attribute.type == "range":
                 try:
                     AttributeRangeValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise HTTPException(
-                        status_code=400,
-                        detail=f"Invalid AttributeRangeValue on attributeValues[{i}].value"
-                    )
+                    raise FtmException('error.attribute.InvalidAttributeRangeValue',
+                                       developer_message=f"Invalid AttributeRangeValue on attributeValues[{i}].value")
             elif attribute.type == "boolean":
                 try:
                     AttributeBooleanValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise HTTPException(
-                        status_code=400,
-                        detail=f"Invalid AttributeBooleanValue on attributeValues[{i}].value"
-                    )
+                    raise FtmException('error.attribute.InvalidAttributeBooleanValue',
+                                       developer_message=f"Invalid AttributeBooleanValue on attributeValues[{i}].value")
 
     async def patch(self, pid: str, patch_document_list: list[PatchDocument]):
         for i in range(0, len(patch_document_list)):
@@ -89,8 +73,5 @@ class ProductTypesService(Service):
                 category_exists = await Category.find_one({
                     "pid": patch_document_list[i].value,"isDeleted": {"$ne": "true"}})
                 if category_exists is None:
-                    raise HTTPException(
-                        status_code=404,
-                        detail="Category not found."
-                    )
+                    raise FtmException('error.category.NotFound')
         await super(ProductTypesService, self).patch(pid=pid, patch_document_list=patch_document_list)

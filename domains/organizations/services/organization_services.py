@@ -1,5 +1,7 @@
 
 from fastapi import HTTPException
+
+from crosscutting.error.exception import FtmException
 from crosscutting.service import Service
 from models.industry import Industry
 from models.organization import Organization
@@ -17,5 +19,5 @@ class OrganizationsService(Service):
                 for j in range(0, patch_len):
                     exists = await Industry.find_one({"pid": patch_document_list[i].value[j], "isDeleted": {"$ne": "true"}})
                     if exists is None:
-                        raise HTTPException(status_code=404, detail="Industry not found.")
+                        raise FtmException('error.industry.NotFound')
         await super(OrganizationsService, self).patch(pid=pid, patch_document_list=patch_document_list)

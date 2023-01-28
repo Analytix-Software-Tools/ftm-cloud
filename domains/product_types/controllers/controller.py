@@ -1,7 +1,7 @@
-from fastapi import Body, APIRouter, HTTPException
+from fastapi import Body, APIRouter
 from pydantic.validators import List
 
-from crosscutting.exception import default_exception_list
+from crosscutting.error.exception import default_exception_list
 from domains.product_types.services.product_type_service import ProductTypesService
 
 from models.patchdocument import PatchDocument

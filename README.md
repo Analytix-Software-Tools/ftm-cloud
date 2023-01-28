@@ -52,6 +52,19 @@ respective domain if one does not exist already. If you need to run all tests, r
 $ python3 runtests --all
 ```
 
+# Exception Handling
+Exception handling is standardized using an exception class called FtmException. When you need to raise an exception
+at any point,
+
+```console
+raise FtmException('errors.ftmcloud.InvalidEmailAddress')
+```
+
+This will present an error response that is clean, presentable and easily consumed by any end users.
+
+In ```crosscutting/error```, there is an ```errors.yaml``` file which lists all the possible errors and error codes by 
+language identifier. This is used to display the errors and descriptions in the live documentation.
+
 # FastAPI and MongoDB Boilerplate
 
 A simple starter for building RESTful APIs with FastAPI and MongoDB. 

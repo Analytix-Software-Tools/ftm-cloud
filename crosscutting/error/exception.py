@@ -89,7 +89,7 @@ class FtmException(Exception):
             info=self.info,
             errorCode=self.error_code
         )
-        return JSONResponse(content=jsonable_encoder(error))
+        return JSONResponse(content=jsonable_encoder(error), status_code=error.statusCode)
 
     def log(self):
         logger = logging.getLogger("Exception")

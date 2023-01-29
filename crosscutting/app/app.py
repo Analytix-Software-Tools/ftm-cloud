@@ -5,7 +5,7 @@ from slowapi.errors import RateLimitExceeded
 from starlette.middleware.cors import CORSMiddleware
 
 from config.config import limiter
-from crosscutting.error.exception import handle_default_exceptions, configure_logging
+from crosscutting.error.exception import handle_default_exceptions, configure_logging, FtmException
 
 
 class FTMApi(FastAPI):
@@ -50,6 +50,7 @@ class FTMApi(FastAPI):
         self.state.limiter = limiter
         self.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
         self.add_exception_handler(Exception, handle_default_exceptions)
+        self.add_exception_handler(FtmException, handle_default_exceptions)
         self.add_middleware(CORSMiddleware,
                             allow_origins=["*"],
                             allow_credentials=True,

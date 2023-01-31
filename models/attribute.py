@@ -84,7 +84,7 @@ class AttributeRangeValue(BaseModel):
 
 class AttributeDropdownValue(BaseModel):
     options: list[str]
-    value: str
+    value: str | None
 
     class Config:
         scheme_extra = {

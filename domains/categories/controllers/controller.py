@@ -76,8 +76,8 @@ async def delete_category(pid: str):
         raise FtmException('error.category.NotEmpty', developer_message=message, user_message=message)
     if len(product_types) > 0:
         message = "Please remove or de-associate the following product types before deletion: "
-        for i in product_types:
-            message += product_types[i].name
+        for product_type in product_types:
+            message += product_type.name + ' '
         raise FtmException('error.category.NotEmpty', developer_message=message, user_message=message)
     await categories_service.delete_document(pid=pid)
     return Response(status_code=200, response_type="success", description="Category deleted.")

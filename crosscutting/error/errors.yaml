@@ -55,7 +55,7 @@ errors:
       logLevel: WARNING
       traceback: true
       info: http://www.example.com/
-    error.attribute.InvalidAttributeDropDownValue:
+    error.attribute.InvalidAttributeDropdownValue:
       statusCode: 400
       developerMessage: The AttributeDropdownValue format is invalid.
       userMessage: There was an error while processing your request. Our technical staff have been notified.
@@ -195,6 +195,14 @@ errors:
       statusCode: 404
       developerMessage: The privilege requested was not found.
       userMessage: Uh oh! That privilege was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.producttype.InvalidName:
+      statusCode: 409
+      developerMessage: The product type name is in use.
+      userMessage: This product type name is taken or is invalid. Try another one!
       uuid: true
       logLevel: WARNING
       traceback: true

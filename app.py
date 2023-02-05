@@ -1,17 +1,17 @@
-from fastapi import FastAPI, Depends
+from fastapi import Depends
 
-from auth.jwt_bearer import token_listener
-from config.config import initiate_database
-from crosscutting.app.app import FTMApi
-from domains.users.controllers.controller import router as user_router
-from domains.organizations.controllers.controller import router as organization_router
-from domains.privileges.controllers.controller import router as privilege_router
-from domains.industries.controllers.controller import router as industry_router
-from domains.categories.controllers.controller import categories_router
-from domains.attributes.controllers.controller import router as attribute_router
-from domains.product_types.controllers.controller import product_type_router
-from domains.products.controllers.controller import product_router
-from domains.reports.controllers.controller import router as reports_router
+from ftmcloud.core.auth.jwt_bearer import token_listener
+from ftmcloud.db.init_db import initiate_database
+from ftmcloud.core.app.app import FTMApi
+from ftmcloud.api.domains.users.controllers.controller import router as user_router
+from ftmcloud.api.domains.organizations.controllers.controller import router as organization_router
+from ftmcloud.api.domains.privileges.controllers.controller import router as privilege_router
+from ftmcloud.api.domains.industries.controllers.controller import router as industry_router
+from ftmcloud.api.domains.categories.controllers.controller import categories_router
+from ftmcloud.api.domains.attributes.controllers.controller import router as attribute_router
+from ftmcloud.api.domains.product_types.controllers.controller import product_type_router
+from ftmcloud.api.domains.products.controllers.controller import product_router
+from ftmcloud.api.domains.reports.controllers.controller import router as reports_router
 
 app = FTMApi()
 

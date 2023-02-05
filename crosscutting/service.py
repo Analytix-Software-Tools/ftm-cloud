@@ -57,24 +57,27 @@ class Service:
         :return: The list of documents.
         """
         query = {}
-        if q is not None:
-            query = json.loads(q)
-        if additional_filters is not None:
-            query = {**query, **additional_filters}
-        config = Settings()
-        if limit is None:
-            limit = config.DEFAULT_QUERY_LIMIT
-        elif limit > config.MAX_QUERY_LIMIT:
-            limit = config.DEFAULT_QUERY_LIMIT
-        sort_criteria = []
-        if sort is not None:
-            sort_direction = sort[0]
-            sort_field = sort[1:]
-            if sort_direction == '^':
-                sort_direction = 1
-            elif sort_direction == '-':
-                sort_direction = -1
-            sort_criteria.append((sort_field, sort_direction))
+        try:
+            if q is not None:
+                query = json.loads(q)
+            if additional_filters is not None:
+                query = {**query, **additional_filters}
+            config = Settings()
+            if limit is None:
+                limit = config.DEFAULT_QUERY_LIMIT
+            elif limit > config.MAX_QUERY_LIMIT:
+                limit = config.DEFAULT_QUERY_LIMIT
+            sort_criteria = []
+            if sort is not None:
+                sort_direction = sort[0]
+                sort_field = sort[1:]
+                if sort_direction == '^':
+                    sort_direction = 1
+                elif sort_direction == '-':
+                    sort_direction = -1
+                sort_criteria.append((sort_field, sort_direction))
+        except BaseException as E:
+            raise FtmException('error.query.InvalidQuery', developer_message=E.__str__())
         documents = await self.collection.find({"isDeleted": {"$ne": True}, **query}, limit=limit, skip=offset,
                                                sort=sort_criteria).to_list()
         return documents
@@ -87,10 +90,13 @@ class Service:
         :return: The total count of documents matching the specified criteria.
         """
         query = {}
-        if q is not None:
-            query = json.loads(q)
-        if additional_filters is not None:
-            query = {**query, **additional_filters}
+        try:
+            if q is not None:
+                query = json.loads(q)
+            if additional_filters is not None:
+                query = {**query, **additional_filters}
+        except BaseException:
+            raise FtmException('error.query.InvalidQuery')
         return await self.collection.find(query, {"isDeleted": {"$ne": True}}).count()
 
     async def validate_exists(self, pid: str):

@@ -21,7 +21,8 @@ from slowapi.util import get_remote_address
 class Settings(BaseSettings):
     # database configurations
     # 'mongodb+srv://admin:eky0PQyN3cd71WwY@cluster0.illqh.mongodb.net'
-    DATABASE_URL: Optional[str] =  os.environ['MONGO_URI_PROD_ENCODED'] if 'MONGO_URI_PROD_ENCODED' in os.environ else 'mongodb://mongodb:27017'
+    DATABASE_URL: Optional[str] = os.environ[
+        'MONGO_URI_PROD_ENCODED'] if 'MONGO_URI_PROD_ENCODED' in os.environ else 'mongodb://mongodb:27017'
     MAX_QUERY_LIMIT: int = 100
     DEFAULT_QUERY_LIMIT: int = 10
 

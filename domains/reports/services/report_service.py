@@ -74,19 +74,25 @@ class ReportService:
                         else:
                             product_score -= 1
                     case "dropdown":
-                        # Compare based on whether at least one value in the user spec matches.
-                        # Add 1/n for each match of the requirement in the product, where n is the number of
-                        # requirement-designated attributes.
+                        requirement_values = product.attributeValues[i].value.options
+                        requirement_values = requirement_attr_pid_to_value[
+                            product.attributeValues[i].attributePid
+                        ].value.options
+                        match = any(lambda x: x in requirement_values for x in requirement_values)
+                        if match:
+                            product_score += 1
+                        else:
+                            product_score -= 1
                         break
                     case "text":
-                        # NOTE: As of now, if an exact match is located, simply add 1.
+                        # Rank based on levenshtein distance formula.
                         if requirement_attr_pid_to_value[product.attributeValues[i].attributePid].value.value == \
                                 product.attributeValues[i].value.value:
                             product_score += 1
                         break
         return product_score
 
-    def _rank_product_hits(self, products, requirement_attr_pid_to_value, attribute_pid_mapping, attribute_pid_to_mean):
+    def  _rank_product_hits(self, products, requirement_attr_pid_to_value, attribute_pid_mapping, attribute_pid_to_mean):
         """
         For each product in the subset, cross-references the attribute data type. Applies a variance
         matching algorithm for numbers and ranges and a string matching. Begins each product with
@@ -118,7 +124,7 @@ class ReportService:
         :return: a mapping of attribute PIDs to mean
         """
         attribute_pid_to_values = {}
-        attribute_pid_to_mean = {}
+        attribute_pid_to_mean = {} 
         attribute_pids = []
         for i in range(0, len(products)):
             for j in range(0, len(products[i].attributeValues)):

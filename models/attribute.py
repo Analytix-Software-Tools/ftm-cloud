@@ -12,7 +12,7 @@ class Attribute(BaseDocument):
     pid: Optional[str]
     name: str
     description: str
-    type: Literal["number", "range", "text", "dropdown"]
+    type: Literal["number", "range", "text", "dropdown", "boolean"]
 
     class Collection:
         name = "attributes"

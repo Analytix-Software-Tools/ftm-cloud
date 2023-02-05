@@ -15,7 +15,7 @@ router = APIRouter()
 @router.post('/products', response_description="Successfully retrieved hits.",
              response_model=Response[HitList[Product]],
              responses=default_exception_list)
-@limiter.limit('50/minute')
+@limiter.limit('30/minute')
 async def search_products(request: Request, query: ProductSearchQuery = Body(...)):
     """
 

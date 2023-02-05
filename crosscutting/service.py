@@ -76,8 +76,8 @@ class Service:
                 elif sort_direction == '-':
                     sort_direction = -1
                 sort_criteria.append((sort_field, sort_direction))
-        except BaseException as E:
-            raise FtmException('error.query.InvalidQuery', developer_message=E.__str__())
+        except ValueError as E:
+            raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
         documents = await self.collection.find({"isDeleted": {"$ne": True}, **query}, limit=limit, skip=offset,
                                                sort=sort_criteria).to_list()
         return documents
@@ -95,8 +95,8 @@ class Service:
                 query = json.loads(q)
             if additional_filters is not None:
                 query = {**query, **additional_filters}
-        except BaseException:
-            raise FtmException('error.query.InvalidQuery')
+        except ValueError as E:
+            raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
         return await self.collection.find(query, {"isDeleted": {"$ne": True}}).count()
 
     async def validate_exists(self, pid: str):

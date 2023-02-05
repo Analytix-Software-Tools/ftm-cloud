@@ -7,6 +7,14 @@ errors:
       logLevel: ERROR
       traceback: true
       info: http://www.example.com/
+    error.general.InvalidJson:
+      statusCode: 400
+      developerMessage: The JSON request is of an unprocessable formatting.
+      userMessage: Something went wrong - our technical team has been notified.
+      uuid: true
+      logLevel: ERROR
+      traceback: true
+      info: http://www.example.com/
     error.patch.InvalidPatch:
       statusCode: 422
       developerMessage: The patch request is in invalid or inoperable format.

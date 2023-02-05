@@ -7,7 +7,8 @@ from models.document import BaseDocument
 
 
 class Attribute(BaseDocument):
-    """Represents an attribute that can exist on a service.
+    """
+    Properties of product types or products that a user may specify to query by.
     """
     pid: Optional[str]
     name: str

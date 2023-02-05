@@ -10,7 +10,10 @@
     "openapi-server-generate-tests": "rm -rf server/release && openapi-generator-cli generate -g python-fastapi -i http://localhost:8080/openapi.json --output 'server/release' --skip-validate-spec && node tests.js",
     "ftmcloud:run-dev": "cd ../ && docker compose up -d",
     "ftmcloud:reboot-mongo": "cd ../ && docker compose up -d --build --force-recreate mongodb",
-    "ftmcloud:reboot-web": "cd ../ && docker compose up -d --build --force-recreate web"
+    "ftmcloud:reboot-web": "cd ../ && docker compose up -d --build --force-recreate web",
+    "dev:build-image": "cd ../ && docker build --platform=linux/amd64 . -t cr2244/ftmcloud:dev",
+    "dev:push-image": "sudo docker login && sudo docker push cr2244/ftmcloud:dev",
+    "dev:deploy": "npm run dev:build-image && npm run dev:push-image"
   },
   "keywords": [],
   "author": "",

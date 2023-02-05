@@ -9,7 +9,6 @@ from beanie.odm.fields import PydanticObjectId
 
 
 class BaseDocument(Document):
-    """A model that wraps database objects to store universal fields."""
 
     # id: PydanticObjectId = Field(..., exclude=True)
     createdAt: Optional[datetime.datetime] = Field(default=datetime.datetime.now(), exclude=True)

@@ -1,3 +1,4 @@
+import base64
 import os
 from typing import Optional
 
@@ -19,10 +20,10 @@ from slowapi.util import get_remote_address
 
 
 class Settings(BaseSettings):
-    # database configurations
-    # 'mongodb+srv://admin:eky0PQyN3cd71WwY@cluster0.illqh.mongodb.net'
-    DATABASE_URL: Optional[str] = os.environ[
-        'MONGO_URI_PROD_ENCODED'] if 'MONGO_URI_PROD_ENCODED' in os.environ else 'mongodb://mongodb:27017'
+    MONGO_URI = 'mongodb://mongodb:27017'
+    if 'MONGO_URI_ENCODED' in os.environ:
+        MONGO_URI = base64.b64decode(os.environ['MONGO_URI_ENCODED'])
+    DATABASE_URL: Optional[str] = MONGO_URI
     MAX_QUERY_LIMIT: int = 100
     DEFAULT_QUERY_LIMIT: int = 10
 

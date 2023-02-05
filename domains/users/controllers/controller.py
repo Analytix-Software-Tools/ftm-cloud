@@ -13,8 +13,6 @@ from domains.users.services.user_services import UserService
 
 router = APIRouter()
 
-hash_helper = CryptContext(schemes=["bcrypt"])
-
 
 @router.post("/login", response_model=LoginResponse, responses=default_exception_list)
 async def login_user(credentials: UserSignIn = Body(...)):
@@ -29,17 +27,13 @@ async def login_user(credentials: UserSignIn = Body(...)):
 async def signup_user(new_user: User = Body(...)):
     """Registers a new user within the space.
     """
-    user_exists = await User.find_one(User.email == new_user.email, {"isDeleted": {"$ne": True}})
-    if user_exists:
-        raise FtmException('error.user.InvalidEmail')
-
     user_services = UserService()
+    user = await user_services.validate_new_user(user=new_user)
     privilege_service = PrivilegesService()
     organization_service = OrganizationsService()
-    await privilege_service.validate_exists(new_user.privilegePid)
-    await organization_service.validate_exists(pid=new_user.organizationPid)
-    new_user.password = hash_helper.encrypt(new_user.password)
-    new_user = await user_services.add_document(new_user)
+    await privilege_service.validate_exists(pid=user.privilegePid)
+    await organization_service.validate_exists(pid=user.organizationPid)
+    await user_services.add_document(user)
     return new_user
 
 

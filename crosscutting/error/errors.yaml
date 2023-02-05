@@ -31,6 +31,14 @@ errors:
       logLevel: WARNING
       traceback: true
       info: http://www.example.com/
+    error.query.InvalidSort:
+      statusCode: 422
+      developerMessage: The sort criteria is invalid. Use '^' for ascending or '-' for descending!
+      userMessage: An error occurred while processing your request. Our technical staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
     error.attribute.InvalidName:
       statusCode: 409
       developerMessage: The attribute name is in use.

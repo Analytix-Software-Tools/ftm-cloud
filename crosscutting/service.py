@@ -57,27 +57,29 @@ class Service:
         :return: The list of documents.
         """
         query = {}
-        try:
-            if q is not None:
+        if q is not None:
+            try:
                 query = json.loads(q)
-            if additional_filters is not None:
-                query = {**query, **additional_filters}
-            config = Settings()
-            if limit is None:
-                limit = config.DEFAULT_QUERY_LIMIT
-            elif limit > config.MAX_QUERY_LIMIT:
-                limit = config.DEFAULT_QUERY_LIMIT
-            sort_criteria = []
-            if sort is not None:
-                sort_direction = sort[0]
-                sort_field = sort[1:]
-                if sort_direction == '^':
-                    sort_direction = 1
-                elif sort_direction == '-':
-                    sort_direction = -1
-                sort_criteria.append((sort_field, sort_direction))
-        except ValueError as E:
-            raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
+            except ValueError as E:
+                raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
+        if additional_filters is not None:
+            query = {**query, **additional_filters}
+        config = Settings()
+        if limit is None:
+            limit = config.DEFAULT_QUERY_LIMIT
+        elif limit > config.MAX_QUERY_LIMIT:
+            limit = config.DEFAULT_QUERY_LIMIT
+        sort_criteria = []
+        if sort is not None:
+            sort_direction = sort[0]
+            if sort_direction != '^' or sort_direction != '-':
+                raise FtmException('error.query.InvalidSort')
+            sort_field = sort[1:]
+            if sort_direction == '^':
+                sort_direction = 1
+            elif sort_direction == '-':
+                sort_direction = -1
+            sort_criteria.append((sort_field, sort_direction))
         documents = await self.collection.find({"isDeleted": {"$ne": True}, **query}, limit=limit, skip=offset,
                                                sort=sort_criteria).to_list()
         return documents

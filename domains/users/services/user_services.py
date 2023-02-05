@@ -14,8 +14,25 @@ class UserService(Service):
     def __init__(self):
         super(UserService, self).__init__(collection=User)
 
+    async def validate_new_user(self, user):
+        """
+        Validates a new user to ensure their email is not taken. Hashes the
+        user's password and returns the validated user.
+
+        :param user: the user to validate
+        :return: the user with validated fields
+        """
+        user_exists = await self.collection.find_one(User.email == user.email, {"isDeleted": {"$ne": True}})
+        if user_exists:
+            raise FtmException('error.user.InvalidEmail')
+        new_user = user
+        hash_helper = CryptContext(schemes=["bcrypt"])
+        new_user.password = hash_helper.encrypt(new_user.password)
+        return new_user
+
     async def patch_users_profile(self, pid, patch_document_list):
-        """Patches the user's own profile with information provided by them.
+        """
+        Patches the user's own profile with information provided by them.
         """
 
         await self.validate_exists(pid=pid)

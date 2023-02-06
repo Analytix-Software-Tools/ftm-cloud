@@ -110,7 +110,7 @@ def handle_default_exceptions(request: Request, exc: Exception):
     :return:
     """
     if not isinstance(exc, FtmException):
-        exc = FtmException(error_code="exception", exception=exc)
+        exc = FtmException(error_code="error", exception=exc)
         exc.log()
     return exc.__json__()
 

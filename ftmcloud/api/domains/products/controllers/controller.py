@@ -24,11 +24,14 @@ class ProductsController:
         response_description="Successfully registered product.",
         responses=default_exception_list
     )
-    async def add_product(self, new_product: Product = Body(...)):
+    async def add_product(self, new_product: Product = Body(...), current_user: User = Depends(get_current_user)):
         """
         Registers a new product within the space.
         """
         products_service = ProductService()
+        if not has_elevated_privileges(user=current_user) and new_product.organizationPid != \
+                current_user.organizationPid:
+            raise FtmException("error.organization.NotFound")
         new_product = await products_service.add_document(new_product)
         return new_product
 

@@ -115,7 +115,7 @@ class Service:
             query = {**query, **additional_filters}
         exists = await self.collection.find_one(query)
         if exists is None:
-            raise FtmException(f"exception.{self.collection.__name__.lower()}.NotFound")
+            raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
         return exists
 
     async def validate_pids_in_list(self, pid_list: [str]):
@@ -151,7 +151,7 @@ class Service:
                 raise FtmException('error.patch.InvalidPatch')
         result = await self.collection.find_one({"pid": pid})
         if result is None:
-            raise FtmException(f"exception.{self.collection.__name__.lower()}.NotFound")
+            raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
         try:
             diff_doc = patch.apply(result.dict())
             try:
@@ -175,5 +175,5 @@ class Service:
         """
         exists = await self.collection.find_one({"isDeleted": {"$ne": True}, "pid": pid})
         if exists is None:
-            raise FtmException(f"exception.{self.collection.__name__.lower()}.NotFound")
+            raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
         await exists.update({"$set": {"isDeleted": True}})

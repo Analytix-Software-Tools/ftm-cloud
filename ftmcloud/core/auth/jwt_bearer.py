@@ -4,6 +4,7 @@ from jwt.exceptions import InvalidTokenError
 
 from ftmcloud.core.exception.exception import FtmException
 from .jwt_handler import decode_jwt
+from ...models.user import User
 
 
 def verify_jwt(jwtoken: str) -> bool:
@@ -12,7 +13,7 @@ def verify_jwt(jwtoken: str) -> bool:
     try:
         payload = decode_jwt(jwtoken)
     except InvalidTokenError:
-        raise FtmException('exception.user.InvalidToken')
+        raise FtmException('error.user.InvalidToken')
 
     if payload:
         is_token_valid = True
@@ -29,17 +30,17 @@ class JWTBearer(HTTPBearer):
         print("Credentials :", credentials)
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise FtmException('exception.user.InvalidToken',
+                raise FtmException('error.user.InvalidToken',
                                    developer_message="Bad authentication method. Must be of type 'Bearer'!")
 
             if not verify_jwt(credentials.credentials):
-                raise FtmException('exception.user.InvalidToken', developer_message="Access token integrity is invalid!")
+                raise FtmException('error.user.InvalidToken', developer_message="Access token integrity is invalid!")
 
             await init_controller(credentials.credentials, request)
 
             return credentials.credentials
         else:
-            raise FtmException('exception.user.InvalidToken')
+            raise FtmException('error.user.InvalidToken')
 
 
 token_listener = JWTBearer()
@@ -50,6 +51,21 @@ async def get_user_token(token: str = Depends(token_listener)):
     is specified, validates that the permission exists in the user's decoded ACL.
     """
     user = decode_jwt(token)
+    return user
+
+
+async def get_current_user(token_claims: dict = Depends(get_user_token)):
+    """
+    Retrieves the current user using the bearer access token claim.
+
+    :param token_claims: the encoded token
+    :return: the user, if they exist, otherwise an FtmException will be thrown
+    """
+    if 'sub' not in token_claims:
+        raise FtmException('error.general.BadTokenIntegrity')
+    user = await User.find_one({"pid": token_claims["sub"], "isDeleted": {"$ne": True}})
+    if user is None:
+        raise FtmException("error.user.InvalidUser")
     return user
 
 
@@ -66,4 +82,4 @@ async def init_controller(token: str, request: Request):
     acl_list = user['permissions']
     route_path = request.method + ':' + str(request.url).replace(f'{str(request.base_url)}api/v0/', '').split('/')[0]
     if route_path not in acl_list:
-        raise FtmException('exception.user.InsufficientPrivileges')
+        raise FtmException('error.user.InsufficientPrivileges')

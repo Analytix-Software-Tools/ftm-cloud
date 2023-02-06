@@ -15,6 +15,14 @@ errors:
       logLevel: ERROR
       traceback: true
       info: http://www.example.com/
+    error.general.BadTokenIntegrity:
+      statusCode: 400
+      developerMessage: The access token integrity is not valid.
+      userMessage: Something went wrong - our technical team has been notified.
+      uuid: true
+      logLevel: ERROR
+      traceback: true
+      info: http://www.example.com/
     error.patch.InvalidPatch:
       statusCode: 422
       developerMessage: The patch request is in invalid or inoperable format.
@@ -111,7 +119,7 @@ errors:
         logLevel: WARNING
         traceback: true
         info: http://www.example.com/
-    error.user.InvalidPassword:
+    error.user.PasswordStrength:
         statusCode: 409
         developerMessage: The password is not strong enough. Should be longer than 8 characters with special characters.
         userMessage: Please use a password greater than 8 characters and include at least 2 special characters!

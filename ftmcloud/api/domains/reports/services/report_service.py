@@ -153,13 +153,13 @@ class ReportService:
         :return: a list of hits
         """
         if searchText == "" or searchText is None:
-            raise FtmException('exception.query.InvalidQuery', developer_message="Invalid search query!")
+            raise FtmException('error.query.InvalidQuery', developer_message="Invalid search query!")
         if limit > self._hit_limit:
             limit = self._hit_limit
         product_type_exists = await self.product_types_collection.find_one({"pid": productTypePid,
                                                                             "isDeleted": {"$ne": True}})
         if product_type_exists is None:
-            raise FtmException('exception.producttype.NotFound', developer_message="Invalid product type specified!",
+            raise FtmException('error.producttype.NotFound', developer_message="Invalid product type specified!",
                                user_message="Invalid product type specified!")
         attribute_pid_mapping = {}
         requirement_attr_pid_to_value = {}
@@ -170,14 +170,14 @@ class ReportService:
             attribute_pid_mapping[attributes[i].pid] = attributes[i]
         for j in range(0, len(requirements)):
             if requirements[j].attributePid not in attribute_pid_mapping:
-                raise FtmException('exception.query.InvalidQuery', developer_message="Invalid search query specified!")
+                raise FtmException('error.query.InvalidQuery', developer_message="Invalid search query specified!")
             else:
                 requirement_attr_pid_to_value[requirements[j].attributePid] = requirements[j].value
                 attribute_pids.append(requirements[j].attributePid)
                 if not has_attributes:
                     has_attributes = True
         if not has_attributes:
-            raise FtmException('exception.query.InvalidQuery', developer_message="Requirements length must be > 0!",
+            raise FtmException('error.query.InvalidQuery', developer_message="Requirements length must be > 0!",
                                user_message="You must specify at least one attribute in your requirement!")
         query = {"name": {"$regex": searchText, "$options": "i"},
                  "productTypePid": productTypePid,

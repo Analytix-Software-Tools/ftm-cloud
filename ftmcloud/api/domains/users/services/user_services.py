@@ -1,3 +1,5 @@
+from password_validator import PasswordValidator
+
 from ftmcloud.core.auth.jwt_handler import sign_jwt
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.core.service import Service
@@ -22,7 +24,11 @@ class UserService(Service):
         """
         user_exists = await self.collection.find_one(User.email == user.email, {"isDeleted": {"$ne": True}})
         if user_exists:
-            raise FtmException('exception.user.InvalidEmail')
+            raise FtmException('error.user.InvalidEmail')
+        validation_criteria = PasswordValidator()
+        validation_criteria.min(8).max(100).has().lowercase().has().digits().has().no().spaces().has().symbols()
+        if not validation_criteria.validate(user.password):
+            raise FtmException("error.user.PasswordStrength")
         new_user = user
         hash_helper = CryptContext(schemes=["bcrypt"])
         new_user.password = hash_helper.encrypt(new_user.password)
@@ -36,7 +42,7 @@ class UserService(Service):
         await self.validate_exists(pid=pid)
         for document in patch_document_list:
             if document.path == '/organizationPid' or document.path == '/privilegePid':
-                raise FtmException('exception.patch.InvalidPatch')
+                raise FtmException('error.patch.InvalidPatch')
 
         return await self.patch(pid=pid, patch_document_list=patch_document_list)
 
@@ -54,9 +60,9 @@ class UserService(Service):
             if password:
                 return await sign_jwt(user_exists)
 
-            raise FtmException('exception.user.InvalidCredentials')
+            raise FtmException('error.user.InvalidCredentials')
 
-        raise FtmException('exception.user.InvalidCredentials')
+        raise FtmException('error.user.InvalidCredentials')
 
     async def users_profile(self, pid) -> UserProfile:
         """Retrieves the user's full profile information by returning
@@ -95,5 +101,5 @@ class UserService(Service):
             }
         }]).to_list()
         if len(user) == 0:
-            raise FtmException('exception.user.NotFound')
+            raise FtmException('error.user.NotFound')
         return user[0]

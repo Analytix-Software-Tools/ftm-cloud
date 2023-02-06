@@ -13,11 +13,11 @@ class CategoriesService(Service):
         category_exists = await self.find_one(
             {"name": new_category.name, "isDeleted": {"$ne": "true"}})
         if category_exists:
-            raise FtmException('exception.category.InvalidName')
+            raise FtmException('error.category.InvalidName')
         if new_category.parentCategoryPid is not None:
             parent_category_exists = await self.find_one({"pid": new_category.parentCategoryPid, "isDeleted": {"$ne": "true"}})
             if not parent_category_exists:
-                raise FtmException('exception.category.NotFound', developer_message="Parent category not found!",
+                raise FtmException('error.category.NotFound', developer_message="Parent category not found!",
                                    user_message="We couldn't find the parent category you specified.")
         return await super(CategoriesService, self).add_document(new_document=new_category)
 
@@ -27,11 +27,11 @@ class CategoriesService(Service):
                 exists = await self.base_model.find_one(
                     {"pid": patch_document_list[i].value, "isDeleted": {"$ne": "true"}})
                 if exists is None:
-                    raise FtmException('exception.category.NotFound')
+                    raise FtmException('error.category.NotFound')
         return await super(CategoriesService, self).patch(pid=pid, patch_document_list=patch_document_list)
 
     async def delete_document(self, pid: str):
         product_types = await ProductType.find_one({"productCategoryPid": pid, "isDeleted": {"$ne": "true"}})
         if product_types is not None:
-            raise FtmException('exception.category.NotEmpty')
+            raise FtmException('error.category.NotEmpty')
         return await super(CategoriesService, self).delete_document(pid=pid)

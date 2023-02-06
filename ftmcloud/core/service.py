@@ -61,7 +61,7 @@ class Service:
             try:
                 query = json.loads(q)
             except ValueError as E:
-                raise FtmException('exception.general.InvalidJson', developer_message=E.__str__())
+                raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
         if additional_filters is not None:
             query = {**query, **additional_filters}
         config = Settings()
@@ -72,8 +72,8 @@ class Service:
         sort_criteria = []
         if sort is not None:
             sort_direction = sort[0]
-            if sort_direction != '^' or sort_direction != '-':
-                raise FtmException('exception.query.InvalidSort')
+            if sort_direction != '^' and sort_direction != '-':
+                raise FtmException('error.query.InvalidSort')
             sort_field = sort[1:]
             if sort_direction == '^':
                 sort_direction = 1
@@ -98,16 +98,22 @@ class Service:
             if additional_filters is not None:
                 query = {**query, **additional_filters}
         except ValueError as E:
-            raise FtmException('exception.general.InvalidJson', developer_message=E.__str__())
+            raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
         return await self.collection.find(query, {"isDeleted": {"$ne": True}}).count()
 
-    async def validate_exists(self, pid: str):
+    async def validate_exists(self, pid: str, additional_filters=None):
         """Validate the document exists.
 
+        :param additional_filters:
         :param pid:
         :return:
         """
-        exists = await self.collection.find_one({"isDeleted": {"$ne": True}, "pid": pid})
+        query = {"isDeleted": {"$ne": True}}
+        if pid is not None:
+            query["pid"] = pid
+        if additional_filters is not None:
+            query = {**query, **additional_filters}
+        exists = await self.collection.find_one(query)
         if exists is None:
             raise FtmException(f"exception.{self.collection.__name__.lower()}.NotFound")
         return exists
@@ -142,7 +148,7 @@ class Service:
             if patch_list[i]['path'] == '/_id' \
                     or patch_list[i]['path'] == '/pid' \
                     or patch_list[i]['path'] == '/isDeleted':
-                raise FtmException('exception.patch.InvalidPatch')
+                raise FtmException('error.patch.InvalidPatch')
         result = await self.collection.find_one({"pid": pid})
         if result is None:
             raise FtmException(f"exception.{self.collection.__name__.lower()}.NotFound")
@@ -151,13 +157,13 @@ class Service:
             try:
                 new_doc = self.collection(**diff_doc)
             except ValidationError:
-                raise FtmException('exception.patch.InvalidPatch')
+                raise FtmException('error.patch.InvalidPatch')
             update_query = {"$set": {
                 field: value for field, value in new_doc.dict().items() if field != "id"
             }}
             await result.update(update_query)
         except JsonPatchException:
-            raise FtmException('exception.patch.InvalidPatch')
+            raise FtmException('error.patch.InvalidPatch')
 
     async def delete_document(self, pid: str):
         """Delete the specified document by asserting the isDeleted field

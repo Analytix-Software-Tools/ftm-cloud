@@ -38,7 +38,7 @@ class FtmException(Exception):
         if exception:
             self.with_traceback(exception.__traceback__)
 
-        with open('core/exception/errors.yaml', "r") as stream:
+        with open('ftmcloud/core/exception/errors.yaml', "r") as stream:
             try:
                 error_messages = yaml.safe_load(stream=stream)
                 if error_code not in error_messages['errors']:

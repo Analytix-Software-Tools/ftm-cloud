@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "FtmCloud"
     API_REVISION: str = "v0"
     DEBUG: bool = False
+    SUPERUSER_PRIVILEGE: str = "aefbe39c-2a12-471d-bd32-3a631f67c179"
 
     # Database
     MONGO_URI = base64.b64decode(os.environ['MONGO_URI_ENCODED']) if "MONGO_URI_ENCODED" in \

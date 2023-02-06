@@ -14,7 +14,7 @@ async def validate_login(credentials: HTTPBasicCredentials = Depends(security)):
     if admin:
         password = hash_helper.verify(credentials.password, admin['password'])
         if not password:
-            raise FtmException('exception.user.InvalidCredentials')
+            raise FtmException('error.user.InvalidCredentials')
         return True
     return False
 

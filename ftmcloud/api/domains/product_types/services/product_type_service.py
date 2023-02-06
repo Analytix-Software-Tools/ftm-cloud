@@ -16,12 +16,12 @@ class ProductTypesService(Service):
         product_type_exists = await self.find_one(
             {"name": new_product_type.name, "isDeleted": {"$ne": "true"}})
         if product_type_exists:
-            raise FtmException('exception.producttype.InvalidName')
+            raise FtmException('error.producttype.InvalidName')
         if new_product_type.categoryPid is not None:
             category_exists = await Category.find_one({
                 "pid": new_product_type.categoryPid, "isDeleted": {"$ne": "true"}})
             if category_exists is None:
-                raise FtmException('exception.category.NotFound')
+                raise FtmException('error.category.NotFound')
         await self.validate_attribute_values_in_product_type(attribute_values=new_product_type.attributeValues)
         return await super(ProductTypesService, self).add_document(new_document=new_product_type)
 
@@ -36,30 +36,30 @@ class ProductTypesService(Service):
         for i in range(0, len(attribute_values)):
             attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid, "isDeleted": {"$ne": "true"}})
             if attribute is None:
-                raise FtmException('exception.attribute.NotFound', developer_message=f"Attribute not found. attributeValues[{i}].attributePid")
+                raise FtmException('error.attribute.NotFound', developer_message=f"Attribute not found. attributeValues[{i}].attributePid")
             if attribute.type == "number":
                 try:
                     AttributeNumberValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise FtmException('exception.attribute.InvalidAttributeNumberValue',
+                    raise FtmException('error.attribute.InvalidAttributeNumberValue',
                                        developer_message=f"Invalid AttributeNumberValue on attributeValues[{i}].value")
             elif attribute.type == "dropdown":
                 try:
                     AttributeDropdownValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise FtmException('exception.attribute.InvalidAttributeDropdownValue',
+                    raise FtmException('error.attribute.InvalidAttributeDropdownValue',
                                        developer_message=f"Invalid AttributeDropdownValue on attributeValues[{i}].value")
             elif attribute.type == "range":
                 try:
                     AttributeRangeValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise FtmException('exception.attribute.InvalidAttributeRangeValue',
+                    raise FtmException('error.attribute.InvalidAttributeRangeValue',
                                        developer_message=f"Invalid AttributeRangeValue on attributeValues[{i}].value")
             elif attribute.type == "boolean":
                 try:
                     AttributeBooleanValue.parse_obj(attribute_values[i].value)
                 except:
-                    raise FtmException('exception.attribute.InvalidAttributeBooleanValue',
+                    raise FtmException('error.attribute.InvalidAttributeBooleanValue',
                                        developer_message=f"Invalid AttributeBooleanValue on attributeValues[{i}].value")
 
     async def patch(self, pid: str, patch_document_list: list[PatchDocument]):
@@ -70,5 +70,5 @@ class ProductTypesService(Service):
                 category_exists = await Category.find_one({
                     "pid": patch_document_list[i].value,"isDeleted": {"$ne": "true"}})
                 if category_exists is None:
-                    raise FtmException('exception.category.NotFound')
+                    raise FtmException('error.category.NotFound')
         await super(ProductTypesService, self).patch(pid=pid, patch_document_list=patch_document_list)

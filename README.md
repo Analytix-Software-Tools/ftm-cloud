@@ -1,3 +1,6 @@
+# Analytix - Overview
+Welcome to Analytix! Analytix is an up and coming cross-industrial AI-powered search engine for connecting users with the products and services they care about. The Analytix platform provides support for end users and organizations seeking a means to find the items they need at a detailed degree of specificity.
+
 # Structure of the Cloud
 This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
 and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These controllers generally connect with services which manage the interaction with the database. 

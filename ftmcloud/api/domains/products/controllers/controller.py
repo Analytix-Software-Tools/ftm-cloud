@@ -74,7 +74,7 @@ class ProductsController:
         scope_filter = None if has_elevated_privileges(current_user) else \
             {"organizationPid": current_user.organizationPid}
         product_exists = await products_service.validate_exists(pid=pid, additional_filters=scope_filter)
-        if len(product_exists) == 0:
+        if product_exists is None:
             raise FtmException("error.product.NotFound")
         return Response(status_code=200, response_type='success', description='Product retrieved.',
                         data=[product_exists])

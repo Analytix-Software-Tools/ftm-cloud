@@ -21,7 +21,7 @@ def test_add_attribute(client: TestClient):
     )
 
     # uncomment below to assert the status code of the HTTP response
-    #assert response.status_code == 200
+    assert response.status_code == 200
 
 
 def test_delete_attribute(client: TestClient):

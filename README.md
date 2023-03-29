@@ -2,14 +2,18 @@
 This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
 and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These controllers generally connect with services which manage the interaction with the database. 
 
-There are 3 services, that make up the FTM-Cloud prod environment - 2 hosted on Linux VMs, one Atlas instance. The services are:
+There are a total of 4 resources (accounting for dev and prod environments) within the FTMCloud:
 
-ftm-cloud-prod
-ftm-services-prod
-ftm-cloud-mongo-prod
+ftmcloud-prod
+ftmcloud-dev
+ftmcloud-mongo-prod (Atlas)
+ftmcloud-mongo-dev (Atlas)
+
+Each ftmcloud instances is hosted on Azure App Services with IP whitelisting, whereas the ftmcloud-mongo instances
+are MongoDB Atlas clusters with network whitelisting.
 
 # Development Environment
-A development environment can easily be setup for non-production or prod-like environments at any time by running
+A development environment can easily be setup for local development and testing at any time by running
 the command
 
 ```commandline

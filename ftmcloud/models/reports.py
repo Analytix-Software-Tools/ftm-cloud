@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
 from pydantic.schema import Generic
+from pydantic.typing import Dict
 
 from ftmcloud.models.attribute import AttributeValue
 from ftmcloud.models.response import DataT
@@ -14,6 +15,7 @@ class ProductSearchQuery(BaseModel):
     productTypePid: str
     requirements: list[AttributeValue]
     limit: int = 10
+    offset: int = 0
 
     class Config:
         scheme_extra = {
@@ -21,6 +23,7 @@ class ProductSearchQuery(BaseModel):
                 "searchText": "Search Text",
                 "productTypePid": "productTypePid",
                 "limit": 10,
+                "offset": 0,
                 "requirements": [
                     {
                         "attributePid": "attributePid",

@@ -22,12 +22,7 @@ class ReportsController:
     @limiter.limit('30/minute')
     async def search_products(self, request: Request, query: ProductSearchQuery = Body(...)):
         """
-
         Retrieves products that accurately fit a user-specified requirement.
-
-        :param request: the user request, passed into the rate-limiter
-        :param query: represents the current query
-        :return: a list of hits, organized by score
         """
         reports_service = ReportService()
         hit_list = await reports_service.search_products(searchText=query.searchText,

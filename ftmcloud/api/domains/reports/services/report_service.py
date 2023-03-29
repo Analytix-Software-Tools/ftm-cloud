@@ -163,9 +163,9 @@ class ReportService:
                                user_message="Invalid product type specified!")
         attribute_pid_mapping = {}
         requirement_attr_pid_to_value = {}
-        attribute_pids = []
+        attribute_pids = list(map(lambda x: x.attributePid, product_type_exists.attributeValues))
         has_attributes = False
-        attributes = await self.attributes_collection.find_all().to_list()
+        attributes = await self.attributes_collection.find({"pid": {"$in": attribute_pids}}).to_list()
         for i in range(0, len(attributes)):
             attribute_pid_mapping[attributes[i].pid] = attributes[i]
         for j in range(0, len(requirements)):
@@ -189,5 +189,8 @@ class ReportService:
                                        requirement_attr_pid_to_value=requirement_attr_pid_to_value,
                                        attribute_pid_mapping=attribute_pid_mapping,
                                        attribute_pid_to_mean=attribute_pid_to_mean)
-        results = HitList(hits=hits, maxScore=hits[0].score, total=len(hits))
+        total_result_len = len(hits)
+        end_ind = limit if total_result_len > limit else total_result_len
+        results = HitList(hits=hits[:end_ind], maxScore=hits[0].score if total_result_len > 0 else 0,
+                          total=total_result_len)
         return results

@@ -3,14 +3,6 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.http_validation_error import HTTPValidationError  # noqa: F401
-from openapi_server.models.http_error import HttpError  # noqa: F401
-from openapi_server.models.industry import Industry  # noqa: F401
-from openapi_server.models.patch_document import PatchDocument  # noqa: F401
-from openapi_server.models.response import Response  # noqa: F401
-from openapi_server.models.response_industry import ResponseIndustry  # noqa: F401
-
-
 def test_add_industry(client: TestClient):
     """Test case for add_industry
 

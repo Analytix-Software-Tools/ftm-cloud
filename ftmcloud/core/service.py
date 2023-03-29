@@ -1,5 +1,6 @@
 import datetime
 import json
+from json import JSONDecodeError
 
 from jsonpatch import JsonPatch, JsonPatchException
 
@@ -45,8 +46,18 @@ class Service:
         document = await new_document.create()
         return document
 
+
+    def _parse_q_fields(self, fields):
+        """
+        Sanitizes and ensures the q fields are a string in JSON format.
+        """
+        try:
+            return json.loads(fields)
+        except JSONDecodeError:
+            raise FtmException('error.query.InvalidQuery')
+
     async def get_all(self, q=None, offset=None, sort=None, limit=None,
-                      additional_filters=None):
+                      additional_filters=None, fields=None):
         """Retrieves all documents in the collection.
 
         :param additional_filters: A dict query applied after the q.
@@ -54,6 +65,7 @@ class Service:
         :param offset: Represents the offset from the initial document in the collection.
         :param sort: The field to sort by.
         :param limit: The max number of documents returned from the request.
+        :param fields: The fields to include in the request
         :return: The list of documents.
         """
         query = {}
@@ -80,7 +92,9 @@ class Service:
             elif sort_direction == '-':
                 sort_direction = -1
             sort_criteria.append((sort_field, sort_direction))
-        documents = await self.collection.find({"isDeleted": {"$ne": True}, **query}, limit=limit, skip=offset,
+        if fields is not None:
+            fields = self._parse_q_fields(fields=fields)
+        documents = await self.collection.find({"isDeleted": {"$ne": True}, **query}, projection=fields, limit=limit, skip=offset,
                                                sort=sort_criteria).to_list()
         return documents
 

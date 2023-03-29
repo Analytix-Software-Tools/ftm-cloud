@@ -11,7 +11,7 @@ from beanie.odm.fields import PydanticObjectId
 class BaseDocument(Document):
 
     # id: PydanticObjectId = Field(..., exclude=True)
-    createdAt: Optional[datetime.datetime] = Field(default=datetime.datetime.now(), exclude=True)
+    createdAt: datetime.datetime = Field(default=datetime.datetime.now())
     isDeleted: SecretBytes = Field(default=False, exclude=True)
 
     class Config:

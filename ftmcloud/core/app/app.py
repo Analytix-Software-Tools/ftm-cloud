@@ -38,6 +38,11 @@ class FTMApi(FastAPI):
                          description="Search engine and analytics API.",
                          version=self.configuration.API_REVISION,
                          debug=self.configuration.DEBUG,
+                         servers=[
+                             {
+                                 "url": "https://api.analytix-software.com/v0"
+                             }
+                         ],
                          license_info={
                              "name": "GNU General Public License v3.0",
                              "url": "https://www.gnu.org/licenses/gpl-3.0.en.html",

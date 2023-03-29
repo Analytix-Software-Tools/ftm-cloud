@@ -18,6 +18,7 @@ class Organization(BaseDocument):
     addressZip: str | int = ""
     phone: str = ""
     about: str = ""
+    siteUrl: str = ""
     industryPids: list[str] = []
 
     class Collection:

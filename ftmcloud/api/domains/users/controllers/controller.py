@@ -50,12 +50,11 @@ class UsersController:
     @router.get("/", response_description="Users retrieved", response_model=Response[UserResponse],
                 responses=default_exception_list)
     async def get_users(self, q: str | None = None, limit: int | None = None, offset: int | None = None,
-                        sort: str | None = None, fields: str | None = None,
-                        includeTotals: bool | None = None):
+                        sort: str | None = None, includeTotals: bool | None = None):
         """Gets all users using the user defined parameters.
         """
         user_services = UserService()
-        users = await user_services.get_all(q=q, limit=limit, offset=offset, sort=sort, fields=fields)
+        users = await user_services.get_all(q=q, limit=limit, offset=offset, sort=sort)
         headers = {}
         if includeTotals is not None:
             headers = {"X-Total-Count": str(await user_services.total(q=q))}

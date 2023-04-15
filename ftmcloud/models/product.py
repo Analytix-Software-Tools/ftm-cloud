@@ -1,3 +1,4 @@
+from beanie import Indexed
 from pydantic.class_validators import Optional
 
 from ftmcloud.models.attribute import AttributeValue
@@ -7,7 +8,7 @@ from ftmcloud.models.document import BaseDocument
 class Product(BaseDocument):
     """Represents a type of service to standardize formatting.
     """
-    pid: Optional[str]
+    pid: Indexed(str, unique=True)
     name: str
     description: str
     imgUrl: str = ""

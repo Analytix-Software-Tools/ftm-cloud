@@ -1,10 +1,12 @@
 import datetime
 import json
 from json import JSONDecodeError
+from copy import deepcopy
 
 from jsonpatch import JsonPatch, JsonPatchException
 
 import uuid
+
 from pydantic.error_wrappers import ValidationError
 
 from ftmcloud.core.config.config import Settings
@@ -46,18 +48,82 @@ class Service:
         document = await new_document.create()
         return document
 
-
-    def _parse_q_fields(self, fields):
+    def process_q(self, q, additional_filters):
         """
-        Sanitizes and ensures the q fields are a string in JSON format.
+        Parse the q, combine additional filters and add the default
+        delete filter.
+        """
+        deleted_filter = {"isDeleted": {"$ne": "true"}}
+        if q is not None:
+            # TODO: Should sanitize the query for invalid query values to prevent abuse.
+            # self._sanitize_query(q)
+
+            # TODO: Should create a datetime query if one is found.
+            # q = self._create_datetime_query(json.dumps(q))
+
+            q_list = [self.validate_is_json(q)]
+        else:
+            q_list = []
+
+        q_list.append(deleted_filter)
+
+        if additional_filters is not None:
+            for additional_filter in additional_filters:
+                q_list.append(additional_filter)
+
+        if len(q_list) > 1:
+            q = {"$and": q_list}
+        else:
+            q = q_list[0]
+
+        return q
+
+    @staticmethod
+    def validate_is_json(raw):
+        """
+        Validates the raw string is a JSON.
         """
         try:
-            return json.loads(fields)
-        except JSONDecodeError:
-            raise FtmException('error.query.InvalidQuery')
+            return json.loads(raw)
+        except JSONDecodeError as E:
+            raise FtmException("error.general.InvalidJson", developer_message=E.__str__())
+
+    def get_projection_model_from_fields(self, fields):
+        """
+        Acts as a factory method to generate a projection model instance with a subset
+        of collection fields.
+        """
+        projection_model = deepcopy(self.collection)
+        field_values = fields.values()
+
+        if all(x == "1" for x in field_values):
+            is_inclusion = True
+        elif all(x == "0" for x in field_values):
+            is_inclusion = False
+        else:
+            raise FtmException("error.user.InvalidQuery")
+
+        field_name_map = {}
+        for field in self.collection.__fields__.keys():
+            field_name_map[field] = True
+
+        new_fields = {} if is_inclusion else self.collection.__fields__
+
+        for key in fields.keys():
+            if is_inclusion and key in field_name_map:
+                new_fields[key] = self.collection.__fields__[key]
+            elif not is_inclusion and key in field_name_map:
+                new_fields.pop(key)
+            else:
+                raise FtmException("error.query.InvalidQuery")
+
+        projection_model.__fields__ = new_fields
+        projection_model.init_fields()
+
+        return projection_model
 
     async def get_all(self, q=None, offset=None, sort=None, limit=None,
-                      additional_filters=None, fields=None):
+                      additional_filters=None):
         """Retrieves all documents in the collection.
 
         :param additional_filters: A dict query applied after the q.
@@ -68,14 +134,9 @@ class Service:
         :param fields: The fields to include in the request
         :return: The list of documents.
         """
-        query = {}
-        if q is not None:
-            try:
-                query = json.loads(q)
-            except ValueError as E:
-                raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
-        if additional_filters is not None:
-            query = {**query, **additional_filters}
+
+        query = self.process_q(q=q, additional_filters=additional_filters)
+
         config = Settings()
         if limit is None:
             limit = config.DEFAULT_QUERY_LIMIT
@@ -92,10 +153,9 @@ class Service:
             elif sort_direction == '-':
                 sort_direction = -1
             sort_criteria.append((sort_field, sort_direction))
-        if fields is not None:
-            fields = self._parse_q_fields(fields=fields)
-        documents = await self.collection.find({"isDeleted": {"$ne": True}, **query}, projection=fields, limit=limit, skip=offset,
-                                               sort=sort_criteria).to_list()
+
+        documents = await self.collection.find(query, limit=limit, skip=offset, sort=sort_criteria).to_list()
+
         return documents
 
     async def total(self, q=None, additional_filters=None):

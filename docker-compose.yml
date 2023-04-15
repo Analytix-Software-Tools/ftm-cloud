@@ -9,6 +9,8 @@ services:
       - mongodb
     ports:
       - "8080:8080"
+    environment:
+      - MONGO_URI_ENCODED=bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0
 
   mongodb:
     image: mongo:5.0

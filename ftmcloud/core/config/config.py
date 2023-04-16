@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     # Database
     MONGO_URI = base64.b64decode(os.environ['MONGO_URI_ENCODED']) if "MONGO_URI_ENCODED" in \
-                                                                     os.environ else 'mongodb://mongodb:27017'
+                                                                     os.environ else base64.b64decode('bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0')
     DATABASE_URL: Optional[str] = MONGO_URI
     MAX_QUERY_LIMIT: int = 100
     DEFAULT_QUERY_LIMIT: int = 10

@@ -11,7 +11,7 @@ class Industry(BaseDocument):
     description: str
     naicsCode: int | None = None
 
-    class Collection:
+    class Settings:
         name = "industries"
 
     class Config:

@@ -14,7 +14,7 @@ class Attribute(BaseDocument):
     description: str
     type: Literal["number", "range", "text", "dropdown", "boolean"]
 
-    class Collection:
+    class Settings:
         name = "attributes"
 
     class Config:

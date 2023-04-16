@@ -32,7 +32,7 @@ class Service:
         :param q:
         :return:
         """
-        exists = await self.collection.find_one({"isDeleted": {"$ne": True}, **q})
+        exists = await self.collection.find_one({"isDeleted": {"$ne": "true"}, **q})
         return exists
 
     async def add_document(self, new_document):
@@ -68,8 +68,7 @@ class Service:
         q_list.append(deleted_filter)
 
         if additional_filters is not None:
-            for additional_filter in additional_filters:
-                q_list.append(additional_filter)
+            q_list.append(additional_filters)
 
         if len(q_list) > 1:
             q = {"$and": q_list}
@@ -173,7 +172,7 @@ class Service:
                 query = {**query, **additional_filters}
         except ValueError as E:
             raise FtmException('error.general.InvalidJson', developer_message=E.__str__())
-        return await self.collection.find(query, {"isDeleted": {"$ne": True}}).count()
+        return await self.collection.find(query, {"isDeleted": {"$ne": "true"}}).count()
 
     async def validate_exists(self, pid: str, additional_filters=None):
         """Validate the document exists.
@@ -182,7 +181,7 @@ class Service:
         :param pid:
         :return:
         """
-        query = {"isDeleted": {"$ne": True}}
+        query = {"isDeleted": {"$ne": "true"}}
         if pid is not None:
             query["pid"] = pid
         if additional_filters is not None:
@@ -247,7 +246,7 @@ class Service:
         :param pid: The pid of the document to delete.
         :return: None
         """
-        exists = await self.collection.find_one({"isDeleted": {"$ne": True}, "pid": pid})
+        exists = await self.collection.find_one({"isDeleted": {"$ne": "true"}, "pid": pid})
         if exists is None:
             raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
-        await exists.update({"$set": {"isDeleted": True}})
+        await exists.update({"$set": {"isDeleted": "true"}})

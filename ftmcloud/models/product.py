@@ -16,7 +16,7 @@ class Product(BaseDocument):
     organizationPid: str
     attributeValues: list[AttributeValue] = []
 
-    class Collection:
+    class Settings:
         name = "products"
 
     class Config:

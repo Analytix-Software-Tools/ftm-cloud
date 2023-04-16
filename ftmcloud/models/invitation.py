@@ -11,6 +11,6 @@ class Invitation(BaseDocument):
     email: str
     organizationPid: str | None = None
 
-    class Collection:
+    class Settings:
         name = "invitations"
         

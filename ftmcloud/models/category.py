@@ -11,7 +11,7 @@ class Category(BaseDocument):
     description: str
     parentCategoryPid: str | None = None
 
-    class Collection:
+    class Settings:
         name = "categories"
 
     class Config:

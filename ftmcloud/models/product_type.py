@@ -13,7 +13,7 @@ class ProductType(BaseDocument):
     categoryPid: str | None = None
     attributeValues: list[AttributeValue] = []
 
-    class Collection:
+    class Settings:
         name = "product_types"
 
     class Config:

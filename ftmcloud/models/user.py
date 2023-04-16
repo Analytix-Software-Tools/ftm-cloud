@@ -25,7 +25,7 @@ class User(BaseDocument):
     phone: str = ""
     password: str
 
-    class Collection:
+    class Settings:
         name = "users"
 
     class Config:

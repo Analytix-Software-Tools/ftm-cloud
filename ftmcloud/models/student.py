@@ -30,7 +30,7 @@ class UpdateStudentModel(BaseModel):
     year: Optional[int]
     gpa: Optional[float]
 
-    class Collection:
+    class Settings:
         name = "student"
 
     class Config:

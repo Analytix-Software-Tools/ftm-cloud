@@ -21,7 +21,7 @@ class Organization(BaseDocument):
     siteUrl: str = ""
     industryPids: list[str] = []
 
-    class Collection:
+    class Settings:
         name = "organizations"
 
     class Config:

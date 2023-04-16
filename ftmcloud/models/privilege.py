@@ -11,7 +11,7 @@ class Privilege(Document):
     description: Optional[str]
     permissions: list
 
-    class Collection:
+    class Settings:
         name = "privileges"
 
     class Config:

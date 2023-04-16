@@ -12,7 +12,7 @@
     "local:reboot-mongo": "cd ../ && docker compose up -d --build --force-recreate mongodb",
     "local:reboot-web": "cd ../ && docker compose up -d --build --force-recreate web",
     "dev:build-image": "cd ../ && docker build --platform=linux/amd64 . -t cr2244/ftmcloud:dev",
-    "dev:push-image": "sudo docker login && sudo docker push cr2244/ftmcloud:dev",
+    "dev:push-image": "docker login && docker push cr2244/ftmcloud:dev",
     "dev:deploy": "npm run dev:build-image && npm run dev:push-image"
   },
   "keywords": [],

@@ -4,7 +4,7 @@ from ftmcloud.models.patchdocument import PatchDocument
 from ftmcloud.models.organization import Organization
 from ftmcloud.models.product_type import ProductType
 from ftmcloud.models.product import Product
-from ftmcloud.models.attribute import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, AttributeTextValue
+from ftmcloud.models.attribute import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, AttributeTextValue, AttributeValue
 
 
 class ProductService(Service):
@@ -48,45 +48,52 @@ class ProductService(Service):
                 required_attribute_to_found[value.attributePid] = False
         attribute_values = product.attributeValues
         for i in range(0, len(attribute_values)):
-            attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid, "isDeleted": {"$ne": "true"}})
+
+            try:
+                attribute_value = AttributeValue.parse_obj(attribute_values[i])
+            except:
+                raise FtmException("error.attribute.InvalidAttributeValue")
+            
+            attribute = await Attribute.find_one({"pid": attribute_value.attributePid, "isDeleted": {"$ne": "true"}})
+
             if attribute is None:
                 raise FtmException('error.attribute.NotFound',
                                    developer_message=f"Attribute not found. attributeValues[{i}].attributePid")
-            if attribute_values[i].attributePid not in product_type_attribute_pid_mapping:
+            if attribute_value.attributePid not in product_type_attribute_pid_mapping:
                 raise FtmException('error.product.InvalidAttributeValue',
                                    developer_message=f"Attribute '{attribute.name}' does not exist on product type. attributeValues[{i}].attributePid")
-            if attribute_values[i].attributePid in required_attribute_to_found:
-                required_attribute_to_found[attribute_values[i].attributePid] = True
+            if attribute_value.attributePid in required_attribute_to_found:
+                required_attribute_to_found[attribute_value.attributePid] = True
             if attribute.type == "number":
                 try:
-                    AttributeNumberValue.parse_obj(attribute_values[i].value)
+                    AttributeNumberValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvaludAttributeNumberValue',
                                        developer_message=f"Invalid AttributeNumberValue on attributeValues[{i}].value")
             elif attribute.type == "dropdown":
                 try:
-                    AttributeDropdownValue.parse_obj(attribute_values[i].value)
+                    AttributeDropdownValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeDropdownValue',
                                        developer_message=f"Invalid AttributeDropdownValue attributeValues[{i}].value")
-                if attribute_values[i].value.value not in product_type_attribute_pid_mapping[attribute_values[i].attributePid].value.options:
+                if attribute_value.value.value not in product_type_attribute_pid_mapping[attribute_value.attributePid].value.options:
                     raise FtmException('error.product.InvalidAttributeValue',
-                                       developer_message=f"Invalid value '{attribute_values[i].value.value}' not specified in product type. attributeValues[{i}].value.value")
+                                       developer_message=f"Invalid value '{attribute_value.value.value}' not specified in product type. attributeValues[{i}].value.value")
             elif attribute.type == "text":
                 try:
-                    AttributeTextValue.parse_obj(attribute_values[i].value)
+                    AttributeTextValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeTextValue',
                                        developer_message=f"Invalid AttributeTextValue attributeValues[{i}].value")
             elif attribute.type == "range":
                 try:
-                    AttributeRangeValue.parse_obj(attribute_values[i].value)
+                    AttributeRangeValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeRangeValue',
                                        developer_message=f"Invalid AttributeRangeValue on attributeValues[{i}].value")
             elif attribute.type == "boolean":
                 try:
-                    AttributeBooleanValue.parse_obj(attribute_values[i].value)
+                    AttributeBooleanValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeBooleanValue',
                                        developer_message=f"Invalid AttributeBooleanValue on attributeValues[{i}].value")

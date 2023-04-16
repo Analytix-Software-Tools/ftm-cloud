@@ -18,7 +18,7 @@ async def sign_jwt(user: User) -> LoginResponse:
     :param user:
     :return:
     """
-    now = time.time()
+    now = int(time.time())
     role = await PrivilegesService().validate_exists(pid=user.privilegePid)
 
     payload = {

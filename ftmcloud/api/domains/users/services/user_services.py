@@ -22,7 +22,7 @@ class UserService(Service):
         :param user: the user to validate
         :return: the user with validated fields
         """
-        user_exists = await self.collection.find_one(User.email == user.email, {"isDeleted": {"$ne": True}})
+        user_exists = await self.collection.find_one(User.email == user.email, {"isDeleted": {"$ne": "true"}})
         if user_exists:
             raise FtmException('error.user.InvalidEmail')
         validation_criteria = PasswordValidator()
@@ -71,7 +71,7 @@ class UserService(Service):
         :param pid: The pid to find the profile for.
         :return: The user's profile.
         """
-        user = await self.collection.find({"pid": pid}).aggregate([{
+        user = await self.collection.find({"pid": pid, "isDeleted": {"$ne": True}}).aggregate([{
             "$lookup":
                 {
                     "from": "organizations",

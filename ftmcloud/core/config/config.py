@@ -23,7 +23,8 @@ class Settings(BaseSettings):
     DEFAULT_QUERY_LIMIT: int = 10
 
     # JWT
-    secret_key: str = 'D(G+KbPe'
+    JWT_SECRET = os.environ.get("JWT_SECRET", 'D(G+KbPe')
+    secret_key: str = JWT_SECRET
     algorithm: str = "HS256"
 
     class Config:

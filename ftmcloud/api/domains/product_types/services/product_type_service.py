@@ -34,30 +34,36 @@ class ProductTypesService(Service):
         :return: None
         """
         for i in range(0, len(attribute_values)):
-            attribute = await Attribute.find_one({"pid": attribute_values[i].attributePid, "isDeleted": {"$ne": "true"}})
+            try:
+                attribute_value = AttributeValue.parse_obj(attribute_values[i])
+            except:
+                raise FtmException("error.attribute.InvalidAttributeValue")
+            
+            attribute = await Attribute.find_one({"pid": attribute_value.attributePid, "isDeleted": {"$ne": "true"}})
+
             if attribute is None:
                 raise FtmException('error.attribute.NotFound', developer_message=f"Attribute not found. attributeValues[{i}].attributePid")
             if attribute.type == "number":
                 try:
-                    AttributeNumberValue.parse_obj(attribute_values[i].value)
+                    AttributeNumberValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeNumberValue',
                                        developer_message=f"Invalid AttributeNumberValue on attributeValues[{i}].value")
             elif attribute.type == "dropdown":
                 try:
-                    AttributeDropdownValue.parse_obj(attribute_values[i].value)
+                    AttributeDropdownValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeDropdownValue',
                                        developer_message=f"Invalid AttributeDropdownValue on attributeValues[{i}].value")
             elif attribute.type == "range":
                 try:
-                    AttributeRangeValue.parse_obj(attribute_values[i].value)
+                    AttributeRangeValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeRangeValue',
                                        developer_message=f"Invalid AttributeRangeValue on attributeValues[{i}].value")
             elif attribute.type == "boolean":
                 try:
-                    AttributeBooleanValue.parse_obj(attribute_values[i].value)
+                    AttributeBooleanValue.parse_obj(attribute_value.value)
                 except:
                     raise FtmException('error.attribute.InvalidAttributeBooleanValue',
                                        developer_message=f"Invalid AttributeBooleanValue on attributeValues[{i}].value")

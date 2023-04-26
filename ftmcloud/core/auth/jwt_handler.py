@@ -1,6 +1,7 @@
 import time
 
 import jwt
+from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService
 
 from ftmcloud.core.config.config import Settings
 from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
@@ -20,6 +21,7 @@ async def sign_jwt(user: User) -> LoginResponse:
     """
     now = int(time.time())
     role = await PrivilegesService().validate_exists(pid=user.privilegePid)
+    await OrganizationsService().validate_exists(pid=user.organizationPid)
 
     payload = {
         'iss': 'com.analytics.ftmcloud',

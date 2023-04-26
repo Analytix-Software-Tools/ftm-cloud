@@ -7,8 +7,30 @@ from .jwt_handler import decode_jwt
 from ...models.user import User
 
 
+def _validate_org_in_payload(payload):
+    """
+    Validates the orgPid in the payload.
+    """
+    return 'orgPid' in payload and isinstance(payload['orgPid'], str)
+
+def _validate_user_in_payload(payload):
+    """
+    Validate the user subscriber in the payload.
+    """
+    return 'sub' in payload and isinstance(payload['sub'], str)
+
+def _validate_permissions_in_payload(payload):
+    """
+    Validates the permissions in the payload.
+    """
+    return 'permissions' in payload and isinstance(payload['permissions'], list)
+
 def verify_jwt(jwtoken: str) -> bool:
-    is_token_valid: bool = False
+    """
+    Ensure the user's access token is valid and fields have not
+    been modified.
+    """
+    is_token_valid: bool = True
 
     try:
         payload = decode_jwt(jwtoken)
@@ -16,7 +38,12 @@ def verify_jwt(jwtoken: str) -> bool:
         raise FtmException('error.user.InvalidToken')
 
     if payload:
-        is_token_valid = True
+        user_valid = _validate_user_in_payload(payload)
+        org_valid = _validate_org_in_payload(payload)
+        permissions_valid = _validate_permissions_in_payload(payload)
+        is_token_valid = user_valid and org_valid and permissions_valid
+    else:
+        is_token_valid = False
     return is_token_valid
 
 

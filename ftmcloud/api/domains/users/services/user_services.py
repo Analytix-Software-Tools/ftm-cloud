@@ -1,3 +1,4 @@
+import jwt
 from password_validator import PasswordValidator
 
 from ftmcloud.core.auth.jwt_handler import sign_jwt
@@ -64,14 +65,18 @@ class UserService(Service):
 
         raise FtmException('error.user.InvalidCredentials')
 
-    async def users_profile(self, pid) -> UserProfile:
+    async def users_profile(self, token) -> UserProfile:
         """Retrieves the user's full profile information by returning
         their profile, the organization they are in as well as the role.
 
-        :param pid: The pid to find the profile for.
+        :param token: The token to use to allocate the profile.
         :return: The user's profile.
         """
-        user = await self.collection.find({"pid": pid, "isDeleted": {"$ne": True}}).aggregate([{
+        if self.settings.AUTH_METHOD == 'Keycloak':
+            user_query = {}
+        else:
+            user_query = {"pid": token['sub'], "isDeleted": {"$ne": True}}
+        user = await self.collection.find(user_query).aggregate([{
             "$lookup":
                 {
                     "from": "organizations",

@@ -10,7 +10,7 @@ from ftmcloud.models.invitation import Invitation
 
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
 from ftmcloud.models.user import User
-from ftmcloud.utils.elevation import has_elevated_privileges
+from ftmcloud.utils.session import has_elevated_privileges
 from ftmcloud.utils.views import controller
 
 router = APIRouter()

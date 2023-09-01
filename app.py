@@ -1,7 +1,7 @@
 from fastapi import Depends
 
 from ftmcloud.core.auth.jwt_bearer import token_listener
-from ftmcloud.db.init_db import initiate_database
+from ftmcloud.core.db.init_db import initiate_database
 from ftmcloud.core.app.app import FTMApi
 from ftmcloud.api.domains.users.controllers.controller import router as user_router
 from ftmcloud.api.domains.organizations.controllers.controller import router as organization_router
@@ -13,6 +13,7 @@ from ftmcloud.api.domains.attributes.controllers.controller import router as att
 from ftmcloud.api.domains.product_types.controllers.controller import product_type_router
 from ftmcloud.api.domains.products.controllers.controller import product_router
 from ftmcloud.api.domains.reports.controllers.controller import router as reports_router
+from ftmcloud.api.domains.search.controllers.controller import router as search_router
 
 app = FTMApi()
 
@@ -39,5 +40,7 @@ app.include_router(product_type_router, tags=['Product Types'], prefix='/v0/prod
                    dependencies=[Depends(token_listener)])
 app.include_router(product_router, tags=['Products'], prefix='/v0/products',
                    dependencies=[Depends(token_listener)])
-app.include_router(reports_router, tags=['Reports'], prefix='/v0/search',
+app.include_router(reports_router, tags=['Reports'], prefix='/v0/reports',
+                   dependencies=[Depends(token_listener)], deprecated=True)
+app.include_router(search_router, tags=['Search'], prefix='/v0/search',
                    dependencies=[Depends(token_listener)])

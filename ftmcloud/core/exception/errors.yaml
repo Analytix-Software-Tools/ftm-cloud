@@ -295,3 +295,19 @@ errors:
       logLevel: WARNING
       traceback: true
       info: http://www.example.com/
+    error.task.InvalidTask:
+      statusCode: 404
+      developerMessage: The task identifier is invalid or the task was not found.
+      userMessage: An error occurred! Support has automatically been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.search.ConnectionError:
+      statusCode: 503
+      developerMessage: Communication failure! Unable to access the search servers.
+      userMessage: We were unable to retrieve your search results at this time.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/

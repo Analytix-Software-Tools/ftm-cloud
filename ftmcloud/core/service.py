@@ -12,17 +12,37 @@ from pydantic.error_wrappers import ValidationError
 from ftmcloud.core.config.config import Settings
 from ftmcloud.core.exception.exception import FtmException
 
-settings = Settings()
+
+class AbstractService:
+
+    def __init__(self):
+        """
+        AbstractService provides general purpose utilities to be used across different
+        types of domains.
+        """
+        self.settings = Settings()
+
+    @staticmethod
+    def validate_is_json(raw):
+        """
+        Validates the raw string is a JSON.
+        """
+        try:
+            return json.loads(raw)
+        except JSONDecodeError as E:
+            raise FtmException("error.general.InvalidJson", developer_message=E.__str__())
 
 
-class Service:
+class Service(AbstractService):
 
     def __init__(self, collection, base_model=None):
-        """Initialize a new service.
+        """Initialize a service which provides create-read-update-delete functionality
+        against a mongo collection.
 
         :param collection:
         :param base_model:
         """
+        super().__init__()
         self.collection = collection
         self.base_model = base_model
 
@@ -77,16 +97,6 @@ class Service:
 
         return q
 
-    @staticmethod
-    def validate_is_json(raw):
-        """
-        Validates the raw string is a JSON.
-        """
-        try:
-            return json.loads(raw)
-        except JSONDecodeError as E:
-            raise FtmException("error.general.InvalidJson", developer_message=E.__str__())
-
     def get_projection_model_from_fields(self, fields):
         """
         Acts as a factory method to generate a projection model instance with a subset
@@ -136,7 +146,7 @@ class Service:
 
         query = self.process_q(q=q, additional_filters=additional_filters)
 
-        config = Settings()
+        config = self.settings
         if limit is None:
             limit = config.DEFAULT_QUERY_LIMIT
         elif limit > config.MAX_QUERY_LIMIT:

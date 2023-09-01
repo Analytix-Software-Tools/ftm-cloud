@@ -2,15 +2,40 @@
 This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
 and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These controllers generally connect with services which manage the interaction with the database. 
 
-There are a total of 4 resources (accounting for dev and prod environments) within the FTMCloud:
+There are a total of 5 resources (accounting for dev and prod environments) within the FTMCloud:
 
 ftmcloud-prod
 ftmcloud-dev
 ftmcloud-mongo-prod (Atlas)
 ftmcloud-mongo-dev (Atlas)
+ftmcloud-auth-server (Keycloak)
+ftmcloud-rabbitmq (RabbitMQ)
+ftmcloud-es-cluster (ElasticSearch)
+ftmcloud-kibana (Kibana)
 
-Each ftmcloud instances is hosted on Azure App Services with IP whitelisting, whereas the ftmcloud-mongo instances
-are MongoDB Atlas clusters with network whitelisting.
+All resources are hosted and backed on an AWS Elastic Kubernetes Service cluster (with the exception of ftmcloud-mongo-dev 
+and ftmcloud-mongo-prod, which are hosted on MongoDB Atlas).
+
+# FTMCloud Overview
+The FTMCloud is a group of services designed to serve and ingest large amounts of data that back the Analytix
+application. 
+
+## Keycloak
+This service integrates directly with Keycloak's identity management framework. This provides fine-grained control over
+which users can view the application and additionally provides quality-of-life features such as SSO, password reset, and
+email.
+
+## Task Queues
+The service exposes functionality to trigger batch processing and migration to internal users when specific changes are
+made that impact other datasets. There is a Celery-based worker node which interfaces with a Redis backend and a RabbitMQ
+message broker.
+
+## Search Engine
+The application serves data to end users via searching methods backed by an ElasticSearch search engine. Queries to the
+engine
+
+## Database
+The database is a dedicated AWS-backed MongoDB Atlas instance with autoscaling configured. 
 
 # Development Environment
 A development environment can easily be setup for local development and testing at any time by running
@@ -120,3 +145,9 @@ Fork the repo, make changes and send a PR. We'll review it together!
 ## License
 
 This project is licensed under the terms of MIT license.
+
+
+## TODO
+* Implement Celery task queue services/controller/system
+* Implement endpoints that would trigger batch jobs
+* Integrate with Keycloak authentication system and support SSO in React app

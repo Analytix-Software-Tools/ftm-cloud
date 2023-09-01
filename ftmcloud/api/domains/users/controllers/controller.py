@@ -89,7 +89,7 @@ class UsersController:
         """Retrieves the current user's profile given their access token.
         """
         user_service = UserService()
-        user_profile = await user_service.users_profile(pid=token['sub'])
+        user_profile = await user_service.users_profile(token=token)
         return Response(status_code=200, response_type="success", description="User profile retrieved.",
                         data=[user_profile])
 

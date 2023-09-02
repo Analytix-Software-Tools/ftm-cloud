@@ -1,11 +1,10 @@
-import jwt
 from password_validator import PasswordValidator
 
 from ftmcloud.core.auth.jwt_handler import sign_jwt
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.core.service import Service
 from passlib.context import CryptContext
-from ftmcloud.models.user import User, UserProfile, UserSignIn
+from ftmcloud.models.domains.users.user import User, UserProfile, UserSignIn
 
 user_collection = User
 

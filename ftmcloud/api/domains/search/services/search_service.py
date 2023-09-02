@@ -1,7 +1,5 @@
-from ftmcloud.core.elastic.elastic import ElasticSearchIndexConnector
-from ftmcloud.core.exception.exception import FtmException
+from ftmcloud.common.elastic.elastic import ElasticSearchIndexConnector
 from ftmcloud.core.service import AbstractService
-from elasticsearch import AsyncElasticsearch
 
 
 class SearchService(AbstractService):

@@ -6,6 +6,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 from ftmcloud.core.config.config import Settings
 from ftmcloud.core.exception.exception import FtmException
+from ftmcloud.utils.query import validate_is_json
 
 
 class ElasticSearchIndexConnector:
@@ -18,7 +19,7 @@ class ElasticSearchIndexConnector:
         self.index_name = index_name
         self.client = Elasticsearch(
             hosts=[self.config.ELASTICSEARCH_URI],
-            api_key=self.config.ELASTICSEARCH_API_KEY,
+            http_auth=("elastic", "2GHZg07qwg6G7JlHY3f37N99"),
             verify_certs=False,
         )
 
@@ -45,7 +46,7 @@ class ElasticSearchIndexConnector:
             query = {}
 
             if q is not None:
-                query = q
+                query = validate_is_json(q)
 
             if additional_filters is not None:
                 query.update(additional_filters)

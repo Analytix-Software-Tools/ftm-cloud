@@ -6,7 +6,7 @@ from ftmcloud.api.domains.organizations.services.organization_services import Or
 from ftmcloud.core.config.config import Settings
 from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.models.response import LoginResponse
-from ftmcloud.models.user import User
+from ftmcloud.models.domains.users.user import User
 
 
 secret_key = Settings().secret_key

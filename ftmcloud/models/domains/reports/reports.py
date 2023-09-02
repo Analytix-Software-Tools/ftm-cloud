@@ -1,9 +1,8 @@
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
 from pydantic.schema import Generic
-from pydantic.typing import Dict
 
-from ftmcloud.models.attribute import AttributeValue
+from ftmcloud.models.domains.attributes.attribute import AttributeValue
 from ftmcloud.models.response import DataT
 
 

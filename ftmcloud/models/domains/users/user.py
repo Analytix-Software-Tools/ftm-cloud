@@ -4,8 +4,8 @@ from pydantic.fields import Field
 from pydantic.types import SecretStr
 
 from ftmcloud.models.document import BaseDocument
-from ftmcloud.models.organization import Organization
-from ftmcloud.models.privilege import Privilege
+from ftmcloud.models.domains.organizations.organization import Organization
+from ftmcloud.models.domains.privileges.privilege import Privilege
 
 
 class User(BaseDocument):

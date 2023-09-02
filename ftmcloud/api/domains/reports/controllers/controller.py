@@ -4,8 +4,8 @@ from starlette.requests import Request
 from ftmcloud.core.config.config import limiter
 from ftmcloud.api.domains.reports.services.report_service import ReportService
 from ftmcloud.core.exception.exception import default_exception_list
-from ftmcloud.models.product import Product
-from ftmcloud.models.reports import HitList, ProductSearchQuery
+from ftmcloud.models.domains.products.product import Product
+from ftmcloud.models.domains.reports.reports import HitList, ProductSearchQuery
 
 from ftmcloud.models.response import Response
 from ftmcloud.utils.views import controller

@@ -1,7 +1,6 @@
 from beanie import Indexed
-from pydantic.class_validators import Optional
 
-from ftmcloud.models.attribute import AttributeValue
+from ftmcloud.models.domains.attributes.attribute import AttributeValue
 from ftmcloud.models.document import BaseDocument
 
 

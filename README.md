@@ -151,3 +151,5 @@ This project is licensed under the terms of MIT license.
 * Implement Celery task queue services/controller/system
 * Implement endpoints that would trigger batch jobs
 * Integrate with Keycloak authentication system and support SSO in React app
+* Separation of the data layer could be better... as of now, services are largely responsible to sanitize before defined
+  even though they are inherited in most cases, probably want to isolate the logic

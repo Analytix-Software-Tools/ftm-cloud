@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta
 
 from fastapi import Body, APIRouter, Depends
-from pydantic.validators import List
 
 from ftmcloud.core.auth.jwt_bearer import get_current_user
 from ftmcloud.core.exception.exception import default_exception_list
 from ftmcloud.api.domains.invitations.services.invitation_services import InvitationsService
-from ftmcloud.models.invitation import Invitation
+from ftmcloud.models.domains.invitations.invitation import Invitation
 
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
-from ftmcloud.models.user import User
+from ftmcloud.models.domains.users.user import User
 from ftmcloud.utils.session import has_elevated_privileges
 from ftmcloud.utils.views import controller
 

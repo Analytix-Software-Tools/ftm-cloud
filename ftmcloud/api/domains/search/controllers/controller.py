@@ -5,8 +5,8 @@ from ftmcloud.core.auth.jwt_bearer import get_current_user
 from ftmcloud.core.exception.exception import default_exception_list
 
 from ftmcloud.models.response import ResponseWithHttpInfo, Response
-from ftmcloud.models.search import SearchHit
-from ftmcloud.models.user import User
+from ftmcloud.models.domains.search.search import SearchHit
+from ftmcloud.models.domains.users.user import User
 from ftmcloud.utils.views import controller
 
 router = APIRouter()

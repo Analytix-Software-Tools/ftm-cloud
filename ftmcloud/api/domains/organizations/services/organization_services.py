@@ -1,7 +1,7 @@
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.core.service import Service
-from ftmcloud.models.industry import Industry
-from ftmcloud.models.organization import Organization
+from ftmcloud.models.domains.industries.industry import Industry
+from ftmcloud.models.domains.organizations.organization import Organization
 
 
 class OrganizationsService(Service):

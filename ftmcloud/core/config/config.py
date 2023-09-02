@@ -31,10 +31,11 @@ class DevelopmentConfig(BaseConfig):
 
 
 class Settings(BaseConfig):
+
     # Database
-    MONGO_URI = base64.b64decode(os.environ['MONGO_URI_ENCODED']) if "MONGO_URI_ENCODED" in \
+    MONGO_URI = base64.b64decode(os.environ['MONGO_URI_ENCODED']).decode('utf-8') if "MONGO_URI_ENCODED" in \
                                                                      os.environ else base64.b64decode(
-        'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0')
+        'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0').decode('utf-8')
     DATABASE_URL: Optional[str] = MONGO_URI
     AUTH_METHOD = os.environ['AUTHENTICATION_METHOD'] if 'AUTHENTICATION_METHOD' in \
                                                          os.environ else "mongo"

@@ -1,0 +1,313 @@
+errors:
+    error:
+      statusCode: 500
+      developerMessage: An unknown exception occurred.
+      userMessage: Something went wrong while processing your request.
+      uuid: true
+      logLevel: ERROR
+      traceback: true
+      info: http://www.example.com/
+    error.general.InvalidJson:
+      statusCode: 400
+      developerMessage: The JSON request is of an unprocessable formatting.
+      userMessage: Something went wrong - our technical team has been notified.
+      uuid: true
+      logLevel: ERROR
+      traceback: true
+      info: http://www.example.com/
+    error.general.BadTokenIntegrity:
+      statusCode: 400
+      developerMessage: The access token integrity is not valid.
+      userMessage: Something went wrong - our technical team has been notified.
+      uuid: true
+      logLevel: ERROR
+      traceback: true
+      info: http://www.example.com/
+    error.database.DatabaseException:
+      statusCode: 500
+      developerMessage: An error occurred while establishing connection with the database.
+      userMessage: Something went wrong - our technical team has been notified.
+      uuid: true
+      logLevel: Error
+      traceback: true
+      info: http://www.example.com/
+    error.patch.InvalidPatch:
+      statusCode: 422
+      developerMessage: The patch request is in invalid or inoperable format.
+      userMessage: Woops! An exception occurred while trying to process your request.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.query.InvalidQuery:
+      statusCode: 422
+      developerMessage: The query specified is invalid.
+      userMessage: Woops! An exception occurred while trying to process your request.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.query.InvalidSort:
+      statusCode: 422
+      developerMessage: The sort criteria is invalid. Use '^' for ascending or '-' for descending!
+      userMessage: An exception occurred while processing your request. Our technical staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.InvalidName:
+      statusCode: 409
+      developerMessage: The attribute name is in use.
+      userMessage: This attribute name is taken or is invalid. Try another one!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.InvalidAttributeRangeValue:
+      statusCode: 400
+      developerMessage: The AttributeRangeValue format is invalid.
+      userMessage: There was an exception while processing your request. Our technical staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.InvalidAttributeTextValue:
+      statusCode: 400
+      developerMessage: The AttributeTextValue format is invalid.
+      userMessage: There was an exception while processing your request. Our technical staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.InvalidAttributeNumberValue:
+      statusCode: 400
+      developerMessage: The AttributeNumberValue format is invalid.
+      userMessage: There was an exception while processing your request. Our technical staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.InvalidAttributeDropdownValue:
+      statusCode: 400
+      developerMessage: The AttributeDropdownValue format is invalid.
+      userMessage: There was an exception while processing your request. Our technical staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.InvalidAttributeBooleanValue:
+      statusCode: 400
+      developerMessage: The AttributeBooleanValue format is invalid.
+      userMessage: There was an exception while processing your request. Our technical staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.NotEmpty:
+      statusCode: 409
+      developerMessage: Please remove or de-associate all products and product types associated with this attribute.
+      userMessage: Please remove or de-associate all products and product types associated with this attribute.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.attribute.NotFound:
+      statusCode: 404
+      developerMessage: The attribute requested was not found.
+      userMessage: Uh oh! That attribute was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.invitation.InvitationExists:
+      statusCode: 409
+      developerMessage: An invitation is active for this email. Please check the email.
+      userMessage: Please wait until the previous invitation has expired for this email!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.invitation.NotFound:
+      statusCode: 404
+      developerMessage: The invitation requested was not found.
+      userMessage: Uh oh! That invitation was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.user.InvalidEmail:
+        statusCode: 409
+        developerMessage: The email address is in use.
+        userMessage: This email is in use! Try another or check out 'Forgot Password'!
+        uuid: true
+        logLevel: WARNING
+        traceback: true
+        info: http://www.example.com/
+    error.user.PasswordStrength:
+        statusCode: 409
+        developerMessage: The password is not strong enough. Should be longer than 8 characters with special characters.
+        userMessage: Please use a password greater than 8 characters and include at least 2 special characters!
+        uuid: true
+        logLevel: WARNING
+        traceback: true
+        info: http://www.example.com/
+    error.user.InvalidCredentials:
+      statusCode: 401
+      developerMessage: Invalid username or password provided!
+      userMessage: Invalid username or password provided!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.user.InvalidToken:
+      statusCode: 403
+      developerMessage: Access token is expired or invalid. Please re-authenticate.
+      userMessage: Your session has timed out. Please refresh or close and re-open your browser!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.user.InsufficientPrivileges:
+      statusCode: 403
+      developerMessage: You do not have permission to perform this operation.
+      userMessage: Oops! You might have reached this page in exception. Try again later!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.user.NotFound:
+        statusCode: 404
+        developerMessage: The user requested was not found.
+        userMessage: Uh oh! That user was not found!
+        uuid: true
+        logLevel: WARNING
+        traceback: true
+        info: http://www.example.com/
+    error.industry.NotFound:
+      statusCode: 404
+      developerMessage: The industry requested was not found.
+      userMessage: Uh oh! That industry was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.industry.NotEmpty:
+      statusCode: 409
+      developerMessage: Please remove or de-associate all organizations associated with this industry.
+      userMessage: Please remove or de-associate all organizations associated with this industry.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.organization.NotFound:
+      statusCode: 404
+      developerMessage: The organization requested was not found.
+      userMessage: Uh oh! That organization was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.organization.NotEmpty:
+      statusCode: 409
+      developerMessage: Please remove or de-associate all users associated with this organization.
+      userMessage: Please remove or de-associate all users associated with this organization.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.category.NotFound:
+      statusCode: 404
+      developerMessage: The category requested was not found.
+      userMessage: Uh oh! That category was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.category.InvalidName:
+      statusCode: 409
+      developerMessage: The category name is in use.
+      userMessage: This category name is taken or is invalid. Try another one!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.category.NotEmpty:
+      statusCode: 409
+      developerMessage: Please remove or de-associate all product types associated with this category.
+      userMessage: Please remove or de-associate all product types associated with this category.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.privilege.NotFound:
+      statusCode: 404
+      developerMessage: The privilege requested was not found.
+      userMessage: Uh oh! That privilege was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.producttype.InvalidName:
+      statusCode: 409
+      developerMessage: The product type name is in use.
+      userMessage: This product type name is taken or is invalid. Try another one!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.producttype.NotFound:
+      statusCode: 404
+      developerMessage: The product type requested was not found.
+      userMessage: Uh oh! That product type was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.product.NotFound:
+      statusCode: 404
+      developerMessage: The product type requested was not found.
+      userMessage: Uh oh! That product type was not found!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.product.InvalidAttributeValue:
+      statusCode: 400
+      developerMessage: The attribute value does not exist on that product type.
+      userMessage: Something went wrong while trying to process your request. Our technical staff have been notified!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.product.MissingRequiredAttribute:
+      statusCode: 400
+      developerMessage: An exception occurred. An attribute that is marked as required on the product type is missing from the product.
+      userMessage: Missing required attribute as defined on this product's intended product type!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.product.InvalidName:
+      statusCode: 409
+      developerMessage: The product name is in use.
+      userMessage: This product name is taken or is invalid. Try another one!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.task.InvalidTask:
+      statusCode: 404
+      developerMessage: The task identifier is invalid or the task was not found.
+      userMessage: An error occurred! Support has automatically been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.search.ConnectionError:
+      statusCode: 503
+      developerMessage: Communication failure! Unable to access the search servers.
+      userMessage: We were unable to retrieve your search results at this time.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/

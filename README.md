@@ -5,14 +5,43 @@ Welcome to Analytix! Analytix is an up and coming cross-industrial AI-powered se
 This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
 and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These controllers generally connect with services which manage the interaction with the database. 
 
-There are 3 services, that make up the FTM-Cloud prod environment - 2 hosted on Linux VMs, one Atlas instance. The services are:
+There are a total of 5 resources (accounting for dev and prod environments) within the FTMCloud:
 
-ftm-cloud-prod
-ftm-services-prod
-ftm-cloud-mongo-prod
+ftmcloud-prod
+ftmcloud-dev
+ftmcloud-mongo-prod (Atlas)
+ftmcloud-mongo-dev (Atlas)
+ftmcloud-auth-server (Keycloak)
+ftmcloud-rabbitmq (RabbitMQ)
+ftmcloud-es-cluster (ElasticSearch)
+ftmcloud-kibana (Kibana)
+
+All resources are hosted and backed on an AWS Elastic Kubernetes Service cluster (with the exception of ftmcloud-mongo-dev 
+and ftmcloud-mongo-prod, which are hosted on MongoDB Atlas).
+
+# FTMCloud Overview
+The FTMCloud is a group of services designed to serve and ingest large amounts of data that back the Analytix
+application. 
+
+## Keycloak
+This service integrates directly with Keycloak's identity management framework. This provides fine-grained control over
+which users can view the application and additionally provides quality-of-life features such as SSO, password reset, and
+email.
+
+## Task Queues
+The service exposes functionality to trigger batch processing and migration to internal users when specific changes are
+made that impact other datasets. There is a Celery-based worker node which interfaces with a Redis backend and a RabbitMQ
+message broker.
+
+## Search Engine
+The application serves data to end users via searching methods backed by an ElasticSearch search engine. Queries to the
+engine
+
+## Database
+The database is a dedicated AWS-backed MongoDB Atlas instance with autoscaling configured. 
 
 # Development Environment
-A development environment can easily be setup for non-production or prod-like environments at any time by running
+A development environment can easily be setup for local development and testing at any time by running
 the command
 
 ```commandline
@@ -54,3 +83,25 @@ respective domain if one does not exist already. If you need to run all tests, r
 ```console
 $ python3 runtests --all
 ```
+
+# Exception Handling
+Exception handling is standardized using an exception class called FtmException. When you need to raise an exception
+at any point,
+
+```console
+raise FtmException('errors.ftmcloud.InvalidEmailAddress')
+```
+
+This will present an error response that is clean, presentable and easily consumed by any end users.
+
+In ```crosscutting/error```, there is an ```errors.yaml``` file which lists all the possible errors and error codes by 
+language identifier. This is used to display the errors and descriptions in the live documentation.
+
+
+## TODO
+* Implement Celery task queue services/controller/system
+* Implement endpoints that would trigger batch jobs
+* Integrate with Keycloak authentication system and support SSO in React app
+* Separation of the data layer could be better... as of now, services are largely responsible to sanitize before defined
+  even though they are inherited in most cases, probably want to isolate the logic
+=======

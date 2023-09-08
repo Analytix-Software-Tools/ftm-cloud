@@ -1,9 +1,9 @@
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from app import token_listener
+from ftmcloud.app import token_listener
 
-from app import app as application
+from ftmcloud.app import app as application
 
 
 async def generate_dummy_auth():

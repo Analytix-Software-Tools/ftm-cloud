@@ -7,7 +7,7 @@ from ftmcloud.api.domains.product_types.services.product_type_service import Pro
 from ftmcloud.models.patchdocument import PatchDocument
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
 from ftmcloud.models.domains.product_types.product_type import ProductType
-from ftmcloud.utils.views import controller
+from ftmcloud.common.views.views import controller
 
 product_type_router = APIRouter()
 

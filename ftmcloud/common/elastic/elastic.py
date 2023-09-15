@@ -1,12 +1,9 @@
-import warnings
-
 import elasticsearch.exceptions
 from elasticsearch import Elasticsearch
-from urllib3.exceptions import InsecureRequestWarning
 
 from ftmcloud.core.config.config import Settings
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.utils.query import validate_is_json
+from ftmcloud.common.query.query import validate_is_json
 
 
 class ElasticSearchIndexConnector:

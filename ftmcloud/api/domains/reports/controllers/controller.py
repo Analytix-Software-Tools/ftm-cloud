@@ -8,7 +8,7 @@ from ftmcloud.models.domains.products.product import Product
 from ftmcloud.models.domains.reports.reports import HitList, ProductSearchQuery
 
 from ftmcloud.models.response import Response
-from ftmcloud.utils.views import controller
+from ftmcloud.common.views.views import controller
 
 router = APIRouter()
 

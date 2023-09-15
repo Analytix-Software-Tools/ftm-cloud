@@ -7,7 +7,7 @@ from ftmcloud.core.exception.exception import default_exception_list
 from ftmcloud.models.response import ResponseWithHttpInfo, Response
 from ftmcloud.models.domains.search.search import SearchHit
 from ftmcloud.models.domains.users.user import User
-from ftmcloud.utils.views import controller
+from ftmcloud.common.views.views import controller
 
 router = APIRouter()
 

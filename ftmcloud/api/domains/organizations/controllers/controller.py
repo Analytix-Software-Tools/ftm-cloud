@@ -9,7 +9,7 @@ from ftmcloud.models.response import Response, ResponseWithHttpInfo
 from ftmcloud.models.domains.organizations.organization import Organization
 from ftmcloud.models.domains.users.user import User
 from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService
-from ftmcloud.utils.views import controller
+from ftmcloud.common.views.views import controller
 
 router = APIRouter()
 

@@ -7,6 +7,6 @@ RUN pip install --upgrade -r requirements.txt
 
 EXPOSE 8080
 
-COPY ./ /app
+COPY ./ .
 
-CMD ["python", "."]
+CMD ["uvicorn", "ftmcloud.app:app", "--workers", "4", "--host", "0.0.0.0", "--port", "8080"]

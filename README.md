@@ -153,3 +153,4 @@ This project is licensed under the terms of MIT license.
 * Integrate with Keycloak authentication system and support SSO in React app
 * Separation of the data layer could be better... as of now, services are largely responsible to sanitize before defined
   even though they are inherited in most cases, probably want to isolate the logic
+* Separate CrudService out - too much repeated CRUD code in the app

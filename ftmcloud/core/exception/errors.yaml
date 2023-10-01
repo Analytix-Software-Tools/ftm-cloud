@@ -295,6 +295,22 @@ errors:
       logLevel: WARNING
       traceback: true
       info: http://www.example.com/
+    error.model_configuration.ModelConfigurationExists:
+      statusCode: 409
+      developerMessage: Model configuration exists with same documentPid and collection.
+      userMessage: A model configuration already exists for this resource!
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
+    error.model_configuration.InvalidModelConfiguration:
+      statusCode: 409
+      developerMessage: The model configuration is invalid. Check the resource exists in the target collection.
+      userMessage: We were unable to locate that resource within the target collection.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
     error.task.InvalidTask:
       statusCode: 404
       developerMessage: The task identifier is invalid or the task was not found.

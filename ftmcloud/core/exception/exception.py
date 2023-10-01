@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 import traceback
 import uuid
@@ -38,7 +39,9 @@ class FtmException(Exception):
         if exception:
             self.with_traceback(exception.__traceback__)
 
-        with open('ftmcloud/core/exception/errors.yaml', "r") as stream:
+        root_dir = os.path.dirname(os.path.abspath(__file__))
+
+        with open(os.path.join(root_dir, 'errors.yaml'), "r") as stream:
             try:
                 error_messages = yaml.safe_load(stream=stream)
                 if error_code not in error_messages['errors']:

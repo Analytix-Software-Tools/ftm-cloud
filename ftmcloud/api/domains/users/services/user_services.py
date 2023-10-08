@@ -1,6 +1,6 @@
 from password_validator import PasswordValidator
 
-from ftmcloud.core.auth.jwt_handler import sign_jwt
+from ftmcloud.core.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.core.service import Service
 from passlib.context import CryptContext
@@ -33,6 +33,26 @@ class UserService(Service):
         hash_helper = CryptContext(schemes=["bcrypt"])
         new_user.password = hash_helper.encrypt(new_user.password)
         return new_user
+
+    async def login_user_azure_ad(self, token):
+        """
+        Logs a user in via the Azure AD. For a first time sign in, decode the user's token, ensure it is valid, then
+        find them by email in the database. If exists, update to match token signature otherwise create a new user
+        matching the token.
+
+        :param token: the Azure AAD token to decode
+        :return: the token for the new user
+        """
+        update_user = construct_user_from_aad_token(token=token)
+        user_exists = await self.collection.find_one(self.process_q(q=None, additional_filters={"email": update_user.email}))
+        if user_exists is None:
+            update_user.organization_pid = self.settings.DEFAULT_ORGANIZATION_PID
+            update_user.privilege_pid = self.settings.DEFAULT_PRIVILEGE_PID
+            await self.add_document(new_document=update_user)
+        else:
+            # TODO: Need to perform an update to the user to sync with AAD.
+            update_user = user_exists
+        return await sign_jwt(user=update_user)
 
     async def patch_users_profile(self, pid, patch_document_list):
         """

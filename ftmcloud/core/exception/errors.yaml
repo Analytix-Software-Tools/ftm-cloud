@@ -143,6 +143,14 @@ errors:
         logLevel: WARNING
         traceback: true
         info: http://www.example.com/
+    error.user.AuthenticationMethodDisabled:
+      statusCode: 400
+      developerMessage: Authentication method not allowed.
+      userMessage: An error occurred while processing your request. Our support staff have been notified.
+      uuid: true
+      logLevel: WARNING
+      traceback: true
+      info: http://www.example.com/
     error.user.PasswordStrength:
         statusCode: 409
         developerMessage: The password is not strong enough. Should be longer than 8 characters with special characters.

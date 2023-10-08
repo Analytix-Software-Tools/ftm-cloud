@@ -5,9 +5,9 @@ from ftmcloud.api.domains.organizations.services.organization_services import Or
 
 from ftmcloud.core.config.config import Settings
 from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
+from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.models.response import LoginResponse
 from ftmcloud.models.domains.users.user import User
-
 
 secret_key = Settings().secret_key
 
@@ -24,7 +24,7 @@ async def sign_jwt(user: User) -> LoginResponse:
     await OrganizationsService().validate_exists(pid=user.organizationPid)
 
     payload = {
-        'iss': 'com.analytics.ftmcloud',
+        'iss': 'com.analytics-software.api',
         'sub': user.pid,
         'exp': now + 2400,
         'iat': now,
@@ -42,3 +42,18 @@ def decode_jwt(token: str) -> dict:
     decoded_token = jwt.decode(token.encode(), secret_key, algorithms=["HS256"])
     return decoded_token if decoded_token['exp'] >= time.time() else {}
 
+
+def construct_user_from_aad_token(token: str) -> User:
+    decode_token = decode_jwt(token=token)
+    if (
+        "name" in token and
+        "username" in token
+    ):
+        first_name, last_name = decode_token["name"].split(' ')
+        return User(
+            email=decode_token["username"],
+            firstName=first_name,
+            lastName=last_name,
+        )
+    else:
+        raise FtmException("error.user.InvalidToken")

@@ -2,7 +2,7 @@ from fastapi import Body, APIRouter, Depends
 from pydantic.validators import List
 
 from ftmcloud.core.auth.jwt_bearer import get_user_token
-from ftmcloud.core.exception.exception import default_exception_list
+from ftmcloud.core.exception.exception import default_exception_list, FtmException
 from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService
 from ftmcloud.models.patchdocument import PatchDocument
@@ -10,6 +10,7 @@ from ftmcloud.models.response import Response, LoginResponse, ResponseWithHttpIn
 from ftmcloud.models.domains.users.user import User, UserResponse, UserSignIn, UserProfile
 from ftmcloud.api.domains.users.services.user_services import UserService
 from ftmcloud.utils.views import controller
+from ftmcloud.core.config.config import Settings
 
 router = APIRouter()
 
@@ -17,12 +18,26 @@ router = APIRouter()
 @controller(router)
 class UsersController:
 
+    settings = Settings()
+
     @router.post("/login", response_model=LoginResponse, responses=default_exception_list)
     async def login_user(self, credentials: UserSignIn = Body(...)):
         """Signs a user in using their provided credentials.
         """
+        if self.settings.AUTH_METHOD != "mongo":
+            raise FtmException("error.user.AuthenticationMethodDisabled")
         user_service = UserService()
         return await user_service.login_user(credentials=credentials)
+
+    @router.post("/login/sso", response_model=LoginResponse, responses=default_exception_list)
+    async def login_user_sso(self, token: str):
+        """Login user with a token from AAD.
+        """
+        if self.settings.AUTH_METHOD != "azure":
+            raise FtmException("error.user.AuthenticationMethodDisabled")
+        user_service = UserService()
+        user_token = await user_service.login_user_azure_ad(token=token)
+        return LoginResponse(accessToken=user_token)
 
     @router.post("/", response_model=UserResponse, response_description="Successfully registered user.",
                  responses=default_exception_list)

@@ -1,5 +1,6 @@
 autogen/client/release/
 autogen/client/typescript
+autogen/client/python
 autogen/node_modules/
 autogen/server
 

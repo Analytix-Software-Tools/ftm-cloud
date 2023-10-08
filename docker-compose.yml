@@ -1,21 +1,96 @@
 version: "3"
 
+### THIS DOCKER-COMPOSE.YML IS OPTIMIZED FOR DEVELOPMENT BUILDS ONLY
+
 services:
-  web:
-    build: .
-    depends_on:
-      - mongodb
-    links:
-      - mongodb
-    ports:
-      - "8080:8080"
-
-  mongodb:
-    image: mongo:5.0
-    ports:
-      - 27017:27017
-    volumes:
-      - ~/apps/mongo:/data/db
-
+#  web:
+#    build: .
+#    ports:
+#      - "80:8080"
+#    environment:
+#      - MONGO_URI_ENCODED=bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0
+#
+#  postgres:
+#    image: postgres
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_DB: keycloak
+#      POSTGRES_USER: keycloak
+#      POSTGRES_PASSWORD: password
+#  keycloak:
+#      image: quay.io/keycloak/keycloak:legacy
+#      environment:
+#        DB_VENDOR: POSTGRES
+#        DB_ADDR: postgres
+#        DB_DATABASE: keycloak
+#        DB_USER: keycloak
+#        DB_SCHEMA: public
+#        DB_PASSWORD: password
+#        KEYCLOAK_USER: admin
+#        KEYCLOAK_PASSWORD: Pa55w0rd
+#        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+#        #JDBC_PARAMS: "ssl=true"
+#      ports:
+#        - 8080:8080
+#      depends_on:
+#        - postgres
+  elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+      container_name: elasticsearch
+      environment:
+#        - xpack.security.enabled=false
+        - discovery.type=single-node
+        - ELASTIC_PASSWORD=password
+      ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+        nofile:
+          soft: 65536
+          hard: 65536
+      cap_add:
+        - IPC_LOCK
+      volumes:
+        - elasticsearch-data:/usr/share/elasticsearch/data
+      ports:
+        - 9200:9200
+        - 9300:9300
+  kibana:
+      container_name: kibana
+      image: docker.elastic.co/kibana/kibana:8.9.0
+      environment:
+        - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      ports:
+        - 5601:5601
+      depends_on:
+        - elasticsearch
+#  worker:
+#    command: celery -A tasks worker --loglevel=info --logfile=logs/celery.log
+#    volumes:
+#      - ./api:/usr/src/app
+#    environment:
+#      - CELERY_BROKER_URL=rabbitmq://rabbitmq:5672/0
+#      - CELERY_RESULT_BACKEND=db+postgresql://user:password@database:5432/alpha
+#    depends_on:
+#      - web
+#      - rabbitmq
+#  rabbitmq:
+#    image: rabbitmq:3-management-alpine
+#    container_name: 'rabbitmq'
+#    ports:
+#      - 5672:5672
+#      - 15672:15672
+#    volumes:
+#      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+#      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+#    networks:
+#      - rabbitmq_go_net
+networks:
+  rabbitmq_go_net:
+    driver: bridge
 volumes:
-  data:
+  postgres_data:
+    driver: local
+  elasticsearch-data:
+    driver: local

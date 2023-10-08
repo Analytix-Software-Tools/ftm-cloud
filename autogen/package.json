@@ -5,12 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "openapi-server-generate-client": "openapi-generator-cli generate -g javascript -i http://localhost:8080/openapi.json --output 'client/release' --skip-validate-spec --additional-properties=usePromises=true,projectVersion=1.0.0,projectName=ftm-api-client",
-    "openapi-server-generate-typescript": "rm -rf client/typescript && openapi-generator-cli generate -g typescript-fetch -i http://localhost:8080/openapi.json --output 'client/typescript' --skip-validate-spec --additional-properties=npmVersion=1.0.0,npmName=ftm-api-client",
-    "openapi-server-generate-tests": "rm -rf server/release && openapi-generator-cli generate -g python-fastapi -i http://localhost:8080/openapi.json --output 'server/release' --skip-validate-spec && node tests.js",
-    "ftmcloud:run-dev": "cd ../ && docker compose up -d",
-    "ftmcloud:reboot-mongo": "cd ../ && docker compose up -d --build --force-recreate mongodb",
-    "ftmcloud:reboot-web": "cd ../ && docker compose up -d --build --force-recreate web"
+    "openapi-generate-client": "rm -rf client/release && openapi-generator-cli generate -g javascript -i http://localhost:8080/openapi.json --output client/release --skip-validate-spec --additional-properties=usePromises=true,projectVersion=1.0.0,projectName=ftm-api-client",
+    "openapi-generate-typescript": "rm -rf client/typescript && openapi-generator-cli generate -g typescript-fetch -i http://localhost:8080/openapi.json --output client/typescript --skip-validate-spec --additional-properties=npmVersion=1.0.0,npmName=ftm-api-client",
+    "openapi-generate-python": "rm -rf client/python && openapi-generator-cli generate -g python -i http://localhost:8080/openapi.json --output client/python --skip-validate-spec --additional-properties=packageName=ftmcloud_api_client,packageVersion=1.0.0",
+    "openapi-server-generate-tests": "rm -rf server/release && openapi-generator-cli generate -g python-fastapi -i http://localhost:8080/openapi.json --output server/release --skip-validate-spec && node tests.js",
+    "local:deploy": "cd ../ && docker compose up -d",
+    "local:reboot-mongo": "cd ../ && docker compose up -d --build --force-recreate mongodb",
+    "local:reboot-web": "cd ../ && docker compose up -d --build --force-recreate web",
+    "dev:build-image": "cd ../ && docker build --platform=linux/amd64 . -t cr2244/ftmcloud:dev",
+    "dev:push-image": "docker login && docker push cr2244/ftmcloud:dev",
+    "dev:deploy": "npm run dev:build-image && npm run dev:push-image"
   },
   "keywords": [],
   "author": "",

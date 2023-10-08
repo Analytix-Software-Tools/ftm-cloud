@@ -7,7 +7,7 @@ from ftmcloud.api.domains.attributes.services.attribute_services import Attribut
 from ftmcloud.models.patchdocument import PatchDocument
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
 from ftmcloud.models.domains.attributes.attribute import Attribute
-from ftmcloud.utils.views import controller
+from ftmcloud.common.views.views import controller
 
 router = APIRouter()
 

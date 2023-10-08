@@ -71,7 +71,7 @@ services:
 #      - ./api:/usr/src/app
 #    environment:
 #      - CELERY_BROKER_URL=rabbitmq://rabbitmq:5672/0
-#      - CELERY_RESULT_BACKEND=db+postgresql://user:password@database:5432/alpha
+#      - CELERY_RESULT_BACKEND=repository+postgresql://user:password@database:5432/alpha
 #    depends_on:
 #      - web
 #      - rabbitmq

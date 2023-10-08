@@ -5,7 +5,7 @@ Welcome to Analytix! Analytix is an up and coming cross-industrial AI-powered se
 This is a FastAPI application that is broken up by domains and services. Each domain hosts a router, a controller,
 and a service. Functions for each controller can be found by their corresponding domain in domains -> controllers. These controllers generally connect with services which manage the interaction with the database. 
 
-There are a total of 5 resources (accounting for dev and prod environments) within the FTMCloud:
+The following resources exist within the FTMCloud:
 
 ftmcloud-prod
 ftmcloud-dev
@@ -25,17 +25,23 @@ application.
 
 ## Keycloak
 This service integrates directly with Keycloak's identity management framework. This provides fine-grained control over
-which users can view the application and additionally provides quality-of-life features such as SSO, password reset, and
-email.
+which users can view the application and additionally provides quality-of-life and advanced account management features such as SSO, 
+password reset, and email login.
 
-## Task Queues
+In order to enable keycloak authentication, specify the following environment variables:
+
+'KEYCLOAK_URI_ENCODED': base64 encoded keycloak URI
+'KEYCLOAK_AUTH_TOKEN_ENCODED': base64 encoded auth token to communicate with keycloak
+
+## Background Processing
 The service exposes functionality to trigger batch processing and migration to internal users when specific changes are
 made that impact other datasets. There is a Celery-based worker node which interfaces with a Redis backend and a RabbitMQ
-message broker.
+message broker. This API contains connectors to interface with the RabbitMQ broker. See documentation under the tasks cross-cutting domain
+for more information.
 
 ## Search Engine
-The application serves data to end users via searching methods backed by an ElasticSearch search engine. Queries to the
-engine
+The application serves data to end users via searching methods backed by an ElasticSearch search engine. There is a connector class
+which allows you to easily query against different indexes that are defined. 
 
 ## Database
 The database is a dedicated AWS-backed MongoDB Atlas instance with autoscaling configured. 
@@ -138,22 +144,11 @@ The starter listens on port 8000 on address [0.0.0.0](0.0.0.0:8080).
 
 ## Deployment
 
-This application can be deployed on any PaaS such as [Heroku](https://heroku.com) or [Okteto](https://okteto) and any other cloud service provider.
-
-## Contributing ?
-
-
-Fork the repo, make changes and send a PR. We'll review it together!
-
-## License
-
-This project is licensed under the terms of MIT license.
-
-
-## TODO
-* Implement Celery task queue services/controller/system
+## TODO - READ
+This repository is a work in progress. There are several features planned for the near future but not yet implemented to keep in mind
+when browsing this public repo:
+* Implement Celery task queue services/controller/system (in development)
 * Implement endpoints that would trigger batch jobs
-* Integrate with Keycloak authentication system and support SSO in React app
-* Separation of the data layer could be better... as of now, services are largely responsible to sanitize before defined
-  even though they are inherited in most cases, probably want to isolate the logic
-* Separate CrudService out - too much repeated CRUD code in the app
+* Integrate with Keycloak authentication system and support SSO in React app (testing via docker-compose temporarily)
+* Separate CrudService out - too much repeated CRUD code in the app, may want to isolate the logic into a 
+  Repository/DAO pattern to decouple from service logic

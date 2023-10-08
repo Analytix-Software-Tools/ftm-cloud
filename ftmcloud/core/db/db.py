@@ -7,6 +7,7 @@ from ftmcloud.models.domains.attributes.attribute import Attribute
 from ftmcloud.models.domains.categories.category import Category
 from ftmcloud.models.domains.industries.industry import Industry
 from ftmcloud.models.domains.invitations.invitation import Invitation
+from ftmcloud.models.domains.model_configurations.model_configuration import ModelConfiguration
 from ftmcloud.models.domains.organizations.organization import Organization
 from ftmcloud.models.domains.privileges.privilege import Privilege
 from ftmcloud.models.domains.products.product import Product
@@ -18,7 +19,7 @@ async def initiate_database():
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.memorymaker,
                       document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
-                                       ProductType, Attribute])
+                                       ProductType, Attribute, ModelConfiguration])
 
 
 class Repository:

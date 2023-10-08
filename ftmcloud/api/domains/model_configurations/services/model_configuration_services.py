@@ -4,6 +4,7 @@ from ftmcloud.models.domains.categories.category import Category
 from ftmcloud.models.domains.attributes.attribute import Attribute
 from ftmcloud.models.domains.organizations.organization import Organization
 from ftmcloud.models.domains.model_configurations.model_configuration import ModelConfiguration
+from ftmcloud.models.domains.product_types.product_type import ProductType
 
 
 class ModelConfigurationsService(Service):
@@ -15,7 +16,8 @@ class ModelConfigurationsService(Service):
         collection_model_mapping = {
             "attributes": Attribute,
             "categories": Category,
-            "organizations": Organization
+            "organizations": Organization,
+            "product_types": ProductType
         }
         if new_document.targetCollection not in collection_model_mapping.keys():
             raise FtmException("error.model_configuration.InvalidModelConfiguration",

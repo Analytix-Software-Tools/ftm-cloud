@@ -11,7 +11,8 @@ class ModelConfiguration(BaseDocument):
     """
     pid: Optional[str]
     documentPid: str
-    targetCollection: Literal["organizations", "attributes", "categories"]
+    targetCollection: Literal["organizations", "attributes", "categories", "product_types"]
+    confidenceType: Literal["strict", "loose", "moderate"] = "moderate"
     positiveKeywords: list[str]
     negativeKeywords: list[str]
 

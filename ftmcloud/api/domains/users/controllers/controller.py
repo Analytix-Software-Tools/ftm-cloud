@@ -1,7 +1,7 @@
 from fastapi import Body, APIRouter, Depends
 from pydantic.validators import List
 
-from ftmcloud.core.auth.jwt_bearer import get_user_token
+from ftmcloud.common.auth.jwt_bearer import get_user_token
 from ftmcloud.core.exception.exception import default_exception_list, FtmException
 from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService

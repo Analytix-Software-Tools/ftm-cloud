@@ -1,4 +1,7 @@
 from ftmcloud.core.config.config import Settings
+from uuid import uuid4
+
+from ftmcloud.core.exception.exception import FtmException
 
 settings = Settings()
 
@@ -18,4 +21,8 @@ class BackgroundTaskManager:
         :param body: the body of the task
         :return:
         """
-        pass
+        try:
+            new_task_pid = uuid4()
+
+        except:
+            raise FtmException("")

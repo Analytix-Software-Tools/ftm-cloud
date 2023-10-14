@@ -13,17 +13,20 @@ def _validate_org_in_payload(payload):
     """
     return 'orgPid' in payload and isinstance(payload['orgPid'], str)
 
+
 def _validate_user_in_payload(payload):
     """
     Validate the user subscriber in the payload.
     """
     return 'sub' in payload and isinstance(payload['sub'], str)
 
+
 def _validate_permissions_in_payload(payload):
     """
     Validates the permissions in the payload.
     """
     return 'permissions' in payload and isinstance(payload['permissions'], list)
+
 
 def verify_jwt(jwtoken: str) -> bool:
     """

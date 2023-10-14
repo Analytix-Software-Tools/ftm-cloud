@@ -1,15 +1,14 @@
 from fastapi import Body, APIRouter, Depends
 from pydantic.validators import List
-from ftmcloud.core.auth.jwt_bearer import get_current_user
+from ftmcloud.common.auth.jwt_bearer import get_current_user
 from ftmcloud.core.exception.exception import default_exception_list, FtmException
 
-from ftmcloud.api.domains.users.services.user_services import UserService
 from ftmcloud.models.patchdocument import PatchDocument
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
 from ftmcloud.models.domains.model_configurations.model_configuration import ModelConfiguration
 from ftmcloud.models.domains.users.user import User
 from ftmcloud.api.domains.model_configurations.services.model_configuration_services import ModelConfigurationsService
-from ftmcloud.utils.views import controller
+from ftmcloud.common.views.views import controller
 
 router = APIRouter()
 

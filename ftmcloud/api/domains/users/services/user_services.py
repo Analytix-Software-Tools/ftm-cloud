@@ -1,6 +1,6 @@
 from password_validator import PasswordValidator
 
-from ftmcloud.core.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
+from ftmcloud.common.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.core.service import Service
 from passlib.context import CryptContext
@@ -43,7 +43,10 @@ class UserService(Service):
         :param token: the Azure AAD token to decode
         :return: the token for the new user
         """
-        update_user = construct_user_from_aad_token(token=token)
+        try:
+            update_user = construct_user_from_aad_token(token=token)
+        except:
+            raise FtmException("error.general.BadTokenIntegrity")
         user_exists = await self.collection.find_one(self.process_q(q=None, additional_filters={"email": update_user.email}))
         if user_exists is None:
             update_user.organization_pid = self.settings.DEFAULT_ORGANIZATION_PID

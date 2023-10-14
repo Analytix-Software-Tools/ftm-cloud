@@ -17,15 +17,3 @@ async def validate_login(credentials: HTTPBasicCredentials = Depends(security)):
             raise FtmException('error.user.InvalidCredentials')
         return True
     return False
-
-
-async def init_controller(permissions: str):
-    """Initialize the controller by cross-referencing the user
-    permissions with those in the array. If the user does not
-    have the right permissions, raises an HTTPException stating
-    so.
-
-    :param permissions:
-    :return: None
-    """
-    pass

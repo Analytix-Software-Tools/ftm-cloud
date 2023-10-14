@@ -20,33 +20,3 @@ async def initiate_database():
     await init_beanie(database=client.memorymaker,
                       document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
                                        ProductType, Attribute, ModelConfiguration])
-
-
-class Repository:
-
-    # Represents the target collection model.
-    model_collection = None
-
-    def __init__(self, model_collection: BaseModel):
-        """
-        A Repository represents an abstraction of a collection of models. The repository's intent is to abstract
-        the data access functionality from the target to ensure queries are performant at the lowest level and
-        adhere to the data system.
-        """
-        self.model_collection = model_collection
-
-    def replace_one(self, match_query, new_document):
-        """
-        Replaces the document matching the specified query.
-
-        :param match_query:
-        :param new_document:
-        :return:
-        """
-        pass
-
-    def update_one(self, query):
-        pass
-
-    def insert(self, new_document):
-        pass

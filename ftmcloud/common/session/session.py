@@ -1,5 +1,5 @@
 from ftmcloud.core.config.config import Settings
-from ftmcloud.models.domains.users.user import User
+from ftmcloud.models.domains.user import User
 
 
 def has_elevated_privileges(user: User):

@@ -1,5 +1,5 @@
-from ftmcloud.core.service import Service
-from ftmcloud.models.domains.industries.industry import Industry
+from ftmcloud.common.service.service import Service
+from ftmcloud.models.domains.industry import Industry
 
 
 class IndustriesService(Service):

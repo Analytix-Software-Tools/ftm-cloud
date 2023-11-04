@@ -4,7 +4,7 @@ from jwt.exceptions import InvalidTokenError
 
 from ftmcloud.core.exception.exception import FtmException
 from .jwt_handler import decode_jwt
-from ftmcloud.models.domains.users.user import User
+from ftmcloud.models.domains.user import User
 
 
 def _validate_org_in_payload(payload):

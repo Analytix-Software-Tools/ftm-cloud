@@ -2,10 +2,10 @@ import statistics
 
 from ftmcloud.core.config.config import Settings
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.models.domains.attributes.attribute import Attribute
-from ftmcloud.models.domains.products.product import Product
-from ftmcloud.models.domains.product_types.product_type import ProductType
-from ftmcloud.models.domains.reports.reports import Hit, HitList
+from ftmcloud.models.domains.attribute import Attribute
+from ftmcloud.models.domains.product import Product
+from ftmcloud.models.domains.product_type import ProductType
+from ftmcloud.models.domains.reports import Hit, HitList
 
 
 class ReportService:

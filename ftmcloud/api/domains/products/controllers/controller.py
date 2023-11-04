@@ -6,9 +6,9 @@ from ftmcloud.core.exception.exception import default_exception_list, FtmExcepti
 from ftmcloud.api.domains.products.services.product_service import ProductService
 
 from ftmcloud.models.patchdocument import PatchDocument
-from ftmcloud.models.domains.products.product import Product
+from ftmcloud.models.domains.product import Product
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
-from ftmcloud.models.domains.users.user import User
+from ftmcloud.models.domains.user import User
 from ftmcloud.common.session.session import has_elevated_privileges
 from ftmcloud.common.views.views import controller
 

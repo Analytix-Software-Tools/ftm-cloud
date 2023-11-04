@@ -1,5 +1,4 @@
-from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.core.service import AbstractService
+from ftmcloud.common.service.service import AbstractService
 
 
 class TasksService(AbstractService):

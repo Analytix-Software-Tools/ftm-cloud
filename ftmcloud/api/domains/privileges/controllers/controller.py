@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ftmcloud.models.domains.privileges.privilege import Privilege
+from ftmcloud.models.domains.privilege import Privilege
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
 from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.common.views.views import controller

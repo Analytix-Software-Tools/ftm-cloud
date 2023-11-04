@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic.generics import GenericModel
 from pydantic.schema import Generic
 
-from ftmcloud.models.domains.attributes.attribute import AttributeValue
+from ftmcloud.models.domains.attribute import AttributeValue
 from ftmcloud.models.response import DataT
 
 

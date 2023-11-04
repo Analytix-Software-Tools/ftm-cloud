@@ -5,8 +5,8 @@ from ftmcloud.common.auth.jwt_bearer import get_current_user
 from ftmcloud.core.exception.exception import default_exception_list
 
 from ftmcloud.models.response import ResponseWithHttpInfo, Response
-from ftmcloud.models.domains.search.search import SearchHit
-from ftmcloud.models.domains.users.user import User
+from ftmcloud.models.domains.search import SearchHit
+from ftmcloud.models.domains.user import User
 from ftmcloud.common.views.views import controller
 
 router = APIRouter()
@@ -42,6 +42,7 @@ class SearchController:
             include_totals=includeTotals,
             additional_filters=None
         )
+        print(results["hits"]["hits"])
         headers = {}
         if includeTotals is not None:
             headers = {"X-Total-Count": str(total)}

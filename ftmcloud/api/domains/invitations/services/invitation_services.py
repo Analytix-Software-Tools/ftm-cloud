@@ -1,6 +1,6 @@
-from ftmcloud.core.service import Service
-from ftmcloud.models.domains.invitations.invitation import Invitation
-from ftmcloud.models.domains.users.user import User
+from ftmcloud.common.service.service import Service
+from ftmcloud.models.domains.invitation import Invitation
+from ftmcloud.models.domains.user import User
 from ftmcloud.core.exception.exception import FtmException
 from datetime import datetime, timedelta
 

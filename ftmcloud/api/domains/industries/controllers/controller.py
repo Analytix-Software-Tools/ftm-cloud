@@ -6,7 +6,7 @@ from ftmcloud.api.domains.organizations.services.organization_services import Or
 
 from ftmcloud.models.patchdocument import PatchDocument
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
-from ftmcloud.models.domains.industries.industry import Industry
+from ftmcloud.models.domains.industry import Industry
 from ftmcloud.api.domains.industries.services.industry_services import IndustriesService
 from ftmcloud.common.views.views import controller
 

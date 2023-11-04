@@ -6,8 +6,8 @@ from ftmcloud.core.exception.exception import default_exception_list, FtmExcepti
 from ftmcloud.api.domains.users.services.user_services import UserService
 from ftmcloud.models.patchdocument import PatchDocument
 from ftmcloud.models.response import Response, ResponseWithHttpInfo
-from ftmcloud.models.domains.organizations.organization import Organization
-from ftmcloud.models.domains.users.user import User
+from ftmcloud.models.domains.organization import Organization
+from ftmcloud.models.domains.user import User
 from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService
 from ftmcloud.common.views.views import controller
 

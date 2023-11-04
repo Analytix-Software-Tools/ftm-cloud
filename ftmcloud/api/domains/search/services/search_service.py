@@ -1,5 +1,5 @@
 from ftmcloud.common.elastic.elastic import ElasticSearchIndexConnector
-from ftmcloud.core.service import AbstractService
+from ftmcloud.common.service.service import AbstractService
 
 
 class SearchService(AbstractService):

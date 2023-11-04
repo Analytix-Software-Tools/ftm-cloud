@@ -7,7 +7,7 @@ from ftmcloud.core.config.config import Settings
 from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.models.response import LoginResponse
-from ftmcloud.models.domains.users.user import User
+from ftmcloud.models.domains.user import User
 
 secret_key = Settings().secret_key
 

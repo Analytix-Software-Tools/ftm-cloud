@@ -7,7 +7,7 @@ from ftmcloud.api.domains.privileges.services.privilege_services import Privileg
 from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService
 from ftmcloud.models.patchdocument import PatchDocument
 from ftmcloud.models.response import Response, LoginResponse, ResponseWithHttpInfo
-from ftmcloud.models.domains.users.user import User, UserResponse, UserSignIn, UserProfile
+from ftmcloud.models.domains.user import User, UserResponse, UserSignIn, UserProfile
 from ftmcloud.api.domains.users.services.user_services import UserService
 from ftmcloud.common.views.views import controller
 from ftmcloud.core.config.config import Settings

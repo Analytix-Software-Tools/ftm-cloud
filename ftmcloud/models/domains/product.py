@@ -1,6 +1,6 @@
 from beanie import Indexed
 
-from ftmcloud.models.domains.attributes.attribute import AttributeValue
+from ftmcloud.models.domains.attribute import AttributeValue
 from ftmcloud.models.document import BaseDocument
 
 

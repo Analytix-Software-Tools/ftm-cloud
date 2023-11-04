@@ -46,4 +46,4 @@ class SearchController:
         if includeTotals is not None:
             headers = {"X-Total-Count": total}
         return ResponseWithHttpInfo(status_code=200, response_type='success', description='Search hits retrieved.',
-                                    data=results, model=SearchHit, headers=headers)
+                                    data=results["hits"]["hits"], model=SearchHit, headers=headers)

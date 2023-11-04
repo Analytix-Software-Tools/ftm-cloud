@@ -16,7 +16,7 @@ class ElasticSearchIndexConnector:
         self.index_name = index_name
         self.client = Elasticsearch(
             hosts=[self.config.ELASTICSEARCH_URI],
-            http_auth=("elastic", "2GHZg07qwg6G7JlHY3f37N99"),
+            http_auth=("elastic", "1Lo52xdUi6FG344NgLC4yi18"),
             verify_certs=False,
         )
 
@@ -35,24 +35,24 @@ class ElasticSearchIndexConnector:
             offset=0,
             filter_path="",
             include_totals=None,
-            additional_filters=None
+            additional_filters=None,
+            fields=None,
     ):
         try:
             total_results = None
             results = []
-            query = {}
-
-            if q is not None:
-                query = validate_is_json(q)
+            query = q
 
             if additional_filters is not None:
                 query.update(additional_filters)
 
-            documents = await self.client.search(
+            documents = self.client.search(
                 index=self.index_name,
                 query=q,
+                filter_path=filter_path,
                 size=limit,
-                from_=offset
+                from_=offset,
+                fields=fields
             )
 
             if documents is not None:
@@ -70,5 +70,6 @@ class ElasticSearchIndexConnector:
             raise FtmException("error.search.ConnectionError")
         except (
                 elasticsearch.exceptions.ApiError
-        ):
+        ) as E:
+            print(str(E))
             raise FtmException("error.query.InvalidQuery")

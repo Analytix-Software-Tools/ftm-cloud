@@ -16,11 +16,12 @@ class SearchHitSource(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "name": "name",
-                "description": "description",
-                "pid": "pid",
-                "source": "products",
-                "datetime": "2022-03-17T00:54:43.924+00:00"
+                    "name": "name",
+                    "description": "description",
+                    "pid": "pid",
+                    "source": "products",
+                    "_timestamp": "2023-11-03T23:10:58.208839+00:00",
+                    "id": "id"
             }
         }
 
@@ -32,6 +33,8 @@ class SearchHit(BaseModel):
     """
     _source: SearchHitSource
     _score: float
+    _index: str
+    _id: str
 
     class Config:
         schema_extra = {
@@ -41,8 +44,11 @@ class SearchHit(BaseModel):
                     "description": "description",
                     "pid": "pid",
                     "source": "products",
-                    "datetime": "2022-03-17T00:54:43.924+00:00"
+                    "_timestamp": "2023-11-03T23:10:58.208839+00:00",
+                    "id": "id"
                 },
-                "_score": 0.7231
+                "_score": 0.7231,
+                "_index": "_index",
+                "_id": "_id"
             }
         }

@@ -9,7 +9,7 @@ class SearchService(AbstractService):
         Initialize the SearchService.
         """
         super().__init__()
-        self.es_connector = ElasticSearchIndexConnector("search-analytix-mongo-prod")
+        self.es_connector = ElasticSearchIndexConnector("search-analytix-db")
 
     async def search(
             self,
@@ -17,7 +17,7 @@ class SearchService(AbstractService):
             limit: int,
             offset: int,
             include_totals: int,
-            additional_filters: int,
+            additional_filters: int | None,
             fields: list[dict]
     ):
         """
@@ -32,10 +32,10 @@ class SearchService(AbstractService):
         :param: additional_filters additional filters to pass outside the response
         :return: the search query results
         """
-
+        q = self.validate_is_json(q)
         return await self.es_connector.query_index(
             q={"match": q},
-            filter_path=None,
+            filter_path="hits.hits,hits.total",
             offset=offset,
             limit=limit,
             include_totals=include_totals,

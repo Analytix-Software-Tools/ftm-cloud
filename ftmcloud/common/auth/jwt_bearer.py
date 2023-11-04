@@ -110,6 +110,6 @@ async def init_controller(token: str, request: Request):
     """
     user = decode_jwt(token)
     acl_list = user['permissions']
-    route_path = request.method + ':' + str(request.url).replace(f'{str(request.base_url)}v0/', '').split('/')[0]
+    route_path = request.method + ':' + str(request.url).replace(f'{str(request.base_url)}api/v0/', '').split('/')[0]
     if route_path not in acl_list:
         raise FtmException('error.user.InsufficientPrivileges')

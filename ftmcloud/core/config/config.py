@@ -37,7 +37,7 @@ class Settings(BaseConfig):
                                                                      os.environ else base64.b64decode(
         'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0').decode('utf-8')
     DATABASE_URL: Optional[str] = MONGO_URI
-    AUTH_METHOD = os.environ['AUTHENTICATION_METHOD'] if 'c' in \
+    AUTH_METHOD = os.environ['AUTHENTICATION_METHOD'] if 'AUTHENTICATION_METHOD' in \
                                                          os.environ else "azure"
 
     PRIVILEGE_NAME_MAPPING = {}
@@ -50,7 +50,7 @@ class Settings(BaseConfig):
     ELASTICSEARCH_API_KEY = base64.b64decode(ELASTICSEARCH_API_KEY_ENCODED).decode('utf-8')
 
     ELASTICSEARCH_URI_ENCODED = os.environ['ELASTICSEARCH_URI_ENCODED'] if "ELASTICSEARCH_URI_ENCODED" in os.environ \
-        else 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0'
+        else 'aHR0cHM6Ly9sb2NhbGhvc3Q6OTIwMC8='
     ELASTICSEARCH_URI = base64.b64decode(ELASTICSEARCH_URI_ENCODED).decode('utf-8')
 
     # JWT

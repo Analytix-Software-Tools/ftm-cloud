@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from pydantic.schema import Literal, Any
 
 
 class HttpError(BaseModel):

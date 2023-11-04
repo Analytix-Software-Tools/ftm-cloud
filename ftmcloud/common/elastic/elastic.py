@@ -56,8 +56,12 @@ class ElasticSearchIndexConnector:
             )
 
             if documents is not None:
-                if include_totals is not None and 'hits' in documents and 'total' in documents['hits']:
-                    total_results = documents['hits']['total']
+                if (
+                        include_totals is not None and 'hits' in documents and
+                        'total' in documents['hits'] and
+                        'value' in documents['hits']['total']
+                ):
+                    total_results = documents['hits']['total']['value']
                 results = documents
 
             return results, total_results

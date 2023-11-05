@@ -12,6 +12,8 @@ class SearchHitSource(BaseModel):
     name: str
     description: Optional[str]
     datetime: datetime.datetime
+    id: str
+    _timestamp: str
 
     class Config:
         schema_extra = {

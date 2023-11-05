@@ -42,7 +42,6 @@ class SearchController:
             include_totals=includeTotals,
             additional_filters=None
         )
-        print(results["hits"]["hits"])
         headers = {}
         if includeTotals is not None:
             headers = {"X-Total-Count": str(total)}

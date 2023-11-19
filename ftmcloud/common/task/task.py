@@ -1,7 +1,10 @@
+from starlette.background import BackgroundTask
+
 from ftmcloud.core.config.config import Settings
 from uuid import uuid4
 
 from ftmcloud.core.exception.exception import FtmException
+from ftmcloud.models.domains.task import Task
 
 settings = Settings()
 
@@ -12,17 +15,34 @@ class BackgroundTaskManager:
         """
         Initialize a new BackgroundTaskManager.
         """
+        self._tasks_collection = Task
+
+    def abort_task_failed(self, pid: str):
         pass
 
-    def enqueue_task(self, name: str, body: dict):
-        """ Enqueues a task by pushing a message onto the message broker.
+    def init_task(self):
+        pass
 
-        :param name: the name of the task to execute
-        :param body: the body of the task
+    def enqueue_task(self, background_tasks: BackgroundTask, name: str, body: dict):
+        """ Enqueues a task.
+
+        :param background_tasks: BackgroundTask
+            The background task to execute
+        :param name: str
+            The name of the task to execute
+        :param body: dict
+            The body of the task
         :return:
         """
         try:
-            new_task_pid = uuid4()
-
+            new_task = Task()
+            new_task.set({
+                "pid": str(uuid4()),
+                "": ""
+            })
+            self._tasks_collection.insert_one()
         except:
             raise FtmException("")
+
+    def run_task(self):
+        pass

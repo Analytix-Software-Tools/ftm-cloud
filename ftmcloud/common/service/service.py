@@ -248,15 +248,17 @@ class Service(AbstractService):
         except JsonPatchException:
             raise FtmException('error.patch.InvalidPatch')
 
-    async def delete_document(self, pid: str):
+    async def delete_document(self, pid: str, additional_filters: dict = None):
         """Delete the specified document by asserting the isDeleted field
         to be True. This helps to prevent a user accidentally deleting and
         mitigates fallout from any attacks.
 
         :param pid: The pid of the document to delete.
+        :param additional_filters: Additional filters to use on the documents
         :return: None
         """
-        exists = await self.collection.find_one({"isDeleted": {"$ne": "true"}, "pid": pid})
+        q = self.process_q(q={"pid": pid}, additional_filters=additional_filters)
+        exists = await self.collection.find_one(q)
         if exists is None:
             raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
         await exists.update({"$set": {"isDeleted": "true"}})

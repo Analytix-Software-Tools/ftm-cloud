@@ -15,6 +15,7 @@ from ftmcloud.api.domains.product_types.controllers.controller import product_ty
 from ftmcloud.api.domains.products.controllers.controller import product_router
 from ftmcloud.api.domains.reports.controllers.controller import router as reports_router
 from ftmcloud.api.domains.search.controllers.controller import router as search_router
+from ftmcloud.api.domains.tasks.controllers.controller import router as task_router
 
 app = FTMApi()
 
@@ -46,4 +47,6 @@ app.include_router(reports_router, tags=['Reports'], prefix='/api/v0/reports',
 app.include_router(search_router, tags=['Search'], prefix='/api/v0/search',
                    dependencies=[Depends(token_listener)])
 app.include_router(model_configuration_router, tags=["Model Configurations"], prefix='/api/v0/model_configurations',
+                   dependencies=[Depends(token_listener)])
+app.include_router(task_router, tags=["Tasks"], prefix='/api/v0/tasks',
                    dependencies=[Depends(token_listener)])

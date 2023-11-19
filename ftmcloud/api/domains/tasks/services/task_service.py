@@ -1,21 +1,11 @@
-from ftmcloud.common.service.service import AbstractService
+from ftmcloud.common.service.service import Service
+from ftmcloud.models.domains.task import Task
 
 
-class TasksService(AbstractService):
+class TasksService(Service):
 
     def __init__(self):
         """
         Initialize the TasksService.
         """
-        super().__init__()
-
-    def get_task(
-            self, task_id
-    ):
-        """
-        Retrieves the task by ID from the task backend.
-
-        :param task_id: the id of the task
-        :return: the task stored in the backend
-        """
-        raise Exception("Not implemented yet.")
+        super().__init__(collection=Task)

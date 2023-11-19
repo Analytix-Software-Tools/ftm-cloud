@@ -11,11 +11,25 @@ from ftmcloud.models.domains.organization import Organization
 from ftmcloud.models.domains.privilege import Privilege
 from ftmcloud.models.domains.product import Product
 from ftmcloud.models.domains.product_type import ProductType
+from ftmcloud.models.domains.task import Task
 from ftmcloud.models.domains.user import User
 
 
+async def _build_indexes(motor_client: AsyncIOMotorClient):
+    """ Performs initialization to build indexes.
+
+    :return:
+    """
+    # motor_client
+    pass
+
+
 async def initiate_database():
+    """ Initialize the AsyncIOMotorClient.
+
+    :return:
+    """
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.memorymaker,
                       document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
-                                       ProductType, Attribute, ModelConfiguration])
+                                       ProductType, Attribute, ModelConfiguration, Task])

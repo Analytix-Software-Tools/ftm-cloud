@@ -1,6 +1,17 @@
-class TaskResponse:
+import datetime
+from typing import Literal, List
+
+from ftmcloud.models.document import BaseDocument
+
+
+class Task(BaseDocument):
     """
-    Represents the status of a task within a distributed task queue system.
+    Represents the status of a task within the background task system.
     """
     id: int
     status: str
+    taskType: Literal['BulkProductUpload', 'BulkProductUpdate', 'ProductCategoryMigration']
+    errorList: List[dict] | None
+    startDatetime: datetime.datetime
+    completedDatetime: datetime.datetime
+

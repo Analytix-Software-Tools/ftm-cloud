@@ -3,6 +3,7 @@ autogen/client/typescript
 autogen/client/python
 autogen/node_modules/
 autogen/server
+tmp/
 
 .pytest_cache/
 .fleet/

@@ -1,8 +1,10 @@
 from beanie import Document
 from pydantic.class_validators import Optional
 
+from ftmcloud.models.document import BaseDocument
 
-class Privilege(Document):
+
+class Privilege(BaseDocument):
     """Represents different access control levels a user might have within
     the database.
     """

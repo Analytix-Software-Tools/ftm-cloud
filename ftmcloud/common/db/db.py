@@ -44,7 +44,7 @@ async def check_init_database(motor_client: AsyncIOMotorClient):
     """
     privilege_service = PrivilegesService()
     admin_privilege = await privilege_service.find_one(
-        {"name": "Admin"}
+        {"name": "developer"}
     )
     if admin_privilege is None:
         logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ async def check_init_database(motor_client: AsyncIOMotorClient):
             organizations_service = OrganizationsService()
             new_privilege = Privilege(
                 pid="",
-                name="Admin",
+                name="developer",
                 description="Administrator role",
                 permissions=[]
             )

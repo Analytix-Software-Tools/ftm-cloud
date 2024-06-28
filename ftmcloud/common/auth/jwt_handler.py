@@ -38,22 +38,25 @@ async def sign_jwt(user: User) -> LoginResponse:
     return LoginResponse(accessToken=signed_jwt)
 
 
-def decode_jwt(token: str) -> dict:
-    decoded_token = jwt.decode(token.encode(), secret_key, algorithms=["HS256"])
+def decode_jwt(token: str, alg="HS256", options=None) -> dict:
+    decoded_token = jwt.decode(token.encode(), secret_key, algorithms=[alg], options=options)
     return decoded_token if decoded_token['exp'] >= time.time() else {}
 
 
 def construct_user_from_aad_token(token: str) -> User:
-    decode_token = decode_jwt(token=token)
+    decode_token = decode_jwt(token=token, alg="RS256", options={"verify_signature": False})
     if (
-        "name" in token and
-        "username" in token
+        "name" in decode_token and
+        "unique_name" in decode_token
     ):
-        first_name, last_name = decode_token["name"].split(' ')
+        first_name = decode_token["given_name"]
+        last_name = decode_token["family_name"]
         return User(
-            email=decode_token["username"],
+            email=decode_token["unique_name"],
             firstName=first_name,
             lastName=last_name,
+            organizationPid="",
+            password=""
         )
     else:
         raise FtmException("error.user.InvalidToken")

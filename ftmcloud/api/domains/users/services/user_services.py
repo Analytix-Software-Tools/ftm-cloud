@@ -45,12 +45,12 @@ class UserService(Service):
         """
         try:
             update_user = construct_user_from_aad_token(token=token)
-        except:
+        except Exception as e:
             raise FtmException("error.general.BadTokenIntegrity")
         user_exists = await self.collection.find_one(self.process_q(q=None, additional_filters={"email": update_user.email}))
         if user_exists is None:
-            update_user.organization_pid = self.settings.DEFAULT_ORGANIZATION_PID
-            update_user.privilege_pid = self.settings.DEFAULT_PRIVILEGE_PID
+            update_user.organizationPid = self.settings.DEFAULT_ORGANIZATION_PID
+            update_user.privilegePid = self.settings.DEFAULT_PRIVILEGE_PID
             await self.add_document(new_document=update_user)
         else:
             # TODO: Need to perform an update to the user to sync with AAD.

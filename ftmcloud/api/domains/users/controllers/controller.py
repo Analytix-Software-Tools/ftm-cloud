@@ -37,7 +37,7 @@ class UsersController:
             raise FtmException("error.user.AuthenticationMethodDisabled")
         user_service = UserService()
         user_token = await user_service.login_user_azure_ad(token=token)
-        return LoginResponse(accessToken=user_token)
+        return user_token
 
     @router.post("/", response_model=UserResponse, response_description="Successfully registered user.",
                  responses=default_exception_list)

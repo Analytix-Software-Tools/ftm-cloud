@@ -1,10 +1,10 @@
 import time
 
 import jwt
-from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService
+from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
 
 from ftmcloud.core.config.config import Settings
-from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
+from ftmcloud.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.models.response import LoginResponse
 from ftmcloud.models.domains.user import User

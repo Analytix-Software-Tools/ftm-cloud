@@ -1,13 +1,11 @@
 import logging
 
-import uuid
-
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from ftmcloud.api.domains.organizations.services.organization_services import OrganizationsService
-from ftmcloud.api.domains.privileges.services.privilege_services import PrivilegesService
-from ftmcloud.api.domains.users.services.user_services import UserService
+from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
+from ftmcloud.domains.privileges.services.privilege_services import PrivilegesService
+from ftmcloud.domains.users.services.user_services import UserService
 from ftmcloud.common.session.session import PasswordGenerator
 from ftmcloud.core.config.config import Settings
 from ftmcloud.models.domains.attribute import Attribute

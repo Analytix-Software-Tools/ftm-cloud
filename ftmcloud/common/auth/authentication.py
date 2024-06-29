@@ -3,7 +3,7 @@ from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from passlib.context import CryptContext
 
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.api.domains.users.services.user_services import user_collection
+from ftmcloud.domains.users.services.user_services import user_collection
 
 security = HTTPBasic()
 hash_helper = CryptContext(schemes=["bcrypt"])

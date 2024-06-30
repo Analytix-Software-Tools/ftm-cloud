@@ -44,6 +44,8 @@ class UsersController:
     async def signup_user(self, new_user: User = Body(...)):
         """Registers a new user within the space.
         """
+        if self.settings.AUTH_METHOD != "mongo":
+            raise FtmException("error.user.AuthorizationMethodDisabled")
         user_services = UserService()
         user = await user_services.validate_new_user(user=new_user)
         privilege_service = PrivilegesService()

@@ -1,4 +1,4 @@
-from fastapi import Body, APIRouter, Depends
+from fastapi import Body, APIRouter, Depends, BackgroundTasks
 from pydantic.validators import List
 
 from ftmcloud.cross_cutting.auth.jwt_bearer import get_user_token
@@ -7,7 +7,7 @@ from ftmcloud.domains.privileges.services.privilege_services import PrivilegesSe
 from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
 from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
 from ftmcloud.cross_cutting.models.response import Response, LoginResponse, ResponseWithHttpInfo
-from ftmcloud.domains.users.models.models import User, UserSignIn, UserResponse, UserProfile
+from ftmcloud.domains.users.models.models import User, UserSignIn, UserResponse, UserProfile, UserContact
 from ftmcloud.domains.users.services.user_services import UserService
 from ftmcloud.cross_cutting.views.views import controller
 from ftmcloud.core.config.config import Settings
@@ -17,7 +17,6 @@ router = APIRouter()
 
 @controller(router)
 class UsersController:
-
     settings = Settings()
 
     @router.post("/login", response_model=LoginResponse, responses=default_exception_list)
@@ -116,3 +115,14 @@ class UsersController:
         user_service = UserService()
         await user_service.patch_users_profile(pid=token['sub'], patch_document_list=patch_list)
         return Response(status_code=204, response_type="success", description="User profile modified.")
+
+    @router.post(
+        '/contact',
+        response_description="UserContact successfully added.",
+        response_model=Response, responses=default_exception_list
+    )
+    async def submit_user_contact(self, background_tasks: BackgroundTasks, user_contact: UserContact = Body(...)):
+        user_service = UserService()
+        await user_service.submit_user_contact(user_contact)
+        background_tasks.add_task(user_service.send_user_contact_notifications, user_contact)
+        return Response(status_code=201, response_type="success", description="User contact received.")

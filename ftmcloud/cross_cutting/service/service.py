@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from json import JSONDecodeError
 from copy import deepcopy
 
@@ -15,12 +16,15 @@ from ftmcloud.core.exception.exception import FtmException
 
 class AbstractService:
 
+    _logger = None
+
     def __init__(self):
         """
         AbstractService provides general purpose utilities to be used across different
         types of domains.
         """
         self.settings = Settings()
+        self._logger = logging.getLogger(self.__class__.__name__)
 
     @staticmethod
     def validate_is_json(raw):

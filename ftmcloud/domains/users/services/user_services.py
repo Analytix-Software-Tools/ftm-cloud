@@ -4,7 +4,7 @@ from ftmcloud.cross_cutting.auth.jwt_handler import sign_jwt, construct_user_fro
 from ftmcloud.core.exception.exception import FtmException
 from ftmcloud.cross_cutting.service.service import Service
 from passlib.context import CryptContext
-from ftmcloud.domains.users.models.models import User, UserSignIn, UserProfile
+from ftmcloud.domains.users.models.models import User, UserSignIn, UserProfile, UserContact, UserContactsRepository
 
 user_collection = User
 
@@ -13,6 +13,30 @@ class UserService(Service):
 
     def __init__(self):
         super(UserService, self).__init__(collection=User)
+        self._user_contacts_repository = UserContactsRepository()
+
+    async def send_user_contact_notifications(self, contact_form: UserContact):
+        """ Sends the user contact notifications to admin emails.
+
+        TODO: Get all emails associated with admins, then for each admin, send an email.
+
+        :param contact_form: UserContact
+            the user contact form submitted
+        :return:
+        """
+        pass
+
+    async def submit_user_contact(self, contact_form: UserContact):
+        """ Handles a new UserContact.
+
+        :param contact_form: UserContact
+            the contact form submitted
+        :return:
+        """
+        await self._user_contacts_repository.insert(
+            new_document=contact_form
+        )
+        self._logger.info("New user contact form handled with issue type: {}".format(contact_form.issueType))
 
     async def validate_new_user(self, user):
         """

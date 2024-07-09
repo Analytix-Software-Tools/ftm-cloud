@@ -9,7 +9,7 @@ from ftmcloud.domains.privileges.models.models import Privilege
 
 
 class UsersRepository(Repository):
-    
+
     def __init__(self):
         super().__init__(model_cls=User)
 
@@ -104,3 +104,15 @@ class UserProfile(UserResponse):
                 }
             }
         }
+
+
+class UserContact(BaseDocument):
+    issueType: str
+    message: str
+    imagePid: str
+
+
+class UserContactsRepository(Repository):
+
+    def __init__(self):
+        super().__init__(model_cls=UserContact)

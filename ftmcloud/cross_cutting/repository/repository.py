@@ -1,6 +1,5 @@
-from beanie import Document
-
 from ftmcloud.core.exception.exception import FtmException
+from ftmcloud.cross_cutting.models.document import BaseDocument
 
 
 class Repository:
@@ -16,8 +15,6 @@ class Repository:
 
         :param model_cls: the model_cls to reference
         """
-        if not isinstance(model_cls, Document):
-            raise ValueError("Invalid value for 'model_cls'. Must be a Pydantic Document instance!")
         self._model_cls = model_cls
 
     async def find(self, query, first):

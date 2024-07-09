@@ -1,5 +1,5 @@
-from ftmcloud.common.service.service import Service
-from ftmcloud.models.domains.privilege import Privilege
+from ftmcloud.cross_cutting.service.service import Service
+from ftmcloud.domains.privileges.models.models import Privilege
 
 
 class PrivilegesService(Service):

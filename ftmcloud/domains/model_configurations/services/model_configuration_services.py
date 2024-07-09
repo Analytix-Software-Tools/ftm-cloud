@@ -1,10 +1,10 @@
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.common.service.service import Service
-from ftmcloud.models.domains.category import Category
-from ftmcloud.models.domains.attribute import Attribute
-from ftmcloud.models.domains.organization import Organization
-from ftmcloud.models.domains.model_configuration import ModelConfiguration
-from ftmcloud.models.domains.product_type import ProductType
+from ftmcloud.cross_cutting.service.service import Service
+from ftmcloud.domains.categories.models.models import Category
+from ftmcloud.domains.attributes.models.models import Attribute
+from ftmcloud.domains.organizations.models.models import Organization
+from ftmcloud.domains.model_configurations.models.models import ModelConfiguration
+from ftmcloud.domains.product_types.models.models import ProductType
 
 
 class ModelConfigurationsService(Service):

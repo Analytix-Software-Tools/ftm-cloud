@@ -2,15 +2,15 @@ from datetime import datetime, timedelta
 
 from fastapi import Body, APIRouter, Depends
 
-from ftmcloud.common.auth.jwt_bearer import get_current_user
+from ftmcloud.cross_cutting.auth.jwt_bearer import get_current_user
 from ftmcloud.core.exception.exception import default_exception_list
 from ftmcloud.domains.invitations.services.invitation_services import InvitationsService
-from ftmcloud.models.domains.invitation import Invitation
+from ftmcloud.domains.invitations.models.models import Invitation
 
-from ftmcloud.models.response import Response, ResponseWithHttpInfo
-from ftmcloud.models.domains.user import User
-from ftmcloud.common.session.session import has_elevated_privileges
-from ftmcloud.common.views.views import controller
+from ftmcloud.cross_cutting.models.response import Response, ResponseWithHttpInfo
+from ftmcloud.domains.users.models.models import User
+from ftmcloud.cross_cutting.session.session import has_elevated_privileges
+from ftmcloud.cross_cutting.views.views import controller
 
 router = APIRouter()
 

@@ -4,11 +4,11 @@ from pydantic.validators import List
 from ftmcloud.core.exception.exception import default_exception_list, FtmException
 from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
 
-from ftmcloud.models.patchdocument import PatchDocument
-from ftmcloud.models.response import Response, ResponseWithHttpInfo
-from ftmcloud.models.domains.industry import Industry
+from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
+from ftmcloud.cross_cutting.models.response import Response, ResponseWithHttpInfo
+from ftmcloud.domains.industries.models.models import Industry
 from ftmcloud.domains.industries.services.industry_services import IndustriesService
-from ftmcloud.common.views.views import controller
+from ftmcloud.cross_cutting.views.views import controller
 
 router = APIRouter()
 

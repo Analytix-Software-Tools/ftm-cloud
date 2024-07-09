@@ -1,7 +1,7 @@
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.common.service.service import Service
-from ftmcloud.models.domains.category import Category
-from ftmcloud.models.domains.product_type import ProductType
+from ftmcloud.cross_cutting.service.service import Service
+from ftmcloud.domains.categories.models.models import Category
+from ftmcloud.domains.product_types.models.models import ProductType
 
 
 class CategoriesService(Service):

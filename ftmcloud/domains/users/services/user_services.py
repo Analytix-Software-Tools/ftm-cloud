@@ -1,10 +1,10 @@
 from password_validator import PasswordValidator
 
-from ftmcloud.common.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
+from ftmcloud.cross_cutting.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.common.service.service import Service
+from ftmcloud.cross_cutting.service.service import Service
 from passlib.context import CryptContext
-from ftmcloud.models.domains.user import User, UserProfile, UserSignIn
+from ftmcloud.domains.users.models.models import User, UserSignIn, UserProfile
 
 user_collection = User
 

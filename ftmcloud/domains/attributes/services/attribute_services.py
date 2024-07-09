@@ -1,8 +1,8 @@
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.common.service.service import Service
-from ftmcloud.models.domains.attribute import Attribute
-from ftmcloud.models.domains.product import Product
-from ftmcloud.models.domains.product_type import ProductType
+from ftmcloud.cross_cutting.service.service import Service
+from ftmcloud.domains.attributes.models.models import Attribute
+from ftmcloud.domains.products.models.models import Product
+from ftmcloud.domains.product_types.models.models import ProductType
 
 
 class AttributesService(Service):

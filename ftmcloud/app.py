@@ -1,7 +1,7 @@
 from fastapi import Depends
 
-from ftmcloud.common.auth.jwt_bearer import token_listener
-from ftmcloud.common.db.db import initiate_database
+from ftmcloud.cross_cutting.auth.jwt_bearer import token_listener
+from ftmcloud.cross_cutting.db.db import initiate_database
 from ftmcloud.core.app.app import FTMApi
 from ftmcloud.api.rest.controllers.users.controllers.controller import router as user_router
 from ftmcloud.api.rest.controllers.organizations.controllers.controller import router as organization_router

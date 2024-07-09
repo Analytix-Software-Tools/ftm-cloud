@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 
 from ftmcloud.domains.search.services.search_service import SearchService
-from ftmcloud.common.auth.jwt_bearer import get_current_user
+from ftmcloud.cross_cutting.auth.jwt_bearer import get_current_user
 from ftmcloud.core.exception.exception import default_exception_list
 
-from ftmcloud.models.response import ResponseWithHttpInfo, Response
-from ftmcloud.models.domains.search import SearchHit
-from ftmcloud.models.domains.user import User
-from ftmcloud.common.views.views import controller
+from ftmcloud.cross_cutting.models.response import ResponseWithHttpInfo, Response
+from ftmcloud.domains.search.models.models import SearchHit
+from ftmcloud.domains.users.models.models import User
+from ftmcloud.cross_cutting.views.views import controller
 
 router = APIRouter()
 

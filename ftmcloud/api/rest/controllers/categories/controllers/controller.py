@@ -5,10 +5,10 @@ from ftmcloud.core.exception.exception import default_exception_list, FtmExcepti
 from ftmcloud.domains.categories.services.category_services import CategoriesService
 from ftmcloud.domains.product_types.services.product_type_service import ProductTypesService
 
-from ftmcloud.models.patchdocument import PatchDocument
-from ftmcloud.models.response import Response, ResponseWithHttpInfo
-from ftmcloud.models.domains.category import Category
-from ftmcloud.common.views.views import controller
+from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
+from ftmcloud.cross_cutting.models.response import Response, ResponseWithHttpInfo
+from ftmcloud.domains.categories.models.models import Category
+from ftmcloud.cross_cutting.views.views import controller
 
 categories_router = APIRouter()
 

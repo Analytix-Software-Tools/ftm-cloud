@@ -6,7 +6,7 @@ import uuid
 
 from fastapi.encoders import jsonable_encoder
 
-from ftmcloud.models.httperror import HttpError
+from ftmcloud.cross_cutting.models.httperror import HttpError
 import yaml
 from fastapi.responses import JSONResponse
 from starlette.requests import Request

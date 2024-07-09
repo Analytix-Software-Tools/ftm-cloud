@@ -1,9 +1,9 @@
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.common.service.service import Service
-from ftmcloud.models.patchdocument import PatchDocument
-from ftmcloud.models.domains.category import Category
-from ftmcloud.models.domains.product_type import ProductType
-from ftmcloud.models.domains.attribute import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, \
+from ftmcloud.cross_cutting.service.service import Service
+from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
+from ftmcloud.domains.categories.models.models import Category
+from ftmcloud.domains.product_types.models.models import ProductType
+from ftmcloud.domains.attributes.models.models import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, \
     AttributeValue
 
 

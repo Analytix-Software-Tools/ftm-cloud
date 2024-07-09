@@ -1,10 +1,10 @@
 from ftmcloud.core.exception.exception import FtmException
-from ftmcloud.common.service.service import Service
-from ftmcloud.models.patchdocument import PatchDocument
-from ftmcloud.models.domains.organization import Organization
-from ftmcloud.models.domains.product_type import ProductType
-from ftmcloud.models.domains.product import Product
-from ftmcloud.models.domains.attribute import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, AttributeTextValue, AttributeValue
+from ftmcloud.cross_cutting.service.service import Service
+from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
+from ftmcloud.domains.organizations.models.models import Organization
+from ftmcloud.domains.product_types.models.models import ProductType
+from ftmcloud.domains.products.models.models import Product
+from ftmcloud.domains.attributes.models.models import Attribute, AttributeBooleanValue, AttributeNumberValue, AttributeDropdownValue, AttributeRangeValue, AttributeTextValue, AttributeValue
 
 
 class ProductService(Service):

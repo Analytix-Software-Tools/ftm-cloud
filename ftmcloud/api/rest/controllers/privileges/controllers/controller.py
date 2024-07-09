@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
-from ftmcloud.models.domains.privilege import Privilege
-from ftmcloud.models.response import Response, ResponseWithHttpInfo
+from ftmcloud.domains.privileges.models.models import Privilege
+from ftmcloud.cross_cutting.models.response import Response, ResponseWithHttpInfo
 from ftmcloud.domains.privileges.services.privilege_services import PrivilegesService
-from ftmcloud.common.views.views import controller
+from ftmcloud.cross_cutting.views.views import controller
 
 router = APIRouter()
 

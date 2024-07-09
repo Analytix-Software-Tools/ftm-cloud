@@ -4,11 +4,11 @@ from starlette.requests import Request
 from ftmcloud.core.config.config import limiter
 from ftmcloud.domains.reports.services.report_service import ReportService
 from ftmcloud.core.exception.exception import default_exception_list
-from ftmcloud.models.domains.product import Product
-from ftmcloud.models.domains.reports import HitList, ProductSearchQuery
+from ftmcloud.domains.products.models.models import Product
+from ftmcloud.domains.reports.models.models import HitList, ProductSearchQuery
 
-from ftmcloud.models.response import Response
-from ftmcloud.common.views.views import controller
+from ftmcloud.cross_cutting.models.response import Response
+from ftmcloud.cross_cutting.views.views import controller
 
 router = APIRouter()
 

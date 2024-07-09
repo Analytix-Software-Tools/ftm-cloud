@@ -1,5 +1,5 @@
-from ftmcloud.common.service.service import Service
-from ftmcloud.models.domains.task import Task
+from ftmcloud.cross_cutting.service.service import Service
+from ftmcloud.domains.tasks.models.models import Task
 
 
 class TasksService(Service):

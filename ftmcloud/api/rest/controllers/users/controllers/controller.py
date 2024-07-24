@@ -124,5 +124,5 @@ class UsersController:
     async def submit_user_contact(self, background_tasks: BackgroundTasks, user_contact: UserContact = Body(...)):
         user_service = UserService()
         await user_service.submit_user_contact(user_contact)
-        background_tasks.add_task(user_service.send_user_contact_notifications, user_contact)
+        background_tasks.add_task(user_service.process_user_contact, user_contact)
         return Response(status_code=201, response_type="success", description="User contact received.")

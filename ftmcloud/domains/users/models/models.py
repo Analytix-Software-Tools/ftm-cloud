@@ -107,6 +107,7 @@ class UserProfile(UserResponse):
 
 
 class UserContact(BaseDocument):
+    subject: str
     issueType: str
     message: str
     imagePid: str

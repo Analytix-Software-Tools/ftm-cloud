@@ -2,6 +2,7 @@ from password_validator import PasswordValidator
 
 from ftmcloud.cross_cutting.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
 from ftmcloud.core.exception.exception import FtmException
+from ftmcloud.cross_cutting.notifications.email_client import EmailClient
 from ftmcloud.cross_cutting.service.service import Service
 from passlib.context import CryptContext
 from ftmcloud.domains.users.models.models import User, UserSignIn, UserProfile, UserContact, UserContactsRepository
@@ -15,16 +16,61 @@ class UserService(Service):
         super(UserService, self).__init__(collection=User)
         self._user_contacts_repository = UserContactsRepository()
 
-    async def send_user_contact_notifications(self, contact_form: UserContact):
-        """ Sends the user contact notifications to admin emails.
+    async def notify_user(
+            self,
+            email,
+            subject,
+            message_str=None,
+            message_html=None,
+            attachments=None
+    ):
+        """ Notifies a user by email.
 
-        TODO: Get all emails associated with admins, then for each admin, send an email.
+        :param email: str
+            the email
+        :param subject: str
+            the subject
+        :param message_str: str
+            message string
+        :param message_html: str
+            message html
+        :param attachments: list[EmailAttachment]
+            the email attachment
+        :return:
+        """
+        email_client = EmailClient()
+        await email_client.send_email(
+            subject=subject,
+
+        )
+
+    async def process_user_contact(self, contact_form: UserContact):
+        """ Sends the user contact notifications to admin emails and uploads
+        files.
 
         :param contact_form: UserContact
             the user contact form submitted
+
         :return:
         """
-        pass
+        admin_users = await self.get_all(
+            q={"privilegePid": self.settings.SUPERUSER_PRIVILEGE}
+        )
+        for _user in admin_users:
+            await self.notify_user(
+                email=_user.email,
+                subject=f"New contact form received: {contact_form.subject}",
+                message_html=f'''
+                You have received a new contact form submission:
+                <br/>
+                <strong>Subject</strong><br/>
+                <p>{contact_form.subject}</p><br/>
+                <strong>Issue Type</strong><br/>
+                <p>{contact_form.issueType}</p><br/>
+                <strong>Message</strong><br/>
+                <p>{contact_form.message}</h1><br/>
+                '''
+            )
 
     async def submit_user_contact(self, contact_form: UserContact):
         """ Handles a new UserContact.

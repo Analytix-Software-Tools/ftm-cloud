@@ -10,12 +10,10 @@ from ftmcloud.api.rest.controllers.industries.controllers.controller import rout
 from ftmcloud.api.rest.controllers.invitations.controllers.controller import router as invitation_router
 from ftmcloud.api.rest.controllers.categories.controllers.controller import categories_router
 from ftmcloud.api.rest.controllers.attributes.controllers.controller import router as attribute_router
-from ftmcloud.api.rest.controllers.model_configurations.controllers.controller import router as model_configuration_router
 from ftmcloud.api.rest.controllers.product_types.controllers.controller import product_type_router
 from ftmcloud.api.rest.controllers.products.controllers.controller import product_router
 from ftmcloud.api.rest.controllers.reports.controllers.controller import router as reports_router
 from ftmcloud.api.rest.controllers.search.controllers.controller import router as search_router
-from ftmcloud.api.rest.controllers.tasks.controllers.controller import router as task_router
 
 app = FTMApi()
 
@@ -45,8 +43,4 @@ app.include_router(product_router, tags=['Products'], prefix='/api/v0/products',
 app.include_router(reports_router, tags=['Reports'], prefix='/api/v0/reports',
                    dependencies=[Depends(token_listener)], deprecated=True)
 app.include_router(search_router, tags=['Search'], prefix='/api/v0/search',
-                   dependencies=[Depends(token_listener)])
-app.include_router(model_configuration_router, tags=["Model Configurations"], prefix='/api/v0/model_configurations',
-                   dependencies=[Depends(token_listener)])
-app.include_router(task_router, tags=["Tasks"], prefix='/api/v0/tasks',
                    dependencies=[Depends(token_listener)])

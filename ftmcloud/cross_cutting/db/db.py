@@ -12,12 +12,10 @@ from ftmcloud.domains.attributes.models.models import Attribute
 from ftmcloud.domains.categories.models.models import Category
 from ftmcloud.domains.industries.models.models import Industry
 from ftmcloud.domains.invitations.models.models import Invitation
-from ftmcloud.domains.model_configurations.models.models import ModelConfiguration
 from ftmcloud.domains.organizations.models.models import Organization
 from ftmcloud.domains.privileges.models.models import Privilege
 from ftmcloud.domains.products.models.models import Product
 from ftmcloud.domains.product_types.models.models import ProductType
-from ftmcloud.domains.tasks.models.models import Task
 from ftmcloud.domains.users.models.models import User
 
 
@@ -100,5 +98,5 @@ async def initiate_database():
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.analytix,
                       document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
-                                       ProductType, Attribute, ModelConfiguration, Task])
+                                       ProductType, Attribute])
     await check_init_database(motor_client=client)

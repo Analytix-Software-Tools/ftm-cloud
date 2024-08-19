@@ -41,7 +41,11 @@ class UserService(Service):
         email_client = EmailClient()
         await email_client.send_email(
             subject=subject,
-
+            sender_email="info@analytix-ai.com",
+            target_email=email,
+            attachments=attachments,
+            html_text=message_html,
+            plain_text=message_str
         )
 
     async def process_user_contact(self, contact_form: UserContact):

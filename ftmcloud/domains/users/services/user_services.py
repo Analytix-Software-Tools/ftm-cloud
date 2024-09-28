@@ -28,8 +28,8 @@ class UserService(Service):
     ):
         """ Notifies a user by email.
 
-        :param email: str
-            the email
+        :param email: str | list[str]
+            the email or emails
         :param subject: str
             the subject
         :param message_str: str
@@ -43,14 +43,13 @@ class UserService(Service):
         email_client = EmailClient()
         await email_client.send_email(
             subject=subject,
-            sender_email="info@analytix-ai.com",
-            target_email=email,
+            recipients=email,
             attachments=attachments,
             html_text=message_html,
             plain_text=message_str
         )
 
-    async def process_user_contact(self, contact_form: UserContact):
+    async def process_user_contact(self, contact_form: UserContact, sender: User):
         """ Sends the user contact notifications to admin emails and uploads
         files.
 
@@ -62,10 +61,20 @@ class UserService(Service):
         admin_users = await self.get_all(
             q=json.dumps({"privilegePid": self.settings.SUPERUSER_PRIVILEGE})
         )
-        for _user in admin_users:
+        if admin_users is not None and len(admin_users) > 0:
+            recipients = [_user.email for _user in admin_users]
             await self.notify_user(
-                email=_user.email,
+                email=recipients,
                 subject=f"New contact form received: {contact_form.subject}",
+                message_str=f'''
+                You have received a new contact form submission: \n\n\n
+                Subject: {contact_form.subject}\n
+                Issue Type: {contact_form.issueType}\n
+                Message: {contact_form.message}\n\n\n
+                User Email: {sender.email}
+                User Pid: {sender.pid}
+                
+                ''',
                 message_html=f'''
                 You have received a new contact form submission:
                 <br/>
@@ -75,6 +84,8 @@ class UserService(Service):
                 <p>{contact_form.issueType}</p><br/>
                 <strong>Message</strong><br/>
                 <p>{contact_form.message}</h1><br/>
+                User Email: {sender.email}<br/><br/>
+                User Pid: {sender.pid}<br/>
                 '''
             )
 

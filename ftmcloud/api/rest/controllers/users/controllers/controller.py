@@ -1,7 +1,7 @@
 from fastapi import Body, APIRouter, Depends, BackgroundTasks
 from pydantic.validators import List
 
-from ftmcloud.cross_cutting.auth.jwt_bearer import get_user_token
+from ftmcloud.cross_cutting.auth.jwt_bearer import get_user_token, get_current_user, token_listener
 from ftmcloud.core.exception.exception import default_exception_list, FtmException
 from ftmcloud.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
@@ -119,10 +119,15 @@ class UsersController:
     @router.post(
         '/contact',
         response_description="UserContact successfully added.",
-        response_model=Response, responses=default_exception_list
+        response_model=Response, responses=default_exception_list,
     )
-    async def submit_user_contact(self, background_tasks: BackgroundTasks, user_contact: UserContact = Body(...)):
+    async def submit_user_contact(self,
+                                  background_tasks: BackgroundTasks,
+                                  user_contact: UserContact = Body(...),
+                                  sender: User = Depends(get_current_user)
+                                  ):
         user_service = UserService()
+        user_contact.senderPid = sender.pid
         await user_service.submit_user_contact(user_contact)
-        background_tasks.add_task(user_service.process_user_contact, user_contact)
+        background_tasks.add_task(user_service.process_user_contact, user_contact, sender)
         return Response(status_code=201, response_type="success", description="User contact received.")

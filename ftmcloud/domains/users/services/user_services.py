@@ -1,3 +1,5 @@
+import json
+
 from password_validator import PasswordValidator
 
 from ftmcloud.cross_cutting.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
@@ -58,7 +60,7 @@ class UserService(Service):
         :return:
         """
         admin_users = await self.get_all(
-            q={"privilegePid": self.settings.SUPERUSER_PRIVILEGE}
+            q=json.dumps({"privilegePid": self.settings.SUPERUSER_PRIVILEGE})
         )
         for _user in admin_users:
             await self.notify_user(

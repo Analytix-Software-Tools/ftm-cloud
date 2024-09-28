@@ -26,7 +26,7 @@ async def sign_jwt(user: User) -> LoginResponse:
     payload = {
         'iss': 'com.analytics-software.api',
         'sub': user.pid,
-        'exp': now + 2400,
+        'exp': now + 7200,
         'iat': now,
         'permissions': role.permissions,
         'privilegeName': role.name,

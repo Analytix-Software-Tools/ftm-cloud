@@ -72,6 +72,22 @@ class Service(AbstractService):
         document = await new_document.create()
         return document
 
+    async def insert_documents(self, documents):
+        """Adds many documents.
+
+        :param documents: List[dict]
+            list of documents to add
+
+        :return:
+        """
+        insert_docs = []
+        for _document in documents:
+            new_pid = str(uuid.uuid4())
+            _document.pid = new_pid
+            _document.createdAt = datetime.datetime.now()
+            insert_docs.append(_document)
+        await self.collection.insert_many(insert_docs)
+
     def process_q(self, q, additional_filters):
         """
         Parse the q, combine additional filters and add the default

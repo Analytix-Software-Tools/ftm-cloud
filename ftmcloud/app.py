@@ -10,6 +10,7 @@ from ftmcloud.api.rest.controllers.industries.controllers.controller import rout
 from ftmcloud.api.rest.controllers.invitations.controllers.controller import router as invitation_router
 from ftmcloud.api.rest.controllers.categories.controllers.controller import categories_router
 from ftmcloud.api.rest.controllers.attributes.controllers.controller import router as attribute_router
+from ftmcloud.api.rest.controllers.ftm_tasks.controllers.controller import ftm_tasks_router as ftm_task_router
 from ftmcloud.api.rest.controllers.product_types.controllers.controller import product_type_router
 from ftmcloud.api.rest.controllers.products.controllers.controller import product_router
 from ftmcloud.api.rest.controllers.reports.controllers.controller import router as reports_router
@@ -27,6 +28,8 @@ app.include_router(organization_router, tags=['Organizations'], prefix='/api/v0/
                    dependencies=[Depends(token_listener)])
 app.include_router(user_router, tags=["Users"], prefix='/api/v0/users')
 app.include_router(privilege_router, tags=['Privileges'], prefix='/api/v0/privileges',
+                   dependencies=[Depends(token_listener)])
+app.include_router(ftm_task_router, tags=['FtmTasks'], prefix='/api/v0/ftm_tasks',
                    dependencies=[Depends(token_listener)])
 app.include_router(industry_router, tags=['Industries'], prefix='/api/v0/industries',
                    dependencies=[Depends(token_listener)])

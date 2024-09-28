@@ -1,8 +1,10 @@
 import logging
+import uuid
 
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from ftmcloud.domains.ftm_tasks.models.models import FtmTask
 from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
 from ftmcloud.domains.privileges.services.privilege_services import PrivilegesService
 from ftmcloud.domains.users.services.user_services import UserService
@@ -54,8 +56,25 @@ async def check_init_database(motor_client: AsyncIOMotorClient):
                 description="Administrator role",
                 permissions=[]
             )
+            privileges = [
+                Privilege(
+                    pid="",
+                    name="employee",
+                    description="Employee role",
+                    permissions=[]
+                ),
+                Privilege(
+                    pid="",
+                    name="user",
+                    description="User role",
+                    permissions=[]
+                )
+            ]
             default_privilege = await privilege_service.add_document(
                 new_document=new_privilege
+            )
+            await privilege_service.insert_documents(
+                documents=privileges
             )
             default_organization = Organization(
                 name="Default",
@@ -98,5 +117,5 @@ async def initiate_database():
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.analytix,
                       document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
-                                       ProductType, Attribute])
+                                       ProductType, Attribute, FtmTask])
     await check_init_database(motor_client=client)

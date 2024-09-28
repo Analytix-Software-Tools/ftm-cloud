@@ -1,4 +1,6 @@
 import logging
+from tkinter.font import names
+
 import uuid
 
 from beanie import init_beanie
@@ -67,6 +69,12 @@ async def check_init_database(motor_client: AsyncIOMotorClient):
                     pid="",
                     name="user",
                     description="User role",
+                    permissions=[]
+                ),
+                Privilege(
+                    pid="",
+                    name="reviewer",
+                    description="Data reviewer role",
                     permissions=[]
                 )
             ]

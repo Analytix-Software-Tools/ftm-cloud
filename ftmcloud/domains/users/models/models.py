@@ -1,7 +1,8 @@
-from typing import Optional, Literal
+from typing import Optional
 
 from ftmcloud.cross_cutting.repository.repository import Repository
 from pydantic import EmailStr, BaseModel, SecretStr, Field
+from pydantic.schema import Literal
 
 from ftmcloud.cross_cutting.models.document import BaseDocument
 from ftmcloud.domains.organizations.models.models import Organization
@@ -111,8 +112,8 @@ class UserContact(BaseDocument):
     issueType: str
     message: str
     imagePid: str
-    senderPid: str
-    status: str = Literal['Resolved', 'Pending', 'Archived']
+    senderPid: Optional[str]
+    status: Optional[Literal["Resolved", "Pending", "Archived"]]
 
 
 class UserContactsRepository(Repository):

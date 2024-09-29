@@ -72,7 +72,7 @@ class EmailClient:
             html body
         :return:
         """
-        if self.settings.AZURE_COMMUNICATION_URI is None:
+        if self.settings.AZURE_COMMUNICATION_URI == '':
             return self._logger.warning(
                 msg=f'''
                     Variable {self.settings.AZURE_COMMUNICATION_URI.__name__} is unset. Outgoing email request

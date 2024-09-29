@@ -1,56 +1,38 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy container app to Azure Web App - ftmcloud-dev
+name: Deploy Tasks
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+
+env:
+  CONTAINER_IMAGE_NAME: cr2244/ftmcloud
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Log in to registry
-      uses: docker/login-action@v2
-      with:
-        registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_aa6ad54d138640b69af3b877ef54a22c }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_51c51234b354432b82d98b9eb9f856fe }}
-
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
-      with:
-        push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_aa6ad54d138640b69af3b877ef54a22c }}/cr2244/ftmcloud:${{ github.sha }}
-        file: ./Dockerfile
-
-  deploy:
     runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'ftmcloud-dev'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_aeeff5a07f854c85b3bc066b2000e68c }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_aa6ad54d138640b69af3b877ef54a22c }}/cr2244/ftmcloud:${{ github.sha }}'
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Docker Buildx (optional for multi-platform builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Build the Docker image
+      - name: Build Docker Image
+        run: |
+          docker build -t $CONTAINER_IMAGE_NAME:latest .
+
+      # Push the Docker image to Docker Hub or any registry
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker Image
+        run: |
+          docker push $CONTAINER_IMAGE_NAME:latest

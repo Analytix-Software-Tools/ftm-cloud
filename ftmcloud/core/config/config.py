@@ -12,7 +12,7 @@ class BaseConfig(BaseSettings):
     PROJECT_NAME: str = "FtmCloud"
     API_REVISION: str = "v0"
     DEBUG: bool = False
-    SUPERUSER_PRIVILEGE: str = "aefbe39c-2a12-471d-bd32-3a631f67c179"
+    SUPERUSER_PRIVILEGE: str = "f0415c0a-f41c-470e-a440-1f51047eff0d"
     MAX_QUERY_LIMIT: int = 100
     DEFAULT_QUERY_LIMIT: int = 10
     algorithm: str = "HS256"
@@ -52,6 +52,9 @@ class Settings(BaseConfig):
     ELASTICSEARCH_URI_ENCODED = os.environ['ELASTICSEARCH_URI_ENCODED'] if "ELASTICSEARCH_URI_ENCODED" in os.environ \
         else 'aHR0cHM6Ly9sb2NhbGhvc3Q6OTIwMC8='
     ELASTICSEARCH_URI = base64.b64decode(ELASTICSEARCH_URI_ENCODED).decode('utf-8')
+
+    AZURE_COMMUNICATION_URI_ENCODED = os.getenv('AZURE_COMMUNICATION_URI_ENCODED', '')
+    AZURE_COMMUNICATION_URI = base64.b64decode(AZURE_COMMUNICATION_URI_ENCODED).decode('utf-8') if AZURE_COMMUNICATION_URI_ENCODED is not '' else ''
 
     # JWT
     JWT_SECRET = os.environ.get("JWT_SECRET", 'D(G+KbPe')

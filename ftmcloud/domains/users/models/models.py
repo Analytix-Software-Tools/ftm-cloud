@@ -2,6 +2,7 @@ from typing import Optional
 
 from ftmcloud.cross_cutting.repository.repository import Repository
 from pydantic import EmailStr, BaseModel, SecretStr, Field
+from pydantic.schema import Literal
 
 from ftmcloud.cross_cutting.models.document import BaseDocument
 from ftmcloud.domains.organizations.models.models import Organization
@@ -107,10 +108,26 @@ class UserProfile(UserResponse):
 
 
 class UserContact(BaseDocument):
+    pid: Optional[str]
     subject: str
     issueType: str
     message: str
     imagePid: str
+    senderPid: Optional[str]
+    status: Optional[Literal["Resolved", "Pending", "Archived"]]
+
+    class Settings:
+        name = "user_contacts"
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "subject": "subject",
+                "issueType": "Other",
+                "message": "message",
+                "imagePid": ""
+            }
+        }
 
 
 class UserContactsRepository(Repository):

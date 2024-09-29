@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_f61fe7d69225427895bd0ad6d6b1faf1 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_4df4cc3d70c84d5298cf4de1aa8ceea3 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_57a33655b4de4e71bd6e551390f4c062 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_2949083e72f3410cb1f909a6ecab5100 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_f61fe7d69225427895bd0ad6d6b1faf1 }}/cr2244/ftmcloud:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_57a33655b4de4e71bd6e551390f4c062 }}/cr2244/ftmcloud:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'ftmcloud-dev'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_5229ee87ac344a7aacb172ed4082e7b1 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_f61fe7d69225427895bd0ad6d6b1faf1 }}/cr2244/ftmcloud:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_0880de7ec711480f8405ff3775e2b6f7 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_57a33655b4de4e71bd6e551390f4c062 }}/cr2244/ftmcloud:${{ github.sha }}'

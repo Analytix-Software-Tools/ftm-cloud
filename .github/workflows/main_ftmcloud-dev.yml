@@ -41,6 +41,11 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
@@ -48,4 +53,4 @@ jobs:
         app-name: 'ftmcloud-dev'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_aeeff5a07f854c85b3bc066b2000e68c }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_aa6ad54d138640b69af3b877ef54a22c }}/cr2244/ftmcloud:${{ github.sha }}'
+        images: 'hub.docker.com/${{ secrets.AzureAppService_ContainerUsername_aa6ad54d138640b69af3b877ef54a22c }}/cr2244/ftmcloud:${{ github.sha }}'

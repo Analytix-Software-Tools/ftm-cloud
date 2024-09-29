@@ -53,4 +53,4 @@ jobs:
         app-name: 'ftmcloud-dev'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_aeeff5a07f854c85b3bc066b2000e68c }}
-        images: 'hub.docker.com/${{ secrets.AzureAppService_ContainerUsername_aa6ad54d138640b69af3b877ef54a22c }}/cr2244/ftmcloud:${{ github.sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_aa6ad54d138640b69af3b877ef54a22c }}/cr2244/ftmcloud:${{ github.sha }}'

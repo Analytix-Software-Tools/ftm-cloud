@@ -4,6 +4,7 @@ from ftmcloud.cross_cutting.auth.jwt_bearer import token_listener
 from ftmcloud.cross_cutting.db.db import initiate_database
 from ftmcloud.core.app.app import FTMApi
 from ftmcloud.api.rest.controllers.users.controllers.controller import router as user_router
+from ftmcloud.api.rest.controllers.user_contacts.controllers.controller import router as user_contact_router
 from ftmcloud.api.rest.controllers.organizations.controllers.controller import router as organization_router
 from ftmcloud.api.rest.controllers.privileges.controllers.controller import router as privilege_router
 from ftmcloud.api.rest.controllers.industries.controllers.controller import router as industry_router
@@ -27,6 +28,8 @@ async def start_database():
 app.include_router(organization_router, tags=['Organizations'], prefix='/api/v0/organizations',
                    dependencies=[Depends(token_listener)])
 app.include_router(user_router, tags=["Users"], prefix='/api/v0/users')
+app.include_router(user_contact_router, tags=["UserContacts"], prefix='/api/v0/user_contacts',
+                   dependencies=[Depends(token_listener)])
 app.include_router(privilege_router, tags=['Privileges'], prefix='/api/v0/privileges',
                    dependencies=[Depends(token_listener)])
 app.include_router(ftm_task_router, tags=['FtmTasks'], prefix='/api/v0/ftm_tasks',

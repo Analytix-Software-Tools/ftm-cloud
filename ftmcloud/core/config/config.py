@@ -12,7 +12,7 @@ class BaseConfig(BaseSettings):
     PROJECT_NAME: str = "FtmCloud"
     API_REVISION: str = "v0"
     DEBUG: bool = False
-    SUPERUSER_PRIVILEGE: str = "54a7c492-0e43-4c32-b999-970bbaedf030"
+    SUPERUSER_PRIVILEGE: str = "f0415c0a-f41c-470e-a440-1f51047eff0d"
     MAX_QUERY_LIMIT: int = 100
     DEFAULT_QUERY_LIMIT: int = 10
     algorithm: str = "HS256"

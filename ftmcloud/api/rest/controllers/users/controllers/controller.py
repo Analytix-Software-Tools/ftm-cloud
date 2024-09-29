@@ -8,7 +8,7 @@ from ftmcloud.domains.organizations.services.organization_services import Organi
 from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
 from ftmcloud.cross_cutting.models.response import Response, LoginResponse, ResponseWithHttpInfo
 from ftmcloud.domains.users.models.models import User, UserSignIn, UserResponse, UserProfile, UserContact
-from ftmcloud.domains.users.services.user_services import UserService
+from ftmcloud.domains.users.services.user_services import UserService, UserContactService
 from ftmcloud.cross_cutting.views.views import controller
 from ftmcloud.core.config.config import Settings
 
@@ -128,8 +128,9 @@ class UsersController:
                                   sender: User = Depends(get_current_user)
                                   ):
         user_service = UserService()
+        user_contact_service = UserContactService()
         user_contact.senderPid = sender.pid
         user_contact.status = 'Pending'
-        await user_service.submit_user_contact(user_contact)
+        await user_contact_service.add_document(user_contact)
         background_tasks.add_task(user_service.process_user_contact, user_contact, sender)
         return Response(status_code=201, response_type="success", description="User contact received.")

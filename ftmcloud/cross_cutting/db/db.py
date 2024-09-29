@@ -1,10 +1,8 @@
 import logging
-from tkinter.font import names
-
-import uuid
 
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import TEXT
 
 from ftmcloud.domains.ftm_tasks.models.models import FtmTask
 from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
@@ -20,16 +18,40 @@ from ftmcloud.domains.organizations.models.models import Organization
 from ftmcloud.domains.privileges.models.models import Privilege
 from ftmcloud.domains.products.models.models import Product
 from ftmcloud.domains.product_types.models.models import ProductType
-from ftmcloud.domains.users.models.models import User
+from ftmcloud.domains.users.models.models import User, UserContact
 
+logger = logging.getLogger(__name__)
 
 async def _build_indexes(motor_client: AsyncIOMotorClient):
-    """ Performs initialization to build indexes.
+    """ Initializes any indexes which are required to exist on application
+    startup.
 
     :return:
     """
-    # motor_client
-    pass
+    logger.debug("Checking indexes...")
+    indexes = [
+        {
+            "name": "user_contacts_search_index",
+            "index": [("message", TEXT), ("subject", TEXT)],
+            "table": "user_contacts"
+        }
+    ]
+
+    for _index in indexes:
+        logger.debug(f"Checking {_index['name']}")
+        try:
+            await motor_client['analytix'][_index['table']].create_index(
+                _index['index'],
+                name=_index["name"]
+            )
+            logger.info(f"Missing index {_index['name']} created on {_index['table']}.")
+        except Exception as e:
+            logger.error(
+                f"""
+                Index {_index['name']} already exists or an error occurred. {str(e)}
+                """
+            )
+    logger.debug("Index initialization complete.")
 
 
 async def check_init_database(motor_client: AsyncIOMotorClient):
@@ -47,7 +69,6 @@ async def check_init_database(motor_client: AsyncIOMotorClient):
         {"name": "developer"}
     )
     if admin_privilege is None:
-        logger = logging.getLogger(__name__)
         logger.info(f"Database flagged for initializing. Performing initial migration...")
         try:
             users_service = UserService()
@@ -117,13 +138,21 @@ async def check_init_database(motor_client: AsyncIOMotorClient):
             logger.error(f"Exception during database initialization! Please restart. {str(e)}")
 
 
-async def initiate_database():
+async def initiate_database(initial=False):
     """ Initialize the AsyncIOMotorClient.
+
+    :param initial: bool
+        whether we are performing a database initialization vs connection initiation
 
     :return:
     """
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.analytix,
                       document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
-                                       ProductType, Attribute, FtmTask])
-    await check_init_database(motor_client=client)
+                                       ProductType, Attribute, FtmTask, UserContact])
+    if initial:
+        logger.info("Verifying db integrity...")
+        await check_init_database(motor_client=client)
+        await _build_indexes(motor_client=client)
+        client.close()
+        logger.info("Database integrity verified.")

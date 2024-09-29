@@ -89,18 +89,6 @@ class UserService(Service):
                 '''
             )
 
-    async def submit_user_contact(self, contact_form: UserContact):
-        """ Handles a new UserContact.
-
-        :param contact_form: UserContact
-            the contact form submitted
-        :return:
-        """
-        await self._user_contacts_repository.insert(
-            new_document=contact_form
-        )
-        self._logger.info("New user contact form handled with issue type: {}".format(contact_form.issueType))
-
     async def validate_new_user(self, user):
         """
         Validates a new user to ensure their email is not taken. Hashes the
@@ -217,3 +205,18 @@ class UserService(Service):
         if len(user) == 0:
             raise FtmException('error.user.NotFound')
         return user[0]
+
+class UserContactService(Service):
+    
+    def __init__(self):
+        super(UserContactService, self).__init__(collection=UserContact)
+
+    async def add_document(self, new_document):
+        """ Adds user contact document.
+
+        :param new_document:
+        :return:
+        """
+        self._logger.info("New user contact form handled with issue type: {}".format(new_document.issueType))
+        return await super().add_document(new_document)
+

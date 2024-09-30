@@ -1,11 +1,10 @@
 from fastapi import Body, APIRouter, Depends
-from pydantic.schema import Optional, Literal
+from pydantic.schema import Literal
 from pydantic.validators import List
 
-from ftmcloud.core.exception.exception import default_exception_list, FtmException
+from ftmcloud.core.exception.exception import default_exception_list
 from ftmcloud.cross_cutting.auth.jwt_bearer import get_current_user
 from ftmcloud.domains.ftm_tasks.services.ftm_task_services import FtmTasksService
-from ftmcloud.domains.product_types.services.product_type_service import ProductTypesService
 
 from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
 from ftmcloud.cross_cutting.models.response import Response, ResponseWithHttpInfo

@@ -40,10 +40,8 @@ class Settings(BaseConfig):
     AUTH_METHOD = os.environ['AUTHENTICATION_METHOD'] if 'AUTHENTICATION_METHOD' in \
                                                          os.environ else "azure"
 
-    PRIVILEGE_NAME_MAPPING = {}
-
-    DEFAULT_PRIVILEGE_PID = "fcd975ac-f961-4f1e-9887-926198e711f3"
-    DEFAULT_ORGANIZATION_PID = "a5958bfa-269f-4335-9594-4c8d600691bb"
+    DEFAULT_PRIVILEGE_NAME = "reviewer"
+    DEFAULT_ORGANIZATION_PID = "2022eb7c-7abd-4d25-9e4e-d67820b9a5bd"
 
     ELASTICSEARCH_API_KEY_ENCODED = os.environ['ELASTICSEARCH_API_KEY_ENCODED'] if "ELASTICSEARCH_API_KEY_ENCODED" in os.environ \
         else 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0'

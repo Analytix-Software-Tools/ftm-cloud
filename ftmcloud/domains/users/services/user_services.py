@@ -1,9 +1,12 @@
 import json
 
+from azure.core.settings import settings
+from passlib.handlers.bcrypt import bcrypt
 from password_validator import PasswordValidator
 
 from ftmcloud.cross_cutting.auth.jwt_handler import sign_jwt, construct_user_from_aad_token
 from ftmcloud.core.exception.exception import FtmException
+from ftmcloud.cross_cutting.models.patchdocument import PatchDocument
 from ftmcloud.cross_cutting.notifications.email_client import EmailClient
 from ftmcloud.cross_cutting.service.service import Service
 from passlib.context import CryptContext
@@ -130,7 +133,19 @@ class UserService(Service):
             update_user.organizationPid = get_default_organization_pid()
             await self.add_document(new_document=update_user)
         else:
-            # TODO: Need to perform an update to the user to sync with AAD.
+            # Sync user's permissions with those reflected by the tenant.
+            if update_user.privilegePid != user_exists.privilegePid:
+                await self.patch(
+                    pid=user_exists.pid,
+                    patch_document_list=[
+                        PatchDocument(
+                            op="replace",
+                            path="/privilegePid",
+                            value=update_user.privilegePid
+                        )
+                    ]
+                )
+                user_exists.privilegePid = update_user.privilegePid
             update_user = user_exists
         return await sign_jwt(user=update_user)
 
@@ -141,8 +156,18 @@ class UserService(Service):
 
         await self.validate_exists(pid=pid)
         for document in patch_document_list:
-            if document.path == '/organizationPid' or document.path == '/privilegePid':
+            if (
+                    document.path == '/organizationPid' or
+                    document.path == '/privilegePid' or
+                    (
+                            self.settings.AUTH_METHOD != "mongo" and
+                            document.path == "/email"
+                    )
+            ):
                 raise FtmException('error.patch.InvalidPatch')
+            if document.path == '/password':
+                hash_helper = CryptContext(schemes=["bcrypt"])
+                document.value = hash_helper.encrypt(document.value)
 
         return await self.patch(pid=pid, patch_document_list=patch_document_list)
 

@@ -2,7 +2,8 @@ import time
 
 import jwt
 
-from ftmcloud.cross_cutting.session.session import privilege_name_to_pid, privilege_pid_to_name
+from ftmcloud.cross_cutting.session.session import privilege_name_to_pid, privilege_pid_to_name, \
+    get_default_organization_pid
 from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
 
 from ftmcloud.core.config.config import Settings

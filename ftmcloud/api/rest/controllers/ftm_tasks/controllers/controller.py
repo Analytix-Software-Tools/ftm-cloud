@@ -1,3 +1,5 @@
+import json
+
 from fastapi import Body, APIRouter, Depends
 from pydantic.schema import Literal
 from pydantic.validators import List
@@ -58,7 +60,7 @@ class FtmTasksController:
             pid=pid,
             additional_filters={}
         )
-        await ftm_tasks_service.patch(pid=pid, patch_document_list=patch_list)
+        await ftm_tasks_service.patch(pid=pid, patch_document_list=patch_list, current_user=current_user)
         return Response(status_code=204, response_type='success', description="FtmTask patched successfully.")
 
     @ftm_tasks_router.get(
@@ -94,13 +96,17 @@ class FtmTasksController:
         """
         ftm_tasks_service = FtmTasksService()
 
-        assigned_task = await ftm_tasks_service.get_task_assignment(
-            user_pid=current_user.pid,
-            offset=offset,
+        q = ftm_tasks_service.get_task_assignment_query(
             taskType=taskType,
             taskStatus=taskStatus,
             targetApplication=targetApplication,
             showCompleted=showCompleted,
+        )
+
+        assigned_task = await ftm_tasks_service.get_task_assignment(
+            user_pid=current_user.pid,
+            offset=offset,
+            query=q
         )
 
         if assigned_task is None:
@@ -108,7 +114,7 @@ class FtmTasksController:
         else:
             data = [assigned_task]
 
-        headers = {"X-Total-Count": str(await ftm_tasks_service.total('{}'))}
+        headers = {"X-Total-Count": str(await ftm_tasks_service.total(json.dumps(q)))}
 
         return ResponseWithHttpInfo(
             data=data,
@@ -135,3 +141,19 @@ class FtmTasksController:
         ftm_tasks_service = FtmTasksService()
         await ftm_tasks_service.patch(pid=pid, patch_document_list=patch_list)
         return Response(status_code=204, response_type='success', description="FtmTask patched successfully.")
+
+
+    @ftm_tasks_router.get(
+        '/dashboard',
+        response_model=Response,
+        response_description="Successfully got dashboard.",
+        responses=default_exception_list
+    )
+    async def get_dashboard(self):
+        """
+        Retrieves a dashboard of user statistics, most recent tasks, etc.
+        """
+        # 3 aggregates: tasks by type
+        # tasks last 30 days
+        # tasks completed this week
+        pass

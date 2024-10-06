@@ -8,7 +8,8 @@ from ftmcloud.cross_cutting.notifications.email_client import EmailClient
 from ftmcloud.cross_cutting.service.service import Service
 from passlib.context import CryptContext
 
-from ftmcloud.cross_cutting.session.session import get_privilege_pid_for_name
+from ftmcloud.cross_cutting.session.session import get_privilege_pid_for_name, default_organization_pid, \
+    get_default_organization_pid
 from ftmcloud.domains.users.models.models import User, UserSignIn, UserProfile, UserContact, UserContactsRepository
 
 user_collection = User
@@ -126,7 +127,7 @@ class UserService(Service):
             raise FtmException("error.general.BadTokenIntegrity")
         user_exists = await self.collection.find_one(self.process_q(q=None, additional_filters={"email": update_user.email}))
         if user_exists is None:
-            update_user.organizationPid = self.settings.DEFAULT_ORGANIZATION_PID
+            update_user.organizationPid = get_default_organization_pid()
             await self.add_document(new_document=update_user)
         else:
             # TODO: Need to perform an update to the user to sync with AAD.

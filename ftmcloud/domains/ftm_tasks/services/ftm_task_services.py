@@ -13,7 +13,11 @@ class FtmTasksService(Service):
     async def get_task_assignment(
             self,
             user_pid: str,
-            offset: int = 0
+            offset: int = 0,
+            taskType: str | None = None,
+            taskStatus: str | None = None,
+            targetApplication: str | None = None,
+            showCompleted: bool | None = None,
     ) -> FtmTask:
         """ Assigns a task to a given user so that other users cannot simultaneously access and ensures
         any other tasks aren't being modified.
@@ -22,19 +26,36 @@ class FtmTasksService(Service):
             pid of the user accessing the task
         :param offset: int
             offset from the first doc
+        :param taskType: str | None
+            the task type filter
+        :param taskStatus: str | None
+            the task status filter
+        :param targetApplication: str | None
+            the target application filter
+        :param showCompleted: bool | None
+            whether to show completed
 
         :return: ftm_task: FtmTask
             the assigned task
         """
 
         # Retrieve any tasks expired or missing a lockdatetime to get the 'available' tasks.
+        query = {
+            "$or": [
+                {"lockDatetime": {"$lt": datetime.now() - timedelta(minutes=15)}},
+                {"lockDatetime": None}
+            ],
+            "completedDatetime": None if not showCompleted else {"$ne": None}
+        }
+        for k, v in {
+            "taskType": taskType,
+            "taskStatus": taskStatus,
+            "targetApplication": targetApplication
+        }.items():
+            if v is not None:
+                query[k] = v
         available_task = await self.collection.find_one(
-            {
-                "$or": [
-                    {"lockDatetime": {"$lt": datetime.now() - timedelta(minutes=15)}},
-                    {"lockDatetime": None}
-                ]
-            },
+            query,
             skip=offset,
             sort=[("createdAt", -1)]
         )

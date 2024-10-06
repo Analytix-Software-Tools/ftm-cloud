@@ -1,4 +1,5 @@
 from ftmcloud.domains.privileges.models.models import Privilege
+from ftmcloud.domains.organizations.models.models import Organization
 from ftmcloud.domains.users.models.models import User
 
 import random
@@ -17,6 +18,7 @@ class PasswordGenerator:
 
 privilege_pid_to_name = {}
 privilege_name_to_pid = {}
+default_organization_pid = None
 
 async def init_privilege_name_to_pid():
     """ Loads the mapping of privilege name to privilege pid into memory for the
@@ -30,6 +32,20 @@ async def init_privilege_name_to_pid():
     for _privilege in privileges:
         privilege_pid_to_name[_privilege.pid] = _privilege.name
         privilege_name_to_pid[_privilege.name] = _privilege.pid
+
+
+async def init_default_organization():
+    """ Finds the default organization and initializes so all new users are assigned to it.
+
+    :return:
+    """
+    global default_organization_pid
+    org = await Organization.find({"name": "Default"}).to_list()
+    default_organization_pid = org[0].pid
+
+
+def get_default_organization_pid():
+    return default_organization_pid
 
 
 def validate_user_privilege_in_list(privilege_pid: str, privilege_names: list[str]):

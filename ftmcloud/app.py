@@ -16,7 +16,7 @@ from ftmcloud.api.rest.controllers.product_types.controllers.controller import p
 from ftmcloud.api.rest.controllers.products.controllers.controller import product_router
 from ftmcloud.api.rest.controllers.reports.controllers.controller import router as reports_router
 from ftmcloud.api.rest.controllers.search.controllers.controller import router as search_router
-from ftmcloud.cross_cutting.session.session import init_privilege_name_to_pid
+from ftmcloud.cross_cutting.session.session import init_privilege_name_to_pid, init_default_organization
 
 app = FTMApi()
 
@@ -25,6 +25,7 @@ app = FTMApi()
 async def start_database():
     await initiate_database()
     await init_privilege_name_to_pid()
+    await init_default_organization()
 
 
 app.include_router(organization_router, tags=['Organizations'], prefix='/api/v0/organizations',

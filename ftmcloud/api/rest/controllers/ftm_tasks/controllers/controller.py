@@ -69,11 +69,12 @@ class FtmTasksController:
     )
     async def get_task_assignment(
             self,
-            offset: int | None = None,
+            offset: int | None = 0,
             taskType: str | None = None,
             taskStatus: Literal["completed"] | None = None,
             targetApplication: Literal["moodme", "analytix"] | None = None,
-            current_user: User = Depends(get_current_user)
+            current_user: User = Depends(get_current_user),
+            showCompleted: bool | None = None,
     ) -> FtmTask:
         """ Retrieves a task assignment based on the current user and their organization's
         assigned task types. Assigns a single task to the user, hiding the rest from other
@@ -85,6 +86,8 @@ class FtmTasksController:
             status of the task
         :param targetApplication: "moodme" or "analytix"
             the target application filter
+        :param showCompleted: bool
+            whether to show completed tasks or not
 
         :return: assigned_task: FtmTask
             the assigned task
@@ -92,7 +95,12 @@ class FtmTasksController:
         ftm_tasks_service = FtmTasksService()
 
         assigned_task = await ftm_tasks_service.get_task_assignment(
-            user_pid=current_user.pid
+            user_pid=current_user.pid,
+            offset=offset,
+            taskType=taskType,
+            taskStatus=taskStatus,
+            targetApplication=targetApplication,
+            showCompleted=showCompleted,
         )
 
         if assigned_task is None:

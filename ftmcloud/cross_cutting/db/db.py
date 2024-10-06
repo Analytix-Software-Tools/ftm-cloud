@@ -1,5 +1,6 @@
 import logging
 
+import pymongo.errors
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import TEXT
@@ -134,7 +135,7 @@ async def check_init_database(motor_client: AsyncIOMotorClient):
                 Please ensure you save these credentials! You will not be able to retrieve them later.
                 """
             )
-        except Exception as e:
+        except pymongo.errors.PyMongoError as e:
             logger.error(f"Exception during database initialization! Please restart. {str(e)}")
 
 

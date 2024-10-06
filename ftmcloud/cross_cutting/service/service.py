@@ -12,6 +12,7 @@ from pydantic.error_wrappers import ValidationError
 
 from ftmcloud.core.config.config import Settings
 from ftmcloud.core.exception.exception import FtmException
+from ftmcloud.domains.users.models.models import User
 
 
 class AbstractService:
@@ -232,7 +233,22 @@ class Service(AbstractService):
             for i in range(0, pid_list_len):
                 await self.validate_exists(pid=pid_list[i])
 
-    async def patch(self, pid: str, patch_document_list: list):
+    async def patch_document_validator(self, document, patch_document_list, current_user: User | None = None):
+        """ This function allows a passthru to validate patch documents in the list before
+        the patch is performed.
+
+        :param document: dict
+            the document
+        :param patch_document_list: list[dict]
+            list of json patch document
+        :param current_user: User | None
+            the current user
+
+        :return:
+        """
+        pass
+
+    async def patch(self, pid: str, patch_document_list: list, current_user: User | None = None):
         """Patch the resource within the space by pid. Attempts to
         construct a patch document from the list provided. If the formatting
         fits, attempts to find the resource, creates a diff doc, then attempts
@@ -241,6 +257,7 @@ class Service(AbstractService):
 
         :param pid:
         :param patch_document_list:
+        :param current_user: User | None
         :return:
         """
         if len(patch_document_list) == 0:
@@ -255,6 +272,7 @@ class Service(AbstractService):
         result = await self.collection.find_one({"pid": pid})
         if result is None:
             raise FtmException(f"error.{self.collection.__name__.lower()}.NotFound")
+        await self.patch_document_validator(result, patch_list, current_user)
         try:
             diff_doc = patch.apply(result.dict())
             try:

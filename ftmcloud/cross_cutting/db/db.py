@@ -5,6 +5,7 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import TEXT
 
+from ftmcloud.domains.data_sources.models.models import DataSource
 from ftmcloud.domains.ftm_tasks.models.models import FtmTask
 from ftmcloud.domains.organizations.services.organization_services import OrganizationsService
 from ftmcloud.domains.privileges.services.privilege_services import PrivilegesService
@@ -150,7 +151,7 @@ async def initiate_database(initial=False):
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.analytix,
                       document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
-                                       ProductType, Attribute, FtmTask, UserContact])
+                                       ProductType, Attribute, FtmTask, UserContact, DataSource])
     if initial:
         logger.info("Verifying db integrity...")
         await check_init_database(motor_client=client)

@@ -16,6 +16,7 @@ from ftmcloud.api.rest.controllers.product_types.controllers.controller import p
 from ftmcloud.api.rest.controllers.products.controllers.controller import product_router
 from ftmcloud.api.rest.controllers.reports.controllers.controller import router as reports_router
 from ftmcloud.api.rest.controllers.search.controllers.controller import router as search_router
+from ftmcloud.api.rest.controllers.data_sources.controllers.controller import router as data_sources_router
 from ftmcloud.cross_cutting.session.session import init_privilege_name_to_pid, init_default_organization
 
 app = FTMApi()
@@ -52,4 +53,6 @@ app.include_router(product_router, tags=['Products'], prefix='/api/v0/products',
 app.include_router(reports_router, tags=['Reports'], prefix='/api/v0/reports',
                    dependencies=[Depends(token_listener)], deprecated=True)
 app.include_router(search_router, tags=['Search'], prefix='/api/v0/search',
+                   dependencies=[Depends(token_listener)])
+app.include_router(data_sources_router, tags=['DataSources'], prefix='/api/v0/data_sources',
                    dependencies=[Depends(token_listener)])

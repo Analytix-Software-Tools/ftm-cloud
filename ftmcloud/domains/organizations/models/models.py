@@ -20,6 +20,7 @@ class Organization(BaseDocument):
     about: str = ""
     siteUrl: str = ""
     industryPids: list[str] = []
+    dataSourcePid: Optional[str]
 
     class Settings:
         name = "organizations"
@@ -30,6 +31,7 @@ class Organization(BaseDocument):
                 "name": "Test Organization",
                 "description": "Organization",
                 "pid": "Test pid",
-                "createdAt": "2022-03-17T00:54:43.924+00:00"
+                "createdAt": "2022-03-17T00:54:43.924+00:00",
+                "dataSourcePid": "pid"
             }
         }

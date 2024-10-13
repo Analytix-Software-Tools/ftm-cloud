@@ -60,6 +60,15 @@ class Service(AbstractService):
         exists = await self.collection.find_one({"isDeleted": {"$ne": "true"}, **q})
         return exists
 
+    async def add_validator(self, new_document):
+        """ Validates new document incoming.
+
+        :param new_document: model_cls
+            the new document
+        :return:
+        """
+        pass
+
     async def add_document(self, new_document):
         """Adds a specified document.
 
@@ -67,6 +76,7 @@ class Service(AbstractService):
         :param validation:
         :return:
         """
+        await self.add_validator(new_document)
         new_pid = str(uuid.uuid4())
         new_document.pid = new_pid
         new_document.createdAt = datetime.datetime.now()

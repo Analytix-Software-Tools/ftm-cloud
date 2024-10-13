@@ -17,14 +17,18 @@ class Repository:
         """
         self._model_cls = model_cls
 
-    async def find(self, query, first):
+    async def find(self, query, first, internal=False):
         """ Finds the specified document in the class.
 
         :param query:
         :param first:
+        :param internal: bool
+            whether request is being performed internally
         :return:
         """
         try:
+            if not internal:
+                query['isDeleted'] = {'$ne': 'true'}
             return await self._model_cls.find(query, first=first)
         except Exception as E:
             raise FtmException from E

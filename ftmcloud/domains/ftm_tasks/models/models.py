@@ -28,7 +28,7 @@ class FtmTask(BaseDocument):
     """
     targetApplication: str
     taskDescription: str
-    taskType: Literal["DatasetReview"]
+    taskType: Literal["DatasetReview", "GeneralTask"]
     taskMetadata: list[KeyValueRecord]
     dataExample: DataExample
     assigneeUserPid: Optional[str]

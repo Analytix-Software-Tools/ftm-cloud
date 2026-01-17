@@ -3,8 +3,8 @@ import requests
 
 from ftmcloud.core.config.config import Settings
 
-openapi_url2 = "http://localhost:8080/openapi.json"
-openapi_url = "https://ftmcloud-dev.azurewebsites.net/openapi.json"
+openapi_url = "http://localhost:8080/openapi.json"
+openapi_url2 = "https://ftmcloud-dev.azurewebsites.net/openapi.json"
 
 
 def fetch_openapi_json(url):

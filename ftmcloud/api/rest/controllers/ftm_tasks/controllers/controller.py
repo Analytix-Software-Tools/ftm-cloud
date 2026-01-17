@@ -75,8 +75,8 @@ class FtmTasksController:
             taskType: str | None = None,
             taskStatus: Literal["completed"] | None = None,
             targetApplication: Literal["moodme", "analytix"] | None = None,
-            current_user: User = Depends(get_current_user),
             showCompleted: bool | None = None,
+            current_user: User = Depends(get_current_user),
     ) -> FtmTask:
         """ Retrieves a task assignment based on the current user and their organization's
         assigned task types. Assigns a single task to the user, hiding the rest from other

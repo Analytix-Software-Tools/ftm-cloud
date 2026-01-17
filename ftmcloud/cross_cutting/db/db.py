@@ -12,14 +12,9 @@ from ftmcloud.domains.privileges.services.privilege_services import PrivilegesSe
 from ftmcloud.domains.users.services.user_services import UserService
 from ftmcloud.cross_cutting.session.session import PasswordGenerator
 from ftmcloud.core.config.config import Settings
-from ftmcloud.domains.attributes.models.models import Attribute
-from ftmcloud.domains.categories.models.models import Category
-from ftmcloud.domains.industries.models.models import Industry
 from ftmcloud.domains.invitations.models.models import Invitation
 from ftmcloud.domains.organizations.models.models import Organization
 from ftmcloud.domains.privileges.models.models import Privilege
-from ftmcloud.domains.products.models.models import Product
-from ftmcloud.domains.product_types.models.models import ProductType
 from ftmcloud.domains.users.models.models import User, UserContact
 
 logger = logging.getLogger(__name__)
@@ -150,8 +145,8 @@ async def initiate_database(initial=False):
     """
     client = AsyncIOMotorClient(Settings().DATABASE_URL)
     await init_beanie(database=client.analytix,
-                      document_models=[User, Privilege, Organization, Invitation, Industry, Category, Product,
-                                       ProductType, Attribute, FtmTask, UserContact, DataSource])
+                      document_models=[User, Privilege, Organization, Invitation,
+                                       FtmTask, UserContact, DataSource])
     if initial:
         logger.info("Verifying db integrity...")
         await check_init_database(motor_client=client)
